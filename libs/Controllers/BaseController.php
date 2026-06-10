@@ -34,7 +34,7 @@ abstract class BaseController
         }
     }
 
-    protected function notFound(): void
+    public function notFound(): void
     {
         http_response_code(404);
         echo '<!DOCTYPE html>

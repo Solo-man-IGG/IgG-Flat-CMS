@@ -68,8 +68,12 @@ require __DIR__ . '/header.php';
     }
     
     if (!empty($signature)): ?>
-        <footer class="post-signature" style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee; color: #666; font-style: italic;">
-            <p><?php echo nl2br(htmlspecialchars($signature, ENT_QUOTES, 'UTF-8')); ?></p>
+        <footer class="post-signature" style="margin-top: 2rem; padding: 1rem; border-top: 1px solid #eee; background: #f8fafc; border-radius: 0.5rem; color: #666; font-style: italic; text-align: left;">
+            <?php 
+            $parser = new \CMS\MarkdownParser();
+            $parsedSignature = $parser->parse(nl2br($signature));
+            echo $parsedSignature['content']; 
+            ?>
         </footer>
     <?php endif; ?>
 </article>

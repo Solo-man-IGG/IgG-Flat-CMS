@@ -1,19 +1,3 @@
-# IgG Flat CMS
-
-A full-featured CMS that fits on a floppy disk.
-
-IgG Flat CMS is a lightweight, database-free content management system  
-designed for developers and IT consultants who want a simple, stable,  
-and fully controllable website solution.
-
-✅ ~400KB core  
-✅ ~1MB total size  
-✅ No database  
-✅ Built-in admin panel  
-✅ Ready for production use  
-
-Originally built because someone didn’t want to learn Markdown. 🙂
-
 # IgG Flat CMS - Lightweight Flat-File CMS
 
 一個基於 PHP 8.1+ 的輕量級 IgG Flat CMS - Lightweight Flat-File CMS，無需資料庫，完全依賴檔案系統。
@@ -24,6 +8,22 @@ Originally built because someone didn’t want to learn Markdown. 🙂
 - Apache 或 Nginx 網頁伺服器
 - mod_rewrite（Apache）或等效的 URL 重寫功能
 - Composer（用於安裝依賴）
+
+> ⚠️ **重要：Apache 用戶必讀**
+>
+> 本專案的 `.htaccess` 負責保護敏感目錄與實現漂亮網址，**Apache 必須允許執行 `.htaccess`**：
+>
+> 在 Apache 設定檔中（`/etc/apache2/sites-available/000-default.conf` 或 vhost 設定），需為專案目錄加上：
+>
+> ```apache
+> <Directory /path/to/html/>
+>     Options Indexes FollowSymLinks
+>     AllowOverride All
+>     Require all granted
+> </Directory>
+> ```
+>
+> 若無法設定（如虛擬主機未開放），則 `.htaccess` 完全無效，敏感目錄（`vendor/`、`content/`、`libs/` 等）將可直接被 HTTP 存取，存在安全風險。
 
 ## 功能特色
 
@@ -65,50 +65,79 @@ chmod -R 755 uploads
 
 #### Apache
 
-確保啟用 `mod_rewrite` 與 `mod_headers`：
+**1. 啟用必要模組：**
 
 ```bash
 sudo a2enmod rewrite headers expires
 sudo systemctl restart apache2
 ```
 
-專案內附 `.htaccess` 已包含所有重寫、快取及安全規則，無需額外設定。
+**2. 確認 AllowOverride 已開啟：**
+
+編輯 Apache 虛擬主機設定（通常位於 `/etc/apache2/sites-available/000-default.conf` 或 `/etc/httpd/conf.d/`），確定專案目錄區塊包含 `AllowOverride All`：
+
+```apache
+<Directory /path/to/div_html/>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+```
+
+若使用 cPanel、Cloudways 等虛擬主機，`AllowOverride All` 通常已預設啟用，可略過此步驟。
+
+**3. 使用 .htaccess：**
+
+專案內附 `.htaccess` 已包含所有重寫、快取及安全規則。上一步的 `AllowOverride All` 即允許 Apache 讀取這些規則。
+
+> 若因環境限制無法開啟 `AllowOverride`，請參考下方的 Nginx 範例，直接在 Apache vhost 中撰寫等效規則（將 `location` 改寫為對應的 `<Directory>` 與 `RewriteRule`）。
 
 #### Nginx
 
-在 Nginx 配置中添加以下規則：
+在 Nginx 配置的 `server` 區塊中添加以下規則：
 
 ```nginx
 server {
-    # ... 基本設定 ...
+    listen 80;
+    server_name your-domain.com;
+    root /path/to/div_html;
+    index index.php;
 
     # 阻擋敏感目錄
     location ~ ^/(content|cache|libs|vendor|logs)/ {
         deny all;
     }
 
-    # 允許上傳目錄的圖片存取
+    # 允許上傳目錄的圖片存取，但阻擋可執行檔
     location /uploads/ {
-        # 阻擋可執行檔
         location ~ \.(php|phtml|php3|php4|php5|phar|pl|cgi|py|rb|asp|aspx|sh|bat|exe)$ {
             deny all;
         }
     }
 
     # 阻擋直接存取設定檔
-    location = /composer.json { deny all; }
-    location = /composer.lock { deny all; }
-    location ~ \.md$ { deny all; }
+    location = /composer.json  { deny all; }
+    location = /composer.lock  { deny all; }
+    location = /composer.json  { deny all; }
+    location = /.env           { deny all; }
+    location ~ \.md$           { deny all; }
 
-    # URL 重寫
+    # URL 重寫 — 將所有非檔案/目錄請求交給 index.php
     location / {
         try_files $uri $uri/ /index.php?$query_string;
     }
 
-    # 瀏覽器快取
+    # 瀏覽器快取（靜態資源）
     location ~ \.(css|js|jpg|jpeg|png|gif|webp|ico|woff2)$ {
         expires 1y;
         add_header Cache-Control "public, immutable";
+    }
+
+    # PHP 處理
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_pass unix:/var/run/php/php8.4-fpm.sock;  # 請依實際 PHP 版本調整
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     }
 }
 ```
@@ -329,10 +358,39 @@ MAIL_PASSWORD=your-smtp-password
   - 前端模板全面使用 `htmlspecialchars()` 輸出跳脫
   - Markdown 解析關閉 Safe Mode 以支援 HTML 表格等進階語法（Parsedown 本身已過濾危險標籤）
   - YAML frontmatter 使用 `Yaml::dump()` 建構，杜絕注入
-- **敏感目錄保護**：`content/`、`cache/`、`libs/`、`vendor/`、`logs/` 透過 `.htaccess` 阻擋直接 HTTP 存取
+- **敏感目錄保護**：`content/`、`cache/`、`libs/`、`vendor/`、`logs/` 透過 `.htaccess`（Apache）或 `location` 規則（Nginx）阻擋直接 HTTP 存取；**Apache 用戶須確認 AllowOverride 已開啟**，否則 `.htaccess` 不會生效
 - **檔案上傳安全**：白名單副檔名過濾、檔名清理、MIME 類型限制圖片為主
 - **錯誤處理**：生產環境關閉錯誤顯示，錯誤訊息僅寫入日誌
 - **SMTP 密碼保護**：可透過環境變數 `MAIL_PASSWORD` 設定，避免寫入版本控制
+
+## 常見問題
+
+### 開啟後出現 500 Internal Server Error
+
+**原因**：多為 PHP Fatal Error，常見情況是：
+
+- 未安裝 Composer 依賴 → 刪除 `vendor/` 目錄後重新整理即可自動安裝
+- `notFound()` 權限問題 → 首次開啟請瀏覽首頁 `/`（而非 `/div_html/`）建立路由快取
+- PHP 版本低於 8.1 → 請升級至 PHP 8.1+
+
+### 訪問 `/blog`、`/contact` 等網址出現 404
+
+**原因**：Apache 的 mod_rewrite 未啟用，或 `.htaccess` 未被讀取。
+
+- 確認已執行 `sudo a2enmod rewrite` 並重啟 Apache
+- 確認 Apache vhost 中 `AllowOverride` 未被設為 `None`
+
+### 上傳圖片後無法存取或執行 PHP 檔案
+
+**原因**：`uploads/.htaccess` 未被讀取（Apache 未開啟 `AllowOverride`），或使用 Nginx 時未加入 `location` 規則。參考上方 Nginx 配置範例。
+
+### 聯絡表單無法寄信
+
+**原因**：SMTP 未設定。請在後台「系統設定 → 郵件設定」填入 SMTP 資訊，或在專案根目錄建立 `.env` 檔案：
+
+```bash
+MAIL_PASSWORD=your-smtp-password
+```
 
 ## 技術棧
 
