@@ -1,0 +1,17 @@
+{
+    "scheme": "ocean",
+    "colors": {
+        "primary-color": "#0891b2",
+        "secondary-color": "#0e7490",
+        "accent-color": "#f59e0b",
+        "text-color": "#164e63",
+        "bg-color": "#ecfeff",
+        "border-color": "#a5f3fc",
+        "header-bg": "#083344",
+        "header-text": "#ecfeff",
+        "footer-bg": "#083344",
+        "footer-text": "#67e8f9"
+    },
+    "nav_style": "hamburger",
+    "custom_css": ""
+}

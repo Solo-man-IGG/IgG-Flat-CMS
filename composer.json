@@ -1,0 +1,20 @@
+{
+    "name": "flatfile-cms/cms",
+    "description": "Flat-file CMS built with PHP 8.1+",
+    "type": "project",
+    "require": {
+        "php": ">=8.1",
+        "erusev/parsedown": "^1.7",
+        "symfony/yaml": "^6.0",
+        "phpmailer/phpmailer": "^6.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "CMS\\": "libs/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
