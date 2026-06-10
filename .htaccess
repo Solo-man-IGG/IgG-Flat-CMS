@@ -1,0 +1,57 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Block direct access to sensitive directories
+    RewriteRule ^content/ - [F,L]
+    RewriteRule ^cache/ - [F,L]
+    RewriteRule ^libs/ - [F,L]
+    RewriteRule ^vendor/ - [F,L]
+    RewriteRule ^logs/ - [F,L]
+    
+    # Allow access to uploads for images, deny executable files
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteCond %{REQUEST_FILENAME} \.(php|phtml|php3|php4|php5|phar|pl|cgi|py|rb|asp|aspx|sh|bat|exe|htaccess)$ [NC]
+    RewriteRule ^uploads/ - [F,L]
+    
+    # Block direct access to config files
+    RewriteRule ^composer\.json$ - [F,L]
+    RewriteRule ^composer\.lock$ - [F,L]
+    RewriteRule \.md$ - [F,L]
+    
+    # Redirect all requests to index.php, except for existing files/directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+<IfModule mod_dir.c>
+    DirectoryIndex index.php
+</IfModule>
+
+# Browser caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|jpg|jpeg|png|gif|webp|ico|woff2)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# Protect sensitive files
+<FilesMatch "^(composer\.json|composer\.lock|\.env)$">
+    Require all denied
+</FilesMatch>
