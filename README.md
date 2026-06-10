@@ -144,7 +144,7 @@ server {
 
 ### 4. 新增管理員帳號(預設 admin:admin123)
 
-開啟瀏覽器訪問 `/admin/register`，依畫面指示建立第一個管理員帳號。
+開啟瀏覽器訪問 `/admin`，依畫面指示建立第一個管理員帳號。
 
 或者手動編輯 `content/config/users.json` 加入帳號：
 
