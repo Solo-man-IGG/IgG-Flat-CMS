@@ -99,7 +99,7 @@ sudo systemctl restart apache2
 server {
     listen 80;
     server_name your-domain.com;
-    root /path/to/div_html;
+    root /path/to/html;
     index index.php;
 
     # 阻擋敏感目錄
@@ -168,7 +168,7 @@ php -r "echo password_hash('your-password', PASSWORD_BCRYPT, ['cost' => 12]);"
 
 ### 5. 訪問網站
 
-開啟瀏覽器訪問您的網站。後台路徑：`/admin/login`
+開啟瀏覽器訪問您的網站。後台路徑：`/admin`
 
 ## 目錄結構
 
@@ -291,7 +291,7 @@ sort_order: 1
 
 ## 後台管理
 
-登入後台：`/admin/login`
+登入後台：`/admin`
 
 後台功能包括：
 
