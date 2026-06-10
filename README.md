@@ -77,7 +77,7 @@ sudo systemctl restart apache2
 編輯 Apache 虛擬主機設定（通常位於 `/etc/apache2/sites-available/000-default.conf` 或 `/etc/httpd/conf.d/`），確定專案目錄區塊包含 `AllowOverride All`：
 
 ```apache
-<Directory /path/to/div_html/>
+<Directory /path/to/html/>
     Options Indexes FollowSymLinks
     AllowOverride All
     Require all granted
@@ -142,7 +142,7 @@ server {
 }
 ```
 
-### 4. 新增管理員帳號
+### 4. 新增管理員帳號(預設 admin:admin123)
 
 開啟瀏覽器訪問 `/admin/register`，依畫面指示建立第一個管理員帳號。
 
@@ -370,7 +370,7 @@ MAIL_PASSWORD=your-smtp-password
 **原因**：多為 PHP Fatal Error，常見情況是：
 
 - 未安裝 Composer 依賴 → 刪除 `vendor/` 目錄後重新整理即可自動安裝
-- `notFound()` 權限問題 → 首次開啟請瀏覽首頁 `/`（而非 `/div_html/`）建立路由快取
+- `notFound()` 權限問題 → 首次開啟請瀏覽首頁 `/`（而非 `/html/`）建立路由快取
 - PHP 版本低於 8.1 → 請升級至 PHP 8.1+
 
 ### 訪問 `/blog`、`/contact` 等網址出現 404
