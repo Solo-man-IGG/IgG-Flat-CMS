@@ -46,8 +46,7 @@
 ### 1. 下載專案
 
 ```bash
-git clone <repository-url>
-cd div_html
+git clone https://github.com/Solo-man-IGG/IgG-Flat-CMS
 ```
 
 ### 2. 設定權限
