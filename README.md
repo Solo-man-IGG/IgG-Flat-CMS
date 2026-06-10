@@ -1,3 +1,19 @@
+# IgG Flat CMS
+
+A full-featured CMS that fits on a floppy disk.
+
+IgG Flat CMS is a lightweight, database-free content management system  
+designed for developers and IT consultants who want a simple, stable,  
+and fully controllable website solution.
+
+✅ ~400KB core  
+✅ ~1MB total size  
+✅ No database  
+✅ Built-in admin panel  
+✅ Ready for production use  
+
+Originally built because someone didn’t want to learn Markdown. 🙂
+
 # IgG Flat CMS - Lightweight Flat-File CMS
 
 一個基於 PHP 8.1+ 的輕量級 IgG Flat CMS - Lightweight Flat-File CMS，無需資料庫，完全依賴檔案系統。
