@@ -1,16 +1,16 @@
 {
-    "scheme": "custom",
+    "scheme": "default",
     "colors": {
-        "primary-color": "#03333f",
-        "secondary-color": "#0e7490",
-        "accent-color": "#f59e0b",
-        "text-color": "#121d21",
-        "bg-color": "#ecfeff",
-        "border-color": "#a5f3fc",
-        "header-bg": "#083344",
-        "header-text": "#ecfeff",
-        "footer-bg": "#083344",
-        "footer-text": "#67e8f9"
+        "primary-color": "#3b82f6",
+        "secondary-color": "#1d4ed8",
+        "accent-color": "#10b981",
+        "text-color": "#1f2937",
+        "bg-color": "#f8fafc",
+        "border-color": "#e2e8f0",
+        "header-bg": "#0f172a",
+        "header-text": "#ffffff",
+        "footer-bg": "#0f172a",
+        "footer-text": "#e2e8f0"
     },
     "nav_style": "hamburger",
     "custom_css": ""

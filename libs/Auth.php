@@ -15,6 +15,7 @@ class Auth
     private const USERS_FILE = 'content/config/users.json';
     private const MAX_LOGIN_ATTEMPTS = 5;
     private const LOGIN_LOCKOUT_MINUTES = 15;
+    private const ATTEMPTS_DIR = 'logs/login_attempts';
     
     private FileHandler $fileHandler;
     private int $sessionTimeout = 3600; // 1 hour default
@@ -41,29 +42,82 @@ class Auth
     }
     
     /**
-     * Check if login is rate limited
+     * Get path to the attempts file for a given IP
+     */
+    private function getAttemptsFile(string $ip): string
+    {
+        $hash = hash('sha256', $ip);
+        return self::ATTEMPTS_DIR . '/' . $hash . '.json';
+    }
+
+    /**
+     * Read stored attempts for an IP
+     */
+    private function readAttempts(string $ip): array
+    {
+        $file = $this->getAttemptsFile($ip);
+        try {
+            $content = $this->fileHandler->read($file);
+            $attempts = json_decode($content, true);
+            return is_array($attempts) ? $attempts : [];
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Write attempts for an IP, pruning entries outside the lockout window
+     */
+    private function writeAttempts(string $ip, array $attempts): void
+    {
+        $cutoff = time() - self::LOGIN_LOCKOUT_MINUTES * 60;
+        $attempts = array_values(array_filter($attempts, function($t) use ($cutoff) {
+            return $t > $cutoff;
+        }));
+
+        if (empty($attempts)) {
+            $this->deleteAttempts($ip);
+            return;
+        }
+
+        $file = $this->getAttemptsFile($ip);
+        $this->fileHandler->write($file, json_encode($attempts));
+    }
+
+    /**
+     * Delete the attempts file for an IP
+     */
+    private function deleteAttempts(string $ip): void
+    {
+        $file = $this->getAttemptsFile($ip);
+        try {
+            if ($this->fileHandler->exists($file)) {
+                $this->fileHandler->delete($file);
+            }
+        } catch (\Exception $e) {
+            // Ignore
+        }
+    }
+
+    /**
+     * Check if login is rate limited (file-based, persists across session resets)
      */
     private function isRateLimited(): bool
     {
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-        $key = 'login_attempts_' . $ip;
-        
-        if (!isset($_SESSION[$key])) {
-            return false;
-        }
-        
-        $attempts = $_SESSION[$key];
+        $attempts = $this->readAttempts($ip);
+
         if (count($attempts) < self::MAX_LOGIN_ATTEMPTS) {
             return false;
         }
-        
+
         // Check if lockout period has passed
         $firstAttempt = min($attempts);
         if (time() - $firstAttempt > self::LOGIN_LOCKOUT_MINUTES * 60) {
-            unset($_SESSION[$key]);
+            $this->deleteAttempts($ip);
             return false;
         }
-        
+
         return true;
     }
     
@@ -73,19 +127,9 @@ class Auth
     private function recordLoginAttempt(): void
     {
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-        $key = 'login_attempts_' . $ip;
-        
-        if (!isset($_SESSION[$key])) {
-            $_SESSION[$key] = [];
-        }
-        
-        $_SESSION[$key][] = time();
-        
-        // Keep only recent attempts within lockout window
-        $cutoff = time() - self::LOGIN_LOCKOUT_MINUTES * 60;
-        $_SESSION[$key] = array_filter($_SESSION[$key], function($t) use ($cutoff) {
-            return $t > $cutoff;
-        });
+        $attempts = $this->readAttempts($ip);
+        $attempts[] = time();
+        $this->writeAttempts($ip, $attempts);
     }
     
     /**
@@ -94,7 +138,7 @@ class Auth
     private function clearLoginAttempts(): void
     {
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-        unset($_SESSION['login_attempts_' . $ip]);
+        $this->deleteAttempts($ip);
     }
     
     /**

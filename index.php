@@ -1,5 +1,7 @@
 <?php
 
+define('CMS_ENTRY', true);
+
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統

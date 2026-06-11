@@ -10,18 +10,27 @@
 
 namespace CMS\Controllers;
 
+use CMS\Cache;
 use CMS\Counter;
 use CMS\FileHandler;
+use CMS\MarkdownParser;
+use CMS\MenuManager;
 
 abstract class BaseController
 {
     protected FileHandler $fileHandler;
     protected Counter $counter;
+    protected MenuManager $menuManager;
+    protected MarkdownParser $parser;
+    protected Cache $cache;
 
     public function __construct(FileHandler $fileHandler)
     {
         $this->fileHandler = $fileHandler;
         $this->counter = new Counter($fileHandler);
+        $this->menuManager = new MenuManager($fileHandler);
+        $this->parser = new MarkdownParser();
+        $this->cache = new Cache($fileHandler);
     }
 
     protected function loadSettings(): array

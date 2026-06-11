@@ -13,14 +13,12 @@ namespace CMS\Controllers;
 use CMS\Auth;
 use CMS\ContactHandler;
 use CMS\Mailer;
-use CMS\MenuManager;
 
 class ContactController extends BaseController
 {
     public function handleContact(): void
     {
-        $menuManager = new MenuManager($this->fileHandler);
-        $menuItems = $menuManager->getTemplateData();
+        $menuItems = $this->menuManager->getTemplateData();
 
         $settings = $this->loadSettings();
         $siteTitle = $settings['site_title'] ?? 'My Site';

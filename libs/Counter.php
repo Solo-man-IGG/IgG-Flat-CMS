@@ -33,20 +33,55 @@ class Counter
         $views = 0;
 
         try {
-            if ($this->fileHandler->exists($filename)) {
-                $content = $this->fileHandler->read($filename);
+            $dir = dirname($filename);
+            if (!$this->fileHandler->exists($dir)) {
+                $this->fileHandler->createDirectory($dir);
+            }
+
+            $fullPath = $this->resolvePath($filename);
+
+            $fh = fopen($fullPath, 'c+');
+            if (!$fh) {
+                throw new \RuntimeException('Cannot open counter file');
+            }
+
+            if (!flock($fh, LOCK_EX)) {
+                fclose($fh);
+                throw new \RuntimeException('Cannot acquire lock');
+            }
+
+            // Read current value
+            $size = filesize($fullPath);
+            if ($size > 0) {
+                $content = fread($fh, $size);
                 $data = json_decode($content, true);
                 $views = ($data['views'] ?? 0) + 1;
             } else {
                 $views = 1;
             }
 
-            $this->fileHandler->write($filename, json_encode(['views' => $views], JSON_PRETTY_PRINT));
+            // Write updated value under the same exclusive lock
+            ftruncate($fh, 0);
+            rewind($fh);
+            fwrite($fh, json_encode(['views' => $views], JSON_PRETTY_PRINT));
+            fflush($fh);
+
+            flock($fh, LOCK_UN);
+            fclose($fh);
         } catch (\Exception $e) {
             error_log('Counter::increment error: ' . $e->getMessage());
         }
 
         return $views;
+    }
+
+    /**
+     * Resolve a relative path to an absolute one, matching FileHandler's convention
+     */
+    private function resolvePath(string $path): string
+    {
+        $basePath = realpath(__DIR__ . '/..');
+        return $basePath . '/' . ltrim($path, '/');
     }
 
     public function get(string $type, string $slug): int

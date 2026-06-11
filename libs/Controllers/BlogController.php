@@ -10,22 +10,14 @@
 
 namespace CMS\Controllers;
 
-use CMS\Cache;
-use CMS\MarkdownParser;
-use CMS\MenuManager;
-
 class BlogController extends BaseController
 {
     public function handleBlogList(): void
     {
-        $menuManager = new MenuManager($this->fileHandler);
-        $menuItems = $menuManager->getTemplateData();
+        $menuItems = $this->menuManager->getTemplateData();
 
         $settings = $this->loadSettings();
         $siteTitle = $settings['site_title'] ?? 'My Site';
-
-        $parser = new MarkdownParser();
-        $cache = new Cache($this->fileHandler);
 
         $perPage = 12;
         $currentPage = max(1, (int)($_GET['page'] ?? 1));
@@ -34,7 +26,7 @@ class BlogController extends BaseController
         $posts = [];
         $cacheKey = 'blog_list';
 
-        $cached = $cache->get('blog', $cacheKey);
+        $cached = $this->cache->get('blog', $cacheKey);
         if ($cached !== null) {
             $posts = json_decode($cached, true);
         } else {
@@ -42,9 +34,9 @@ class BlogController extends BaseController
                 $files = $this->fileHandler->listFiles('content/blog', 'md');
                 foreach ($files as $file) {
                     $path = 'content/blog/' . $file;
-                    $parsed = $parser->parseFile($this->fileHandler, $path);
+                    $parsed = $this->parser->parseFile($this->fileHandler, $path);
                     $frontmatter = $parsed['frontmatter'];
-                    $slug = $parser->getSlug($frontmatter, $file);
+                    $slug = $this->parser->getSlug($frontmatter, $file);
 
                     if (!($frontmatter['published'] ?? true)) {
                         continue;
@@ -57,10 +49,10 @@ class BlogController extends BaseController
 
                     $posts[] = [
                         'slug' => $slug,
-                        'title' => $parser->getTitle($frontmatter, $parsed['content']),
-                        'date' => $parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
+                        'title' => $this->parser->getTitle($frontmatter, $parsed['content']),
+                        'date' => $this->parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
                         'author' => $frontmatter['author'] ?? '',
-                        'excerpt' => $parser->getExcerpt($parsed['content']),
+                        'excerpt' => $this->parser->getExcerpt($parsed['content']),
                         'tags' => $tags,
                     ];
                 }
@@ -69,7 +61,7 @@ class BlogController extends BaseController
                     return strtotime($b['date']) - strtotime($a['date']);
                 });
 
-                $cache->set('blog', $cacheKey, json_encode($posts));
+                $this->cache->set('blog', $cacheKey, json_encode($posts));
             } catch (\Exception $e) {
                 error_log('Blog list error: ' . $e->getMessage());
             }
@@ -103,18 +95,14 @@ class BlogController extends BaseController
 
     public function handleBlogPost(string $slug): void
     {
-        $menuManager = new MenuManager($this->fileHandler);
-        $menuItems = $menuManager->getTemplateData();
+        $menuItems = $this->menuManager->getTemplateData();
 
         $settings = $this->loadSettings();
         $siteTitle = $settings['site_title'] ?? 'My Site';
 
-        $parser = new MarkdownParser();
-        $cache = new Cache($this->fileHandler);
-
         $cacheKey = 'blog_post_' . $slug;
 
-        $cached = $cache->get('blog', $cacheKey);
+        $cached = $this->cache->get('blog', $cacheKey);
         if ($cached !== null) {
             $post = json_decode($cached, true);
         } else {
@@ -122,11 +110,11 @@ class BlogController extends BaseController
             try {
                 $files = $this->fileHandler->listFiles('content/blog', 'md');
                 foreach ($files as $file) {
-                    $fileSlug = pathinfo($file, PATHINFO_FILENAME);
+                    $path = 'content/blog/' . $file;
+                    $parsed = $this->parser->parseFile($this->fileHandler, $path);
+                    $frontmatter = $parsed['frontmatter'];
+                    $fileSlug = $this->parser->getSlug($frontmatter, $file);
                     if ($fileSlug === $slug) {
-                        $path = 'content/blog/' . $file;
-                        $parsed = $parser->parseFile($this->fileHandler, $path);
-                        $frontmatter = $parsed['frontmatter'];
 
                         if (!($frontmatter['published'] ?? true)) {
                             $this->notFound();
@@ -135,15 +123,15 @@ class BlogController extends BaseController
 
                         $post = [
                             'slug' => $slug,
-                            'title' => $parser->getTitle($frontmatter, $parsed['content']),
-                            'date' => $parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
+                            'title' => $this->parser->getTitle($frontmatter, $parsed['content']),
+                            'date' => $this->parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
                             'author' => $frontmatter['author'] ?? '',
                             'tags' => $frontmatter['tags'] ?? [],
                             'banner' => $frontmatter['banner'] ?? '',
                             'content' => $parsed['content'],
                         ];
 
-                        $cache->set('blog', $cacheKey, json_encode($post));
+                        $this->cache->set('blog', $cacheKey, json_encode($post));
                         break;
                     }
                 }
@@ -163,13 +151,13 @@ class BlogController extends BaseController
             try {
                 $allFiles = $this->fileHandler->listFiles('content/blog', 'md');
                 foreach ($allFiles as $file) {
-                    $fileSlug = pathinfo($file, PATHINFO_FILENAME);
+                    $relatedPath = 'content/blog/' . $file;
+                    $relatedParsed = $this->parser->parseFile($this->fileHandler, $relatedPath);
+                    $relatedFrontmatter = $relatedParsed['frontmatter'];
+                    $fileSlug = $this->parser->getSlug($relatedFrontmatter, $file);
                     if ($fileSlug === $slug) {
                         continue;
                     }
-                    $relatedPath = 'content/blog/' . $file;
-                    $relatedParsed = $parser->parseFile($this->fileHandler, $relatedPath);
-                    $relatedFrontmatter = $relatedParsed['frontmatter'];
                     if (!($relatedFrontmatter['published'] ?? true)) {
                         continue;
                     }
@@ -180,9 +168,9 @@ class BlogController extends BaseController
                     $sharedTags = array_intersect($currentTags, $relatedTags);
                     if (!empty($sharedTags)) {
                         $relatedPosts[] = [
-                            'slug' => $parser->getSlug($relatedFrontmatter, $file),
-                            'title' => $parser->getTitle($relatedFrontmatter, $relatedParsed['content']),
-                            'date' => $parser->getDate($relatedFrontmatter, $this->fileHandler->getModificationTime($relatedPath)),
+                            'slug' => $this->parser->getSlug($relatedFrontmatter, $file),
+                            'title' => $this->parser->getTitle($relatedFrontmatter, $relatedParsed['content']),
+                            'date' => $this->parser->getDate($relatedFrontmatter, $this->fileHandler->getModificationTime($relatedPath)),
                         ];
                     }
                 }

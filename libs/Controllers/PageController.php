@@ -10,10 +10,6 @@
 
 namespace CMS\Controllers;
 
-use CMS\Cache;
-use CMS\MarkdownParser;
-use CMS\MenuManager;
-
 class PageController extends BaseController
 {
     public function handleHome(): void
@@ -22,17 +18,13 @@ class PageController extends BaseController
         $homePageSlug = $settings['home_page'] ?? '';
 
         if ($homePageSlug) {
-            $menuManager = new MenuManager($this->fileHandler);
-            $menuItems = $menuManager->getTemplateData();
+            $menuItems = $this->menuManager->getTemplateData();
             $siteTitle = $settings['site_title'] ?? 'My Site';
-
-            $parser = new MarkdownParser();
-            $cache = new Cache($this->fileHandler);
 
             $cacheKey = 'page_' . $homePageSlug;
             $page = null;
 
-            $cached = $cache->get('pages', $cacheKey);
+            $cached = $this->cache->get('pages', $cacheKey);
             if ($cached !== null) {
                 $page = json_decode($cached, true);
             } else {
@@ -42,17 +34,17 @@ class PageController extends BaseController
                         $fileSlug = pathinfo($file, PATHINFO_FILENAME);
                         if ($fileSlug === $homePageSlug) {
                             $path = 'content/pages/' . $file;
-                            $parsed = $parser->parseFile($this->fileHandler, $path);
+                            $parsed = $this->parser->parseFile($this->fileHandler, $path);
                             $frontmatter = $parsed['frontmatter'];
 
                             $page = [
                                 'slug' => $homePageSlug,
-                                'title' => $parser->getTitle($frontmatter, $parsed['content']),
-                                'date' => $parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
+                                'title' => $this->parser->getTitle($frontmatter, $parsed['content']),
+                                'date' => $this->parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
                                 'content' => $parsed['content'],
                             ];
 
-                            $cache->set('pages', $cacheKey, json_encode($page));
+                            $this->cache->set('pages', $cacheKey, json_encode($page));
                             break;
                         }
                     }
@@ -69,8 +61,7 @@ class PageController extends BaseController
             }
         }
 
-        $menuManager = new MenuManager($this->fileHandler);
-        $menuItems = $menuManager->getTemplateData();
+        $menuItems = $this->menuManager->getTemplateData();
         $siteTitle = $settings['site_title'] ?? 'My Site';
 
         $this->counter->increment('home', 'home');
@@ -86,18 +77,14 @@ class PageController extends BaseController
 
     public function handlePage(string $slug): void
     {
-        $menuManager = new MenuManager($this->fileHandler);
-        $menuItems = $menuManager->getTemplateData();
+        $menuItems = $this->menuManager->getTemplateData();
 
         $settings = $this->loadSettings();
         $siteTitle = $settings['site_title'] ?? 'My Site';
 
-        $parser = new MarkdownParser();
-        $cache = new Cache($this->fileHandler);
-
         $cacheKey = 'page_' . $slug;
 
-        $cached = $cache->get('pages', $cacheKey);
+        $cached = $this->cache->get('pages', $cacheKey);
         if ($cached !== null) {
             $page = json_decode($cached, true);
         } else {
@@ -108,17 +95,17 @@ class PageController extends BaseController
                     $fileSlug = pathinfo($file, PATHINFO_FILENAME);
                     if ($fileSlug === $slug) {
                         $path = 'content/pages/' . $file;
-                        $parsed = $parser->parseFile($this->fileHandler, $path);
+                        $parsed = $this->parser->parseFile($this->fileHandler, $path);
                         $frontmatter = $parsed['frontmatter'];
 
                         $page = [
                             'slug' => $slug,
-                            'title' => $parser->getTitle($frontmatter, $parsed['content']),
-                            'date' => $parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
+                            'title' => $this->parser->getTitle($frontmatter, $parsed['content']),
+                            'date' => $this->parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
                             'content' => $parsed['content'],
                         ];
 
-                        $cache->set('pages', $cacheKey, json_encode($page));
+                        $this->cache->set('pages', $cacheKey, json_encode($page));
                         break;
                     }
                 }
