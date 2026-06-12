@@ -60,8 +60,7 @@ No complicated business model, no hidden affiliate marketing — just something 
 ### 1. Download
 
 ```bash
-git clone <repository-url>
-cd div_html
+git clone https://github.com/Solo-man-IGG/IgG-Flat-CMS
 ```
 
 ### 2. Set permissions
@@ -91,7 +90,7 @@ sudo systemctl restart apache2
 Edit your Apache vhost config (usually `/etc/apache2/sites-available/000-default.conf` or `/etc/httpd/conf.d/`) and ensure the project directory block includes `AllowOverride All`:
 
 ```apache
-<Directory /path/to/div_html/>
+<Directory /path/to/html/>
     Options Indexes FollowSymLinks
     AllowOverride All
     Require all granted
@@ -114,7 +113,7 @@ Add the following rules to your Nginx `server` block:
 server {
     listen 80;
     server_name your-domain.com;
-    root /path/to/div_html;
+    root /path/to/html;
     index index.php;
 
     # Block sensitive directories
@@ -421,7 +420,7 @@ You can also manually clear all cache from the "Settings" page in the admin pane
 **Causes** (most common):
 
 - Composer dependencies not installed → delete `vendor/` and refresh to auto-install
-- `notFound()` permission issue → visit homepage `/` first (not `/div_html/`) to create route cache
+- `notFound()` permission issue → visit homepage `/` first (not `/html/`) to create route cache
 - PHP version below 8.1 → upgrade to PHP 8.1+
 
 ### `/blog`, `/contact` URLs return 404
