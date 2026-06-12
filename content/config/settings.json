@@ -1,7 +1,7 @@
 {
-    "site_title": "My Site",
+    "site_title": "",
     "mail_host": "",
-    "mail_port": "587",
+    "mail_port": "",
     "mail_username": "",
     "mail_password": "",
     "mail_from": "",

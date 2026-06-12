@@ -8,7 +8,7 @@
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-$pageTitle = $post['title'] ?? '文章';
+$pageTitle = $post['title'] ?? __('blog.post.page_title_default');
 $siteTitle = $siteTitle ?? 'My Site';
 $menuItems = $menuItems ?? [];
 require __DIR__ . '/header.php';
@@ -23,12 +23,12 @@ require __DIR__ . '/header.php';
 
     <h1><?php echo htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8'); ?></h1>
     <div class="meta">
-        <span>日期：<?php echo htmlspecialchars($post['date'], ENT_QUOTES, 'UTF-8'); ?></span>
+        <span><?php echo __('blog.post.date_label'); ?><?php echo htmlspecialchars($post['date'], ENT_QUOTES, 'UTF-8'); ?></span>
         <?php if (!empty($post['author'])): ?>
-            <span> | 作者：<?php echo htmlspecialchars($post['author'], ENT_QUOTES, 'UTF-8'); ?></span>
+            <span><?php echo __('blog.post.author_label'); ?><?php echo htmlspecialchars($post['author'], ENT_QUOTES, 'UTF-8'); ?></span>
         <?php endif; ?>
         <?php if (!empty($post['tags'])): ?>
-            <span> | 標籤：
+            <span><?php echo __('blog.post.tags_label'); ?>
                 <?php foreach ($post['tags'] as $tag): ?>
                     <?php echo htmlspecialchars($tag, ENT_QUOTES, 'UTF-8'); ?>
                 <?php endforeach; ?>
@@ -41,7 +41,7 @@ require __DIR__ . '/header.php';
 
     <?php if (!empty($relatedPosts)): ?>
         <div class="related-posts">
-            <h3>延伸閱讀</h3>
+            <h3><?php echo __('blog.post.related_title'); ?></h3>
             <ul>
                 <?php foreach ($relatedPosts as $rp): ?>
                     <li>

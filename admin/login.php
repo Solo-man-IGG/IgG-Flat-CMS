@@ -1,7 +1,5 @@
 <?php
 
-defined("CMS_ENTRY") or die("Direct access not allowed.");
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統
@@ -11,8 +9,10 @@ defined("CMS_ENTRY") or die("Direct access not allowed.");
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../libs/functions.php';
 
 use CMS\Auth;
+use CMS\Lang;
 use CMS\FileHandler;
 use CMS\Logger;
 
@@ -22,6 +22,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Initialize components
+Lang::init(__DIR__ . '/../data');
 $fileHandler = new FileHandler(__DIR__ . '/..');
 $logger = new Logger($fileHandler);
 $auth = new Auth($fileHandler, 3600, $logger);
@@ -42,31 +43,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Validate CSRF token
     if (!$auth->validateCsrfToken($csrfToken)) {
-        $error = 'CSRF 驗證失敗，請重新整理頁面後再試。';
+        $error = __('admin.login.error.csrf');
     } else {
         // Attempt login
         if ($auth->login($username, $password)) {
             header('Location: /admin/dashboard');
             exit;
         } else {
-            $error = '使用者名稱或密碼錯誤。';
+            $error = __('admin.login.error.invalid_credentials');
         }
     }
     
     // Check if rate limited and show appropriate message
     if (empty($error) && method_exists($auth, 'isRateLimited') && $auth->isRateLimited()) {
-        $error = '登入嘗試次數過多，請 ' . 15 . ' 分鐘後再試。';
+        $error = __('admin.login.error.rate_limited', 15);
     }
 }
 
 $csrfField = $auth->getCsrfField();
 ?>
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="<?php echo __('lang.attr'); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登入 - 後台管理</title>
+    <title><?php echo __('admin.login.page_title'); ?></title>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
     <style>
         body {
@@ -148,7 +149,7 @@ $csrfField = $auth->getCsrfField();
 </head>
 <body>
     <div class="login-container">
-        <h1>後台登入</h1>
+        <h1><?php echo __('admin.login.heading'); ?></h1>
         
         <?php if ($error): ?>
             <div class="error"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></div>
@@ -158,20 +159,20 @@ $csrfField = $auth->getCsrfField();
             <?php echo $csrfField; ?>
             
             <div class="form-group">
-                <label for="username">使用者名稱</label>
+                <label for="username"><?php echo __('admin.login.form.username'); ?></label>
                 <input type="text" id="username" name="username" required autofocus>
             </div>
             
             <div class="form-group">
-                <label for="password">密碼</label>
+                <label for="password"><?php echo __('admin.login.form.password'); ?></label>
                 <input type="password" id="password" name="password" required>
             </div>
             
-            <button type="submit">登入</button>
+            <button type="submit"><?php echo __('admin.login.form.submit'); ?></button>
         </form>
         
         <div class="back-link">
-            <a href="/">返回首頁</a>
+            <a href="/"><?php echo __('admin.login.back_home'); ?></a>
         </div>
     </div>
 </body>

@@ -5,6 +5,6 @@
         "password_hash": "$2y$12$DLPrvi6pFY/e6z0s4kJXsOzjZxq5bf61nNyOtXA.KAxifh2mHwiSa",
         "email": "admin@example.com",
         "role": "admin",
-        "created_at": "2024-01-01T00:00:00+00:00"
+        "created_at": "2026-06-01T00:00:00+00:00"
     }
 ]

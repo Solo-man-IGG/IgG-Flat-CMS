@@ -81,4 +81,9 @@ class AdminController extends BaseController
     {
         require __DIR__ . '/../../admin/files.php';
     }
+
+    public function handleAdminLanguage(): void
+    {
+        require __DIR__ . '/../../admin/language.php';
+    }
 }

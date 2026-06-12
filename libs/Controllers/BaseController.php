@@ -10,27 +10,18 @@
 
 namespace CMS\Controllers;
 
-use CMS\Cache;
 use CMS\Counter;
 use CMS\FileHandler;
-use CMS\MarkdownParser;
-use CMS\MenuManager;
 
 abstract class BaseController
 {
     protected FileHandler $fileHandler;
     protected Counter $counter;
-    protected MenuManager $menuManager;
-    protected MarkdownParser $parser;
-    protected Cache $cache;
 
     public function __construct(FileHandler $fileHandler)
     {
         $this->fileHandler = $fileHandler;
         $this->counter = new Counter($fileHandler);
-        $this->menuManager = new MenuManager($fileHandler);
-        $this->parser = new MarkdownParser();
-        $this->cache = new Cache($fileHandler);
     }
 
     protected function loadSettings(): array
@@ -47,18 +38,18 @@ abstract class BaseController
     {
         http_response_code(404);
         echo '<!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="' . __('lang.attr') . '">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>頁面不存在</title>
+    <title>' . __('base.error_404.title') . '</title>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
     <main>
-        <h1>頁面不存在</h1>
-        <p>抱歉，您尋找的頁面不存在。</p>
-        <p><a href="/">返回首頁</a></p>
+        <h1>' . __('base.error_404.heading') . '</h1>
+        <p>' . __('base.error_404.message') . '</p>
+        <p><a href="/">' . __('base.error_404.back_home') . '</a></p>
     </main>
 </body>
 </html>';

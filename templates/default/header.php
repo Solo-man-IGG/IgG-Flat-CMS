@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="<?php echo __('lang.attr'); ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -84,7 +84,7 @@
                 <a href="/"><?php echo htmlspecialchars($siteTitle ?? 'My Site', ENT_QUOTES, 'UTF-8'); ?></a>
             </div>
             <?php if ($navStyle === 'hamburger'): ?>
-            <button class="hamburger-btn" onclick="var btn=this;var menu=document.querySelector('.nav-menu');menu.classList.toggle('open');btn.classList.toggle('active');btn.textContent=btn.classList.contains('active')?'×':'☰';btn.setAttribute('aria-expanded',menu.classList.contains('open'))" aria-label="選單" aria-expanded="false">☰</button>
+            <button class="hamburger-btn" onclick="var btn=this;var menu=document.querySelector('.nav-menu');menu.classList.toggle('open');btn.classList.toggle('active');btn.textContent=btn.classList.contains('active')?'×':'☰';btn.setAttribute('aria-expanded',menu.classList.contains('open'))" aria-label="<?php echo __('header.nav.aria_label'); ?>" aria-expanded="false">☰</button>
             <?php endif; ?>
             <ul class="nav-menu">
                 <?php if (isset($menuItems) && is_array($menuItems)): ?>
@@ -107,7 +107,7 @@
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
-                <li><a href="/contact">聯絡我們</a></li>
+                <li><a href="/contact"><?php echo __('header.nav.contact'); ?></a></li>
             </ul>
         </nav>
     </header>

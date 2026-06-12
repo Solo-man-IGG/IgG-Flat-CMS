@@ -1,7 +1,5 @@
 <?php
 
-defined("CMS_ENTRY") or die("Direct access not allowed.");
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統
@@ -11,6 +9,7 @@ defined("CMS_ENTRY") or die("Direct access not allowed.");
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../libs/functions.php';
 
 use CMS\Auth;
 use CMS\FileHandler;
@@ -31,7 +30,7 @@ $contactHandler = new ContactHandler($fileHandler, $mailer);
 // Require authentication
 $auth->requireAuth();
 
-$pageTitle = '留言管理';
+$pageTitle = __('admin.messages.page_title');
 $currentPage = 'messages';
 $username = $auth->getUsername();
 
@@ -45,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Validate CSRF token
     if (!$auth->validateCsrfToken($csrfToken)) {
-        $error = 'CSRF 驗證失敗，請重新整理頁面後再試。';
+        $error = __('admin.messages.error.csrf');
     } else {
         try {
             switch ($action) {
@@ -53,9 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $filename = $_POST['filename'] ?? '';
                     if ($filename) {
                         if ($contactHandler->markAsReplied($filename)) {
-                            $message = '留言已標記為已回覆。';
+                            $message = __('admin.messages.message.marked_replied');
                         } else {
-                            $error = '操作失敗。';
+                            $error = __('admin.messages.error.operation_failed_short');
                         }
                     }
                     break;
@@ -64,9 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $filename = $_POST['filename'] ?? '';
                     if ($filename) {
                         if ($contactHandler->deleteMessage($filename)) {
-                            $message = '留言已刪除。';
+                            $message = __('admin.messages.message.deleted');
                         } else {
-                            $error = '操作失敗。';
+                            $error = __('admin.messages.error.operation_failed_short');
                         }
                     }
                     break;
@@ -81,20 +80,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if ($msg) {
                             if ($mailer->sendReply($msg['email'], $msg['name'], $replyBody)) {
                                 $contactHandler->markAsReplied($filename);
-                                $message = '回覆已發送。';
+                                $message = __('admin.messages.message.reply_sent');
                             } else {
-                                $error = '發送回覆失敗，請檢查郵件設定。';
+                                $error = __('admin.messages.error.reply_failed');
                             }
                         } else {
-                            $error = '找不到留言。';
+                            $error = __('admin.messages.error.not_found');
                         }
                     } else {
-                        $error = '請填寫回覆內容。';
+                        $error = __('admin.messages.error.reply_empty');
                     }
                     break;
             }
         } catch (\Exception $e) {
-            $error = '操作失敗：' . $e->getMessage();
+            $error = __('admin.messages.error.operation_failed', $e->getMessage());
         }
     }
 }
@@ -110,7 +109,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
 ?>
 
     <div class="admin-content">
-        <h1>留言管理</h1>
+        <h1><?php echo __('admin.messages.heading'); ?></h1>
         
         <?php if ($message): ?>
             <div class="alert alert-success"><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></div>
@@ -122,22 +121,22 @@ require __DIR__ . '/../templates/admin/sidebar.php';
         
         <?php if (!$mailerConfigured): ?>
             <div class="alert alert-error">
-                郵件功能尚未設定。請前往 <a href="/admin/settings">系統設定</a> 配置 SMTP 設定以啟用回覆功能。
+                <?php echo __('admin.messages.warning.mail_not_configured'); ?>
             </div>
         <?php endif; ?>
         
         <div class="card">
-            <h3>留言列表</h3>
+            <h3><?php echo __('admin.messages.list.title'); ?></h3>
             <?php if (!empty($messages)): ?>
                 <table>
                     <thead>
                         <tr>
-                            <th>姓名</th>
-                            <th>電子郵件</th>
-                            <th>主題</th>
-                            <th>日期</th>
-                            <th>狀態</th>
-                            <th>操作</th>
+                            <th><?php echo __('admin.messages.list.col_name'); ?></th>
+                            <th><?php echo __('admin.messages.list.col_email'); ?></th>
+                            <th><?php echo __('admin.messages.list.col_subject'); ?></th>
+                            <th><?php echo __('admin.messages.list.col_date'); ?></th>
+                            <th><?php echo __('admin.messages.list.col_status'); ?></th>
+                            <th><?php echo __('admin.messages.list.col_actions'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -153,20 +152,20 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                                 <td><?php echo htmlspecialchars($msg['created_at'], ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td>
                                     <?php if ($msg['replied']): ?>
-                                        <span style="color: #10b981;">已回覆</span>
+                                        <span style="color: #10b981;"><?php echo __('admin.messages.list.status_replied'); ?></span>
                                     <?php else: ?>
-                                        <span style="color: #f59e0b;">未回覆</span>
+                                        <span style="color: #f59e0b;"><?php echo __('admin.messages.list.status_unreplied'); ?></span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <button class="btn" onclick="showReplyModal('<?php echo htmlspecialchars($msg['filename'], ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($msg['name'], ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($msg['email'], ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($msg['subject'], ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($msg['message'], ENT_QUOTES, 'UTF-8'); ?>')">回覆</button>
+                                    <button class="btn" onclick="showReplyModal('<?php echo htmlspecialchars($msg['filename'], ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($msg['name'], ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($msg['email'], ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($msg['subject'], ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($msg['message'], ENT_QUOTES, 'UTF-8'); ?>')"><?php echo __('admin.messages.list.reply'); ?></button>
                                     
                                     <?php if (!$msg['replied']): ?>
                                         <form method="POST" style="display: inline;">
                                             <?php echo $csrfField; ?>
                                             <input type="hidden" name="action" value="mark_replied">
                                             <input type="hidden" name="filename" value="<?php echo htmlspecialchars($msg['filename'], ENT_QUOTES, 'UTF-8'); ?>">
-                                            <button type="submit" class="btn btn-success">標記已回覆</button>
+                                            <button type="submit" class="btn btn-success"><?php echo __('admin.messages.list.mark_replied'); ?></button>
                                         </form>
                                     <?php endif; ?>
                                     
@@ -174,7 +173,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                                         <?php echo $csrfField; ?>
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="filename" value="<?php echo htmlspecialchars($msg['filename'], ENT_QUOTES, 'UTF-8'); ?>">
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('確定要刪除此留言？');">刪除</button>
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('<?php echo __('admin.messages.list.confirm_delete'); ?>');"><?php echo __('admin.messages.list.delete'); ?></button>
                                     </form>
                                 </td>
                             </tr>
@@ -182,18 +181,18 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                     </tbody>
                 </table>
             <?php else: ?>
-                <p>目前沒有留言。</p>
+                <p><?php echo __('admin.messages.list.empty'); ?></p>
             <?php endif; ?>
         </div>
     </div>
     
     <div id="replyModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
         <div style="background: white; padding: 2rem; border-radius: 0.5rem; max-width: 600px; margin: 100px auto; max-height: 80vh; overflow-y: auto;">
-            <h3>回覆留言</h3>
+            <h3><?php echo __('admin.messages.modal.title'); ?></h3>
             <div style="margin-bottom: 1rem; padding: 1rem; background: #f9fafb; border-radius: 0.375rem;">
-                <p><strong>來自：</strong> <span id="modalName"></span> (<span id="modalEmail"></span>)</p>
-                <p><strong>主題：</strong> <span id="modalSubject"></span></p>
-                <p><strong>原始訊息：</strong></p>
+                <p><strong><?php echo __('admin.messages.modal.from_label', '<span id="modalName"></span> (<span id="modalEmail"></span>)'); ?></strong></p>
+                <p><strong><?php echo __('admin.messages.modal.subject_label', '<span id="modalSubject"></span>'); ?></strong></p>
+                <p><strong><?php echo __('admin.messages.modal.original_message_label'); ?></strong></p>
                 <p id="modalMessage" style="white-space: pre-wrap; background: white; padding: 0.5rem; border-radius: 0.25rem;"></p>
             </div>
             <form method="POST">
@@ -202,12 +201,12 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                 <input type="hidden" name="filename" id="modalFilename">
                 
                 <div class="form-group">
-                    <label for="reply_body">回覆內容 *</label>
+                    <label for="reply_body"><?php echo __('admin.messages.modal.reply_body'); ?></label>
                     <textarea id="reply_body" name="reply_body" rows="10" required></textarea>
                 </div>
                 
-                <button type="submit" class="btn">發送回覆</button>
-                <button type="button" class="btn btn-danger" onclick="hideReplyModal()">取消</button>
+                <button type="submit" class="btn"><?php echo __('admin.messages.modal.send'); ?></button>
+                <button type="button" class="btn btn-danger" onclick="hideReplyModal()"><?php echo __('admin.messages.modal.cancel'); ?></button>
             </form>
         </div>
     </div>

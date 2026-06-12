@@ -1,32 +1,32 @@
 # IgG Flat CMS - Lightweight Flat-File CMS
 
-一個基於 PHP 8.1+ 的輕量級 IgG Flat CMS - Lightweight Flat-File CMS，無需資料庫，完全依賴檔案系統。
+A lightweight PHP 8.1+ flat-file CMS. No database required — everything is file-based.
 
-這套系統的誕生其實很簡單。
+## Why This CMS?
 
-因為我老婆不會用 Markdown，也不想碰 FTP，每次要改網站內容都要麻煩我。  
-於是我就想：「乾脆做一個她看得懂、會操作的後台好了。」
+This is not a "built for open-source" project.
 
-沒想到從一個簡單的後台開始，越做越順手，功能也越加越多……  
-最後不小心做出了一套完整的 **純檔案 Flat CMS**（僅 1MB、零資料庫）。
+It all started because my wife doesn't use Markdown or FTP, so every time she needed to update the website, she had to ask me.  
+I began by writing a simple admin panel, then kept improving it as I used it.
 
-我自己用得很順手，覺得應該也會幫到很多跟我一樣、或跟老婆一樣的人，  
-所以決定用 **MIT 授權** 開源出來，供有緣人自由使用。
+I spent an entire week on it, and it grew far more complete than I expected.  
+When I was about to push it to GitHub, I realized — **the entire project was under 1MB**. Even I was surprised.
 
-沒有複雜的商業模式，沒有隱藏的聯盟行銷，純粹「好用就分享」。
+The result is a genuinely lightweight, practical, zero-database flat-file CMS.  
+No complicated business model, no hidden affiliate marketing — just something useful, shared.
 
-## 系統需求
+## Requirements
 
-- PHP 8.1 或更高版本
-- Apache 或 Nginx 網頁伺服器
-- mod_rewrite（Apache）或等效的 URL 重寫功能
-- Composer（用於安裝依賴）
+- PHP 8.1 or higher
+- Apache or Nginx web server
+- mod_rewrite (Apache) or equivalent URL rewriting
+- Composer (for installing dependencies)
 
-> ⚠️ **重要：Apache 用戶必讀**
+> ⚠️ **Important for Apache users**
 >
-> 本專案的 `.htaccess` 負責保護敏感目錄與實現漂亮網址，**Apache 必須允許執行 `.htaccess`**：
+> This project uses `.htaccess` to protect sensitive directories and enable clean URLs. **Apache must allow `.htaccess` execution:**
 >
-> 在 Apache 設定檔中（`/etc/apache2/sites-available/000-default.conf` 或 vhost 設定），需為專案目錄加上：
+> In your Apache config (`/etc/apache2/sites-available/000-default.conf` or vhost config), add to the project directory block:
 >
 > ```apache
 > <Directory /path/to/html/>
@@ -36,35 +36,37 @@
 > </Directory>
 > ```
 >
-> 若無法設定（如虛擬主機未開放），則 `.htaccess` 完全無效，敏感目錄（`vendor/`、`content/`、`libs/` 等）將可直接被 HTTP 存取，存在安全風險。
+> If `AllowOverride` cannot be enabled (e.g., shared hosting), `.htaccess` will be ignored, exposing sensitive directories (`vendor/`, `content/`, `libs/`, etc.) via HTTP.
 
-## 功能特色
+## Features
 
-- **無資料庫設計**：所有內容以 Markdown 檔案儲存
-- **部落格系統**：支援文章發布、標籤、草稿、標籤篩選、分頁瀏覽（每頁 12 篇）
-- **產品管理**：支援產品目錄、價格（支援文字如「客製報價」）、庫存管理、拖曳排序
-- **靜態頁面**：自定義靜態頁面
-- **聯絡表單**：內建聯絡表單與留言管理（含回覆功能）
-- **檔案管理**：圖片上傳、拖曳上傳、檔案瀏覽器（整合 EasyMDE）
-- **內部文件**：公司內部知識庫／文件管理
-- **瀏覽計數器**：自動記錄頁面、文章、產品瀏覽次數
-- **主題自訂**：後台可自訂主題顏色與導覽樣式
-- **後台管理**：完整的後台介面進行內容管理
-- **自動安裝依賴**：首次執行自動偵測並執行 `composer install`，無需手動下指令
-- **響應式設計**：支援 RWD 行動裝置瀏覽
-- **安全性**：CSRF 防護、bcrypt 密碼加密、Path Traversal 防護、登入暴力破解防護、Session 安全設定
+- **No database** — all content stored as Markdown files
+- **Blog system** — posts, tags, drafts, tag filtering, pagination (12 per page)
+- **Product management** — catalog, pricing (supports text like "Custom Quote"), stock, drag-and-drop sorting
+- **Static pages** — custom pages with Markdown content
+- **Contact form** — built-in form with message management and reply functionality
+- **File management** — image upload, drag & drop, file browser (EasyMDE integration)
+- **Internal documents** — company knowledge base / document management
+- **Visit counter** — automatically tracks page, blog, and product views
+- **Theme customization** — customize colors and navigation style from admin panel
+- **Admin panel** — full-featured backend for content management
+- **Multi-language** — YAML-based language pack system, one-click switching, extendable to any language (Traditional Chinese and English included), with per-string overrides
+- **Auto-install dependencies** — automatically runs `composer install` on first access
+- **Responsive design** — mobile-friendly RWD layout
+- **Security** — CSRF protection, bcrypt password hashing, path traversal protection, brute-force login protection, secure session settings
 
-## 安裝步驟
+## Installation
 
-### 1. 下載專案
+### 1. Download
 
 ```bash
-git clone https://github.com/Solo-man-IGG/IgG-Flat-CMS
+git clone <repository-url>
+cd div_html
 ```
 
-### 2. 設定權限
+### 2. Set permissions
 
-確保以下目錄具有寫入權限：
+Ensure the following directories are writable:
 
 ```bash
 chmod -R 755 content
@@ -73,92 +75,92 @@ chmod -R 755 logs
 chmod -R 755 uploads
 ```
 
-### 3. 配置網頁伺服器
+### 3. Web server configuration
 
 #### Apache
 
-**1. 啟用必要模組：**
+**1. Enable required modules:**
 
 ```bash
 sudo a2enmod rewrite headers expires
 sudo systemctl restart apache2
 ```
 
-**2. 確認 AllowOverride 已開啟：**
+**2. Verify AllowOverride is enabled:**
 
-編輯 Apache 虛擬主機設定（通常位於 `/etc/apache2/sites-available/000-default.conf` 或 `/etc/httpd/conf.d/`），確定專案目錄區塊包含 `AllowOverride All`：
+Edit your Apache vhost config (usually `/etc/apache2/sites-available/000-default.conf` or `/etc/httpd/conf.d/`) and ensure the project directory block includes `AllowOverride All`:
 
 ```apache
-<Directory /path/to/html/>
+<Directory /path/to/div_html/>
     Options Indexes FollowSymLinks
     AllowOverride All
     Require all granted
 </Directory>
 ```
 
-若使用 cPanel、Cloudways 等虛擬主機，`AllowOverride All` 通常已預設啟用，可略過此步驟。
+If using cPanel, Cloudways, or similar hosting, `AllowOverride All` is typically enabled by default.
 
-**3. 使用 .htaccess：**
+**3. Using .htaccess:**
 
-專案內附 `.htaccess` 已包含所有重寫、快取及安全規則。上一步的 `AllowOverride All` 即允許 Apache 讀取這些規則。
+The included `.htaccess` contains all rewrite, cache, and security rules. The `AllowOverride All` directive above allows Apache to read these rules.
 
-> 若因環境限制無法開啟 `AllowOverride`，請參考下方的 Nginx 範例，直接在 Apache vhost 中撰寫等效規則（將 `location` 改寫為對應的 `<Directory>` 與 `RewriteRule`）。
+> If your environment does not allow `AllowOverride`, refer to the Nginx example below and translate the rules into equivalent Apache vhost directives.
 
 #### Nginx
 
-在 Nginx 配置的 `server` 區塊中添加以下規則：
+Add the following rules to your Nginx `server` block:
 
 ```nginx
 server {
     listen 80;
     server_name your-domain.com;
-    root /path/to/html;
+    root /path/to/div_html;
     index index.php;
 
-    # 阻擋敏感目錄
+    # Block sensitive directories
     location ~ ^/(content|cache|libs|vendor|logs)/ {
         deny all;
     }
 
-    # 允許上傳目錄的圖片存取，但阻擋可執行檔
+    # Allow image access in uploads, block executable files
     location /uploads/ {
         location ~ \.(php|phtml|php3|php4|php5|phar|pl|cgi|py|rb|asp|aspx|sh|bat|exe)$ {
             deny all;
         }
     }
 
-    # 阻擋直接存取設定檔
+    # Block direct config file access
     location = /composer.json  { deny all; }
     location = /composer.lock  { deny all; }
     location = /composer.json  { deny all; }
     location = /.env           { deny all; }
     location ~ \.md$           { deny all; }
 
-    # URL 重寫 — 將所有非檔案/目錄請求交給 index.php
+    # URL rewrite — pass all non-file/directory requests to index.php
     location / {
         try_files $uri $uri/ /index.php?$query_string;
     }
 
-    # 瀏覽器快取（靜態資源）
+    # Browser cache for static assets
     location ~ \.(css|js|jpg|jpeg|png|gif|webp|ico|woff2)$ {
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
 
-    # PHP 處理
+    # PHP processing
     location ~ \.php$ {
         include fastcgi_params;
-        fastcgi_pass unix:/var/run/php/php8.4-fpm.sock;  # 請依實際 PHP 版本調整
+        fastcgi_pass unix:/var/run/php/php8.4-fpm.sock;  # Adjust to your PHP version
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     }
 }
 ```
 
-### 4. 新增管理員帳號(預設 admin:admin123)
+### 4. Create an admin account
 
-開啟瀏覽器訪問 `/admin`，依畫面指示建立第一個管理員帳號。
+Visit `/admin` in your browser and follow the on-screen instructions to create the first admin account.
 
-或者手動編輯 `content/config/users.json` 加入帳號：
+Alternatively, manually edit `content/config/users.json`:
 
 ```json
 [
@@ -173,56 +175,63 @@ server {
 ]
 ```
 
-密碼可使用以下 PHP 指令產生：
+Generate a password hash with:
 
 ```bash
 php -r "echo password_hash('your-password', PASSWORD_BCRYPT, ['cost' => 12]);"
 ```
 
-### 5. 訪問網站
+### 5. Access the site
 
-開啟瀏覽器訪問您的網站。後台路徑：`/admin`
+Open your browser and visit your site. Admin panel: `/admin`
 
-## 目錄結構
+## Directory Structure
 
 ```
 /
-├── composer.json             # 套件依賴與 Autoload 設定
-├── .env                      # 環境變數（SMTP 密碼等，不進版本控制）
+├── composer.json             # Dependencies and autoload config
+├── .env                      # Environment variables (SMTP password, etc., not in VCS)
 ├── .gitignore
-├── .htaccess                 # Apache 重寫與安全規則
-├── index.php                 # 唯一入口
-├── admin/                    # 後台管理頁面
-│   ├── login.php             # 登入頁面
-│   ├── dashboard.php         # 儀表板
-│   ├── pages.php             # 頁面管理
-│   ├── blog.php              # 文章管理
-│   ├── products.php          # 產品管理
-│   ├── files.php             # 檔案管理
-│   ├── messages.php          # 留言管理
-│   ├── documents.php         # 內部文件管理
-│   ├── settings.php          # 系統設定
-│   ├── themes.php            # 主題自訂
-│   ├── users.php             # 使用者管理
-│   ├── signature.php         # 數位簽章
+├── .htaccess                 # Apache rewrite & security rules
+├── index.php                 # Single entry point
+├── admin/                    # Admin pages
+│   ├── login.php             # Login page
+│   ├── dashboard.php         # Dashboard
+│   ├── pages.php             # Page management
+│   ├── blog.php              # Blog management
+│   ├── products.php          # Product management
+│   ├── files.php             # File management
+│   ├── messages.php          # Message management
+│   ├── documents.php         # Internal documents
+│   ├── settings.php          # System settings
+│   ├── themes.php            # Theme customization
+│   ├── users.php             # User management
+│   ├── signature.php         # Signature
 │   └── logout.php
-├── content/                  # 內容目錄
-│   ├── blog/                 # .md 文章
-│   ├── products/             # .md 產品
-│   ├── pages/                # .md 靜態頁面
-│   ├── documents/            # .md 內部文件
-│   ├── messages/             # .json 聯絡表單留言
-│   ├── counters/             # .json 瀏覽計數
-│   └── config/               # 配置檔案
-│       ├── menu.yaml         # 選單設定
-│       ├── settings.json     # 郵件、網站標題等（不進版本控制）
-│       ├── theme.json        # 主題顏色設定
-│       ├── users.json        # 後台帳號
-│       └── signature.txt     # 數位簽章文字
-├── cache/                    # 快取目錄
-│   └── pages/                # HTML 快取
-├── logs/                     # 系統錯誤與日誌
-├── libs/                     # 核心類別庫
+├── content/                  # Content directory
+│   ├── blog/                 # .md blog posts
+│   ├── products/             # .md products
+│   ├── pages/                # .md static pages
+│   ├── documents/            # .md internal documents
+│   ├── messages/             # .json contact messages
+│   ├── counters/             # .json visit counters
+│   └── config/               # Configuration files
+│       ├── menu.yaml         # Menu settings
+│       ├── settings.json     # Mail, site title, etc. (not in VCS)
+│       ├── theme.json        # Theme color config
+│       ├── users.json        # Admin accounts
+│       └── signature.txt     # Signature text
+├── cache/                    # Cache directory
+│   └── pages/                # HTML cache
+├── data/                     # Language data
+│   ├── default_lang.yaml     # Default language (English base)
+│   ├── custom_lang.yaml      # User custom overrides
+│   ├── active_lang           # Active language code
+│   └── lang/                 # Language packs
+│       ├── en.yaml           # English language pack
+│       └── zh-TW.yaml        # Traditional Chinese language pack
+├── logs/                     # Error logs
+├── libs/                     # Core class libraries
 │   ├── Router.php
 │   ├── FileHandler.php
 │   ├── MarkdownParser.php
@@ -239,8 +248,8 @@ php -r "echo password_hash('your-password', PASSWORD_BCRYPT, ['cost' => 12]);"
 │       ├── ProductController.php
 │       ├── ContactController.php
 │       └── AdminController.php
-├── templates/                # 模板目錄
-│   ├── default/              # 前台模板
+├── templates/                # Template directory
+│   ├── default/              # Frontend templates
 │   │   ├── header.php
 │   │   ├── footer.php
 │   │   ├── page.php
@@ -251,172 +260,202 @@ php -r "echo password_hash('your-password', PASSWORD_BCRYPT, ['cost' => 12]);"
 │   │   ├── contact.php
 │   │   ├── style.css
 │   │   └── custom.css
-│   └── admin/                # 後台模板
+│   └── admin/                # Admin templates
 │       ├── header.php
 │       ├── footer.php
 │       └── sidebar.php
-├── uploads/                  # 圖片上傳目錄
-└── vendor/                   # Composer 依賴（不進版本控制）
+├── uploads/                  # Image uploads directory
+└── vendor/                   # Composer dependencies (not in VCS)
 ```
 
-## 內容格式
+## Content Format
 
-### 部落格 Frontmatter
+### Blog Frontmatter
 
 ```markdown
 ---
-title: 文章標題
+title: Post Title
 slug: article-slug
 date: 2026-06-01
-author: 作者名稱
+author: Author Name
 published: true
 tags:
-  - 標籤1
-  - 標籤2
+  - tag1
+  - tag2
 banner: https://example.com/banner.jpg
 ---
 
-這是文章內容，支援 Markdown 語法。
+This is the post content, supports Markdown syntax.
 ```
 
-部落格列表支援依標籤篩選與分頁（每頁 12 篇）。
+Blog listing supports tag filtering and pagination (12 posts per page).
 
-### 產品 Frontmatter
+### Product Frontmatter
 
 ```markdown
 ---
-title: 產品名稱
+title: Product Name
 slug: product-slug
 date: 2026-06-01
-price: "NT$ 1,500 起"
-description: 產品簡短描述
+price: "NT$ 1,500起"
+description: Short product description
 tags:
-  - 標籤1
-  - 標籤2
+  - tag1
+  - tag2
 image: https://example.com/image.jpg
 sort_order: 1
 ---
 
-產品詳細內容...
+Detailed product description...
 ```
 
-> `price` 支援文字格式，例如 `"客製報價"`、`"NT$ 1,500 起"`。
+> `price` supports text formats, e.g. `"Custom Quote"`, `"NT$ 1,500 up"`.
 
-## 後台管理
+## Admin Panel
 
-登入後台：`/admin`
+Login at `/admin/login`
 
-後台功能包括：
+Available admin features:
 
-| 功能 | 說明 |
-|------|------|
-| 儀表板 | 查看系統統計資訊（文章、產品、頁面、檔案數量） |
-| 頁面管理 | 新增、編輯、刪除靜態頁面 |
-| 文章管理 | 發布、編輯、刪除部落格文章（含標籤篩選、分頁瀏覽、Banner） |
-| 產品管理 | 管理產品目錄、價格、庫存、排序 |
-| 檔案管理 | 上傳／刪除圖片、拖曳上傳、複製 URL |
-| 留言管理 | 查看聯絡表單留言並回覆 |
-| 內部文件 | 公司內部知識庫／文件管理 |
-| 使用者管理 | 新增、編輯、刪除管理員帳號 |
-| 系統設定 | 配置網站標題、選單、郵件設定、首頁 |
-| 主題設定 | 自訂主題顏色與導覽樣式 |
-| 數位簽章 | 設定數位簽章文字 |
+| Feature | Description |
+|---------|-------------|
+| Dashboard | System overview (posts, products, pages, messages count) |
+| Pages | Create, edit, delete static pages |
+| Blog | Publish, edit, delete blog posts (tag filter, pagination, banner) |
+| Products | Manage product catalog, pricing, stock, sort order |
+| Files | Upload/delete images, drag & drop, copy URL |
+| Messages | View contact form messages and reply |
+| Documents | Internal knowledge base / document management |
+| Users | Create, edit, delete admin accounts |
+| Settings | Configure site title, menu, mail, homepage |
+| Themes | Customize colors and navigation style |
+| Language | One-click language switching, add language packs, override individual strings |
+| Signature | Set post signature text |
 
-## 郵件設定
+## Multi-Language
 
-### 方式一：後台設定
+The system uses a three-tier language architecture:
 
-在「系統設定 → 郵件設定」頁面配置 SMTP：
+```
+default_lang.yaml  →  data/lang/{lang}.yaml  →  custom_lang.yaml
+(English base)        (language pack)           (user overrides)
+```
 
-- SMTP 主機
-- SMTP 埠號（預設 587）
-- SMTP 使用者名稱
-- SMTP 密碼
-- 寄件者信箱
-- 寄件者名稱
+### One-Click Language Switching
 
-### 方式二：環境變數（推薦）
+In the admin panel under "Language", use the dropdown at the top to select a language, then click "Apply". The entire site (frontend and admin) switches immediately.
 
-為避免 SMTP 密碼寫入版本控制，可在專案根目錄建立 `.env` 檔案（已被 `.gitignore` 排除）：
+### Adding a New Language
+
+Create a `.yaml` file in `data/lang/`. The first line defines the display name:
+
+```yaml
+lang.display_name: 日本語
+lang.attr: ja
+# ... all translation keys
+```
+
+The system auto-detects it and adds it to the language dropdown. See `zh-TW.yaml` for reference.
+
+### Custom Overrides
+
+On the "Language" page, you can manually override individual strings (shown with a blue border). These overrides persist across language switches, useful for tweaking specific terms or fixing translations.
+
+## Mail Configuration
+
+### Method 1: Admin Panel
+
+Configure SMTP under "Settings → Mail Settings":
+
+- SMTP Host
+- SMTP Port (default 587)
+- SMTP Username
+- SMTP Password
+- Sender Email
+- Sender Name
+
+### Method 2: Environment Variable (Recommended)
+
+To avoid committing the SMTP password to version control, create a `.env` file in the project root (excluded by `.gitignore`):
 
 ```bash
 MAIL_PASSWORD=your-smtp-password
 ```
 
-環境變數的優先度高於後台設定值。
+Environment variables take precedence over admin panel values.
 
-### 通知收件者
+### Notification Recipient
 
-聯絡表單的通知郵件會自動寄送到「寄件者信箱」設定的地址。
+Contact form notifications are sent to the email address configured in "Sender Email".
 
-## 快取管理
+## Cache Management
 
-系統會自動快取已解析的 Markdown 內容以提高效能。
+The system automatically caches parsed Markdown content for performance.
 
-- **文章快取**：新增/編輯/刪除文章時，自動清除該文章與列表快取
-- **產品快取**：新增/編輯/刪除產品時，自動清除該產品與列表快取
-- **頁面快取**：更新靜態頁面時，自動清除該頁面快取
+- **Blog cache** — automatically cleared when posts are created, edited, or deleted
+- **Product cache** — automatically cleared when products are created, edited, or deleted
+- **Page cache** — automatically cleared when static pages are updated
 
-您也可以在後台的「系統設定」頁面手動清除所有快取。
+You can also manually clear all cache from the "Settings" page in the admin panel.
 
-## 安全性
+## Security
 
-- **路徑遍歷防護**：所有檔案操作透過 `FileHandler` 類別統一處理，多層驗證（null byte 清除、realpath 解析、basepath 前綴檢查）
-- **密碼儲存**：使用 bcrypt + cost 12 加密儲存
-- **CSRF 防護**：所有管理操作與聯絡表單皆有 CSRF Token 驗證
-- **Session 安全**：`HttpOnly` + `Secure` + `SameSite=Lax`，具備閒置逾時（1 小時）與絕對逾時（4 小時）
-- **登入防護**：5 次失敗鎖定 15 分鐘，防止暴力破解
-- **XSS 防護**：
-  - 前端模板全面使用 `htmlspecialchars()` 輸出跳脫
-  - Markdown 解析關閉 Safe Mode 以支援 HTML 表格等進階語法（Parsedown 本身已過濾危險標籤）
-  - YAML frontmatter 使用 `Yaml::dump()` 建構，杜絕注入
-- **敏感目錄保護**：`content/`、`cache/`、`libs/`、`vendor/`、`logs/` 透過 `.htaccess`（Apache）或 `location` 規則（Nginx）阻擋直接 HTTP 存取；**Apache 用戶須確認 AllowOverride 已開啟**，否則 `.htaccess` 不會生效
-- **檔案上傳安全**：白名單副檔名過濾、檔名清理、MIME 類型限制圖片為主
-- **錯誤處理**：生產環境關閉錯誤顯示，錯誤訊息僅寫入日誌
-- **SMTP 密碼保護**：可透過環境變數 `MAIL_PASSWORD` 設定，避免寫入版本控制
+- **Path traversal protection** — all file operations handled by `FileHandler` with multi-layer validation (null byte stripping, realpath resolution, basepath prefix check)
+- **Password storage** — bcrypt with cost 12
+- **CSRF protection** — all admin operations and contact forms include CSRF token validation
+- **Session security** — `HttpOnly` + `Secure` + `SameSite=Lax`, idle timeout (1 hour) and absolute timeout (4 hours)
+- **Login protection** — 5 failed attempts lock out for 15 minutes, preventing brute-force attacks
+- **XSS protection**:
+  - All frontend templates use `htmlspecialchars()` for output escaping
+  - Markdown parser runs with Safe Mode off to support advanced syntax like HTML tables (Parsedown filters dangerous tags)
+  - YAML frontmatter built with `Yaml::dump()`, preventing injection
+- **Sensitive directory protection** — `content/`, `cache/`, `libs/`, `vendor/`, `logs/` blocked via `.htaccess` (Apache) or `location` rules (Nginx); **Apache users must ensure AllowOverride is enabled**
+- **File upload security** — whitelist extension filtering, filename sanitization, MIME type restricted to images
+- **Error handling** — production errors suppressed, logged to file only
+- **SMTP password protection** — can be set via `MAIL_PASSWORD` environment variable, avoiding VCS exposure
 
-## 常見問題
+## Troubleshooting
 
-### 開啟後出現 500 Internal Server Error
+### 500 Internal Server Error
 
-**原因**：多為 PHP Fatal Error，常見情況是：
+**Causes** (most common):
 
-- 未安裝 Composer 依賴 → 刪除 `vendor/` 目錄後重新整理即可自動安裝
-- `notFound()` 權限問題 → 首次開啟請瀏覽首頁 `/`（而非 `/html/`）建立路由快取
-- PHP 版本低於 8.1 → 請升級至 PHP 8.1+
+- Composer dependencies not installed → delete `vendor/` and refresh to auto-install
+- `notFound()` permission issue → visit homepage `/` first (not `/div_html/`) to create route cache
+- PHP version below 8.1 → upgrade to PHP 8.1+
 
-### 訪問 `/blog`、`/contact` 等網址出現 404
+### `/blog`, `/contact` URLs return 404
 
-**原因**：Apache 的 mod_rewrite 未啟用，或 `.htaccess` 未被讀取。
+**Causes**: Apache `mod_rewrite` not enabled, or `.htaccess` not being read.
 
-- 確認已執行 `sudo a2enmod rewrite` 並重啟 Apache
-- 確認 Apache vhost 中 `AllowOverride` 未被設為 `None`
+- Run `sudo a2enmod rewrite` and restart Apache
+- Verify `AllowOverride` is not set to `None` in your Apache vhost
 
-### 上傳圖片後無法存取或執行 PHP 檔案
+### Uploaded images inaccessible, or PHP files execute in uploads
 
-**原因**：`uploads/.htaccess` 未被讀取（Apache 未開啟 `AllowOverride`），或使用 Nginx 時未加入 `location` 規則。參考上方 Nginx 配置範例。
+**Causes**: `uploads/.htaccess` not being read (Apache `AllowOverride` disabled), or Nginx `location` rules not configured. See the Nginx config example above.
 
-### 聯絡表單無法寄信
+### Contact form cannot send email
 
-**原因**：SMTP 未設定。請在後台「系統設定 → 郵件設定」填入 SMTP 資訊，或在專案根目錄建立 `.env` 檔案：
+**Causes**: SMTP not configured. Set up SMTP in the admin panel under "Settings → Mail Settings", or create a `.env` file:
 
 ```bash
 MAIL_PASSWORD=your-smtp-password
 ```
 
-## 技術棧
+## Tech Stack
 
 - PHP 8.1+
 - Composer (PSR-4 Autoloading)
-- Parsedown (Markdown 解析，Safe Mode 關閉以支援 HTML)
-- Symfony YAML (YAML 解析/輸出)
-- PHPMailer (郵件發送)
-- EasyMDE (後台 Markdown 編輯器，CDN 載入)
+- Parsedown (Markdown parsing, Safe Mode off for HTML support)
+- Symfony YAML (YAML parsing/dumping)
+- PHPMailer (email sending)
+- EasyMDE (admin Markdown editor, loaded via CDN)
 
-## 授權
+## License
 
 MIT License
 
-## 支援
+## Support
 
-如有問題或建議，請提交 Issue 或 Pull Request。
+For issues or suggestions, please submit an Issue or Pull Request.

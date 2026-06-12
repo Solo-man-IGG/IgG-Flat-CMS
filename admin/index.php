@@ -1,7 +1,5 @@
 <?php
 
-defined("CMS_ENTRY") or die("Direct access not allowed.");
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統

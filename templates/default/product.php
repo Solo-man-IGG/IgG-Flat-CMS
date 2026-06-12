@@ -8,7 +8,7 @@
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-$pageTitle = $product['title'] ?? '產品';
+$pageTitle = $product['title'] ?? __('product.page_title_default');
 $siteTitle = $siteTitle ?? 'My Site';
 $menuItems = $menuItems ?? [];
 require __DIR__ . '/header.php';
@@ -34,10 +34,10 @@ require __DIR__ . '/header.php';
     <?php if (!empty($product['sku']) || !empty($product['stock'])): ?>
         <div class="product-meta">
             <?php if (!empty($product['sku'])): ?>
-                <span><strong>SKU：</strong><?php echo htmlspecialchars($product['sku'], ENT_QUOTES, 'UTF-8'); ?></span>
+                <span><?php echo __('product.sku_label'); ?><?php echo htmlspecialchars($product['sku'], ENT_QUOTES, 'UTF-8'); ?></span>
             <?php endif; ?>
             <?php if (!empty($product['stock'])): ?>
-                <span><strong>庫存：</strong><?php echo htmlspecialchars($product['stock'], ENT_QUOTES, 'UTF-8'); ?></span>
+                <span><?php echo __('product.stock_label'); ?><?php echo htmlspecialchars($product['stock'], ENT_QUOTES, 'UTF-8'); ?></span>
             <?php endif; ?>
         </div>
     <?php endif; ?>

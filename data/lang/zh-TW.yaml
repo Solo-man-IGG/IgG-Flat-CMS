@@ -1,0 +1,471 @@
+lang.display_name: 正體中文
+lang.attr: zh-TW
+home: 返回首頁
+error.title: 系統錯誤
+error.message: 抱歉，系統發生錯誤。請稍後再試。
+header.nav.aria_label: 選單
+header.nav.contact: 聯絡我們
+base.error_404.title: 頁面不存在
+base.error_404.heading: 頁面不存在
+base.error_404.message: 抱歉，您尋找的頁面不存在。
+base.error_404.back_home: 返回首頁
+page.home.welcome: <h1>歡迎使用 IgG CMS</h1>
+page.home.description: '<p>這是一個基於 PHP 8.1+ 的輕量級 IgG Flat CMS - Lightweight Flat-File CMS。</p>'
+page.home.browse_blog: 瀏覽部落格
+page.home.view_products: 查看產品
+page.home.contact_us: 聯絡我們
+page.page_title_default: 頁面
+contact.page_title: 聯絡我們
+contact.heading: 聯絡我們
+contact.form.name: 姓名 *
+contact.form.email: 電子郵件 *
+contact.form.subject: 主題 *
+contact.form.message: 訊息 *
+contact.form.submit: 送出訊息
+contact.error.csrf: CSRF 驗證失敗，請重新整理頁面後再試。
+contact.error.rate_limit: 請勿頻繁送出訊息，請稍後再試。
+contact.error.send_failed: 發送訊息失敗，請稍後再試。
+auth.csrf_error.title: CSRF 驗證失敗
+auth.csrf_error.heading: CSRF 驗證失敗
+auth.csrf_error.message: 請求驗證失敗，請重新整理頁面後再試。
+auth.csrf_error.back_admin: 返回後台
+blog.list.page_title: 部落格
+blog.list.filter_label: 篩選分類：
+blog.list.filter_all: 全部文章
+blog.list.filter_submit: 送出
+blog.list.date_label: '日期：'
+blog.list.author_label: ' | 作者：'
+blog.list.read_more: 閱讀更多 →
+blog.list.empty: 目前沒有文章。
+blog.list.prev_page: '« 上一頁'
+blog.list.next_page: 下一頁 »
+blog.post.page_title_default: 文章
+blog.post.date_label: '日期：'
+blog.post.author_label: ' | 作者：'
+blog.post.tags_label: ' | 標籤：'
+blog.post.related_title: 延伸閱讀
+products.list.page_title: 產品
+products.list.view_details: 查看詳情 →
+products.list.empty: 目前沒有產品。
+product.page_title_default: 產品
+product.sku_label: '<strong>SKU：</strong>'
+product.stock_label: '<strong>庫存：</strong>'
+router.menu_defaults.blog: 部落格
+router.menu_defaults.products: 產品
+menumanager.defaults.blog: 部落格
+menumanager.defaults.products: 產品
+mailer.contact_notification.subject: 新的聯絡表單留言 [%s]：%s
+mailer.contact_notification.email_title: 新的聯絡表單留言
+mailer.contact_notification.heading: 新的聯絡表單留言
+mailer.contact_notification.name_label: '<strong>姓名：</strong>'
+mailer.contact_notification.email_label: '<strong>電子郵件：</strong>'
+mailer.contact_notification.subject_label: '<strong>主題：</strong>'
+mailer.contact_notification.time_label: '<strong>時間：</strong>'
+mailer.contact_notification.message_label: '<strong>訊息內容：</strong>'
+mailer.contact_notification.footer: '<p>此郵件由 IgG Flat CMS - Lightweight Flat-File CMS 自動發送。</p>'
+mailer.reply.subject: 回覆您的留言 - %s
+mailer.reply.email_title: 回覆您的留言
+mailer.reply.heading: 回覆您的留言
+mailer.reply.greeting: '<p>親愛的 %s，</p>'
+mailer.reply.footer_contact: '<p>如果您有任何其他問題，請隨時與我們聯繫。</p>'
+mailer.reply.footer: '<p>此郵件由 IgG Flat CMS - Lightweight Flat-File CMS 發送。</p>'
+admin.login.page_title: 登入 - 後台管理
+admin.login.heading: 後台登入
+admin.login.form.username: 使用者名稱
+admin.login.form.password: 密碼
+admin.login.form.submit: 登入
+admin.login.back_home: 返回首頁
+admin.login.error.csrf: CSRF 驗證失敗，請重新整理頁面後再試。
+admin.login.error.invalid_credentials: 使用者名稱或密碼錯誤。
+admin.login.error.rate_limited: 登入嘗試次數過多，請 %d 分鐘後再試。
+admin.dashboard.page_title: 儀表板
+admin.dashboard.welcome: 歡迎回來，%s
+admin.dashboard.stat_blog_posts: 文章數量
+admin.dashboard.stat_products: 產品數量
+admin.dashboard.stat_pages: 頁面數量
+admin.dashboard.stat_messages: 留言數量
+admin.dashboard.system_info.title: 系統資訊
+admin.dashboard.system_info.col_item: 項目
+admin.dashboard.system_info.col_value: 數值
+admin.dashboard.system_info.php_version: PHP 版本
+admin.dashboard.system_info.server_time: 伺服器時間
+admin.dashboard.system_info.cache_count: 快取檔案數量
+admin.dashboard.system_info.cache_size: 快取大小
+admin.dashboard.quick_actions.title: 快速操作
+admin.dashboard.quick_actions.new_blog: 新增文章
+admin.dashboard.quick_actions.new_product: 新增產品
+admin.dashboard.quick_actions.new_page: 新增頁面
+admin.dashboard.quick_actions.settings: 系統設定
+admin.blog.page_title: 文章管理
+admin.blog.heading: 文章管理
+admin.blog.error.csrf: CSRF 驗證失敗，請重新整理頁面後再試。
+admin.blog.error.empty_fields: 標題和內容不能為空。
+admin.blog.message.deleted: 文章已刪除。
+admin.blog.message.saved: 文章已儲存。
+admin.blog.error.operation_failed: 操作失敗：%s
+admin.blog.error.load_failed: 載入文章失敗：%s
+admin.blog.form.title_edit: 編輯文章
+admin.blog.form.title_new: 新增文章
+admin.blog.form.title: 標題 *
+admin.blog.form.author: 作者
+admin.blog.form.tags: 標籤 (用逗號分隔)
+admin.blog.form.tags_placeholder: 例如：技術, 教程
+admin.blog.form.banner: Banner 圖片 URL
+admin.blog.form.banner_placeholder: /uploads/your-image.jpg
+admin.blog.form.published: 發布文章
+admin.blog.form.content: 內容 (Markdown) *
+admin.blog.form.cancel_edit: 取消編輯
+admin.blog.form.update: 更新文章
+admin.blog.form.save: 儲存文章
+admin.blog.list.title: 現有文章
+admin.blog.list.col_title: 標題
+admin.blog.list.col_author: 作者
+admin.blog.list.col_date: 日期
+admin.blog.list.col_status: 狀態
+admin.blog.list.col_views: 瀏覽人次
+admin.blog.list.col_actions: 操作
+admin.blog.list.status_published: 已發布
+admin.blog.list.status_draft: 草稿
+admin.blog.list.view: 檢視
+admin.blog.list.edit: 編輯
+admin.blog.list.confirm_delete: 確定要刪除此文章？
+admin.blog.list.delete: 刪除
+admin.blog.list.empty: 目前沒有文章。
+admin.pages.page_title: 頁面管理
+admin.pages.heading: 頁面管理
+admin.pages.error.csrf: CSRF 驗證失敗，請重新整理頁面後再試。
+admin.pages.error.empty_fields: 標題和內容不能為空。
+admin.pages.message.deleted: 頁面已刪除。
+admin.pages.message.saved: 頁面已儲存。
+admin.pages.error.operation_failed: 操作失敗：%s
+admin.pages.error.load_failed: 載入頁面失敗：%s
+admin.pages.form.title_edit: 編輯頁面
+admin.pages.form.title_new: 新增頁面
+admin.pages.form.title: 標題 *
+admin.pages.form.content: 內容 (Markdown) *
+admin.pages.form.cancel_edit: 取消編輯
+admin.pages.form.update: 更新頁面
+admin.pages.form.save: 儲存頁面
+admin.pages.list.title: 現有頁面
+admin.pages.list.col_title: 標題
+admin.pages.list.col_slug: Slug
+admin.pages.list.col_date: 日期
+admin.pages.list.col_views: 瀏覽人次
+admin.pages.list.col_actions: 操作
+admin.pages.list.view: 檢視
+admin.pages.list.edit: 編輯
+admin.pages.list.confirm_delete: 確定要刪除此頁面？
+admin.pages.list.delete: 刪除
+admin.pages.list.empty: 目前沒有頁面。
+admin.products.page_title: 產品管理
+admin.products.heading: 產品管理
+admin.products.error.csrf: CSRF 驗證失敗，請重新整理頁面後再試。
+admin.products.error.empty_fields: 標題和內容不能為空。
+admin.products.message.deleted: 產品已刪除。
+admin.products.message.saved: 產品已儲存。
+admin.products.message.reordered: 產品排序已更新。
+admin.products.error.operation_failed: 操作失敗：%s
+admin.products.error.load_failed: 載入產品失敗：%s
+admin.products.form.title_edit: 編輯產品
+admin.products.form.title_new: 新增產品
+admin.products.form.name: 產品名稱 *
+admin.products.form.price: 價格
+admin.products.form.price_placeholder: 例如：19900 或 客製報價
+admin.products.form.sku: SKU
+admin.products.form.stock: 庫存數量
+admin.products.form.image: 圖片 URL
+admin.products.form.image_placeholder: https://example.com/image.jpg
+admin.products.form.sort_order: 排序順序 (數字越小越前面)
+admin.products.form.description: 產品描述 (Markdown) *
+admin.products.form.cancel_edit: 取消編輯
+admin.products.form.update: 更新產品
+admin.products.form.save: 儲存產品
+admin.products.list.title: 現有產品
+admin.products.list.col_sort: 排序
+admin.products.list.col_name: 產品名稱
+admin.products.list.col_price: 價格
+admin.products.list.col_sku: SKU
+admin.products.list.col_stock: 庫存
+admin.products.list.col_date: 日期
+admin.products.list.col_views: 瀏覽人次
+admin.products.list.col_actions: 操作
+admin.products.list.view: 檢視
+admin.products.list.edit: 編輯
+admin.products.list.confirm_delete: 確定要刪除此產品？
+admin.products.list.delete: 刪除
+admin.products.list.update_sort: 更新排序
+admin.products.list.empty: 目前沒有產品。
+admin.messages.page_title: 留言管理
+admin.messages.heading: 留言管理
+admin.messages.error.csrf: CSRF 驗證失敗，請重新整理頁面後再試。
+admin.messages.message.marked_replied: 留言已標記為已回覆。
+admin.messages.error.operation_failed_short: 操作失敗。
+admin.messages.message.deleted: 留言已刪除。
+admin.messages.message.reply_sent: 回覆已發送。
+admin.messages.error.reply_failed: 發送回覆失敗，請檢查郵件設定。
+admin.messages.error.not_found: 找不到留言。
+admin.messages.error.reply_empty: 請填寫回覆內容。
+admin.messages.error.operation_failed: 操作失敗：%s
+admin.messages.warning.mail_not_configured: 郵件功能尚未設定。請前往 系統設定 配置 SMTP 設定以啟用回覆功能。
+admin.messages.list.title: 留言列表
+admin.messages.list.col_name: 姓名
+admin.messages.list.col_email: 電子郵件
+admin.messages.list.col_subject: 主題
+admin.messages.list.col_date: 日期
+admin.messages.list.col_status: 狀態
+admin.messages.list.col_actions: 操作
+admin.messages.list.status_replied: 已回覆
+admin.messages.list.status_unreplied: 未回覆
+admin.messages.list.reply: 回覆
+admin.messages.list.mark_replied: 標記已回覆
+admin.messages.list.confirm_delete: 確定要刪除此留言？
+admin.messages.list.delete: 刪除
+admin.messages.list.empty: 目前沒有留言。
+admin.messages.modal.title: 回覆留言
+admin.messages.modal.from_label: '來自：%s'
+admin.messages.modal.subject_label: '主題：%s'
+admin.messages.modal.original_message_label: 原始訊息：
+admin.messages.modal.reply_body: 回覆內容 *
+admin.messages.modal.send: 發送回覆
+admin.messages.modal.cancel: 取消
+admin.settings.page_title: 系統設定
+admin.settings.heading: 系統設定
+admin.settings.error.csrf: CSRF 驗證失敗，請重新整理頁面後再試。
+admin.settings.message.saved: 設定已儲存。
+admin.settings.message.menu_saved: 選單已儲存。
+admin.settings.message.cache_cleared: 快取已清除。
+admin.settings.error.invalid_test_email: 請輸入有效的測試收件信箱。
+admin.settings.email_test.subject_suffix: ' 郵件測試'
+admin.settings.email_test.body_html: '<h3>這是一封測試郵件</h3><p>若您收到此信，表示 SMTP 設定正常。</p><p>時間：%s</p>'
+admin.settings.email_test.body_plain: 這是一封測試郵件。若您收到此信，表示 SMTP 設定正常。時間：%s
+admin.settings.email_test.recipient_name: 測試收件者
+admin.settings.message.test_email_sent: 測試郵件已發送至 %s
+admin.settings.error.test_email_failed: 發送失敗：%s
+admin.settings.error.unknown: 未知錯誤，請檢查 error_log
+admin.settings.error.operation_failed: 操作失敗：%s
+admin.settings.site_section.title: 網站設定
+admin.settings.site_section.site_title: 網站標題
+admin.settings.site_section.save: 儲存設定
+admin.settings.mail_section.title: 郵件設定
+admin.settings.mail_section.host: SMTP 主機
+admin.settings.mail_section.host_placeholder: smtp.example.com
+admin.settings.mail_section.port: SMTP 埠號
+admin.settings.mail_section.username: SMTP 使用者名稱
+admin.settings.mail_section.password: SMTP 密碼
+admin.settings.mail_section.password_placeholder: （已設定，留空不修改）
+admin.settings.mail_section.password_help: 亦可透過環境變數 MAIL_PASSWORD 設定（優先於此欄位）
+admin.settings.mail_section.from_email: 寄件者信箱
+admin.settings.mail_section.from_name: 寄件者名稱
+admin.settings.mail_section.save: 儲存郵件設定
+admin.settings.menu_section.title: 選單設定
+admin.settings.menu_section.col_type: 類型
+admin.settings.menu_section.col_label: 標籤
+admin.settings.menu_section.col_order: 順序
+admin.settings.menu_section.col_enabled: 啟用
+admin.settings.menu_section.col_actions: 操作
+admin.settings.menu_section.type_blog: 部落格
+admin.settings.menu_section.type_products: 產品
+admin.settings.menu_section.optgroup_static_pages: 靜態頁面
+admin.settings.menu_section.delete_item: 刪除
+admin.settings.menu_section.add_item: 新增選單項目
+admin.settings.menu_section.save: 儲存選單
+admin.settings.home_section.title: 首頁設定
+admin.settings.home_section.home_page: 首頁內容
+admin.settings.home_section.default_option: 預設首頁（系統內建）
+admin.settings.home_section.help: 選擇要作為首頁的頁面，選「預設首頁」則使用系統內建首頁。
+admin.settings.home_section.save: 儲存首頁設定
+admin.settings.cache_section.title: 快取管理
+admin.settings.cache_section.clear: 清除所有快取
+admin.settings.email_test.title: 郵件測試
+admin.settings.email_test.to_label: 測試收件信箱 *
+admin.settings.email_test.to_placeholder: test@example.com
+admin.settings.email_test.help: 輸入一個信箱進行測試發送，確認 SMTP 設定是否正常
+admin.settings.email_test.send: 發送測試郵件
+admin.users.page_title: 使用者管理
+admin.users.heading: 使用者管理
+admin.users.error.csrf: CSRF 驗證失敗，請重新整理頁面後再試。
+admin.users.message.deleted: 使用者已刪除。
+admin.users.error.cannot_delete_last_admin: 無法刪除使用者（可能是最後一個管理員）。
+admin.users.error.empty_fields: 使用者名稱、密碼和信箱不能為空。
+admin.users.error.password_too_short: 密碼至少需要 6 個字元。
+admin.users.message.created: 使用者已建立。
+admin.users.error.username_exists: 使用者名稱已存在。
+admin.users.error.id_email_empty: 使用者 ID 和信箱不能為空。
+admin.users.message.updated: 使用者已更新。
+admin.users.error.update_failed: 更新使用者失敗。
+admin.users.error.operation_failed: 操作失敗：%s
+admin.users.add_section.title: 新增使用者
+admin.users.add_section.username: 使用者名稱 *
+admin.users.add_section.password: 密碼 * (至少 6 個字元)
+admin.users.add_section.email: 信箱 *
+admin.users.add_section.role: 角色
+admin.users.role.admin: 管理員
+admin.users.role.editor: 編輯者
+admin.users.add_section.create: 建立使用者
+admin.users.list.title: 現有使用者
+admin.users.list.col_username: 使用者名稱
+admin.users.list.col_email: 信箱
+admin.users.list.col_role: 角色
+admin.users.list.col_created: 建立日期
+admin.users.list.col_actions: 操作
+admin.users.list.edit: 編輯
+admin.users.list.confirm_delete: 確定要刪除此使用者？
+admin.users.list.delete: 刪除
+admin.users.list.current_user_label: （目前登入）
+admin.users.list.empty: 目前沒有使用者。
+admin.users.edit_section.title: 編輯使用者
+admin.users.edit_section.username: 使用者名稱
+admin.users.edit_section.email: 信箱 *
+admin.users.edit_section.role: 角色
+admin.users.edit_section.password: 新密碼 (留空則不變更)
+admin.users.edit_section.password_help: 若要變更密碼，請輸入至少 6 個字元的新密碼
+admin.users.edit_section.update: 更新使用者
+admin.users.edit_section.cancel: 取消
+admin.themes.page_title: 主題管理
+admin.themes.heading: 主題管理
+admin.themes.presets.default: 預設
+admin.themes.presets.dark: 暗色
+admin.themes.presets.nature: 自然
+admin.themes.presets.ocean: 海洋
+admin.themes.presets.sunset: 夕陽
+admin.themes.color_label.primary: 主要顏色
+admin.themes.color_label.secondary: 次要顏色
+admin.themes.color_label.accent: 強調色
+admin.themes.color_label.text: 文字顏色
+admin.themes.color_label.background: 背景顏色
+admin.themes.color_label.border: 邊框顏色
+admin.themes.color_label.header_bg: 頁首背景
+admin.themes.color_label.header_text: 頁首文字
+admin.themes.color_label.footer_bg: 頁尾背景
+admin.themes.color_label.footer_text: 頁尾文字
+admin.themes.error.csrf: CSRF 驗證失敗，請重新整理頁面後再試。
+admin.themes.message.saved: 主題設定已儲存。
+admin.themes.message.reset: 主題已重置為預設。
+admin.themes.error.operation_failed: 操作失敗：%s
+admin.themes.scheme_section.title: 配色方案
+admin.themes.scheme_section.description: 選擇一個預設方案，或自行調整下方的顏色。
+admin.themes.custom_colors.title: 自訂顏色
+admin.themes.nav_style.title: 導覽樣式
+admin.themes.nav_style.description: 選擇選單的顯示方式。
+admin.themes.nav_style.list: 水平列表
+admin.themes.nav_style.hamburger: 漢堡選單
+admin.themes.nav_style.preview.item1: 選項1
+admin.themes.nav_style.preview.item2: 選項2
+admin.themes.nav_style.preview.item3: 選項3
+admin.themes.custom_css.title: 自訂 CSS
+admin.themes.custom_css.description: 進階：直接撰寫 CSS 覆蓋樣式，適合熟悉 CSS 的使用者。
+admin.themes.save: 儲存主題設定
+admin.themes.confirm_reset: 確定要重置所有主題設定？
+admin.themes.reset_default: 重置為預設
+admin.signature.page_title: 文章簽名管理
+admin.signature.heading: 文章簽名管理
+admin.signature.error.load_failed: 讀取簽名失败：%s
+admin.signature.error.csrf: CSRF 驗證失敗，請重新整理頁面後再試。
+admin.signature.message.saved: 簽名已儲存。
+admin.signature.error.save_failed: 儲存失敗：%s
+admin.signature.form.title: 設定文章簽名
+admin.signature.form.signature: 文章簽名
+admin.signature.form.placeholder: 例如：感謝閱讀，歡迎留言。
+admin.signature.form.help: 此簽名將自動附加到所有文章末尾。
+admin.signature.form.save: 儲存簽名
+admin.files.page_title: 檔案管理
+admin.files.heading: 檔案管理
+admin.files.error.create_upload_dir_failed: 無法建立上傳目錄：%s
+admin.files.error.upload_dir_inaccessible: 上傳目錄無法存取。
+admin.files.error.csrf: CSRF 驗證失敗，請重新整理頁面後再試。
+admin.files.message.deleted: 檔案已刪除。
+admin.files.error.delete_failed: 刪除失敗：%s
+admin.files.error.no_file_selected: 請選擇要上傳的檔案。
+admin.files.message.upload_success: 成功上傳 %d 個檔案。
+admin.files.error.upload_failed: '%d 個檔案上傳失敗（不支援的格式或超過大小限制）。'
+admin.files.upload_section.title: 上傳檔案
+admin.files.upload_section.select_files: 選擇圖片（可多選）
+admin.files.upload_section.help: 支援 JPG、PNG、GIF、WebP，單檔最大 20MB
+admin.files.upload_section.drag_drop: 或將圖片拖曳到此區域上傳
+admin.files.upload_section.upload: 上傳檔案
+admin.files.list.title: 已上傳檔案（%d）
+admin.files.list.copy_url: 複製
+admin.files.list.confirm_delete: 確定要刪除「%s」？
+admin.files.list.delete: 刪除
+admin.files.list.empty: 尚未上傳任何檔案。
+admin.files.copy_feedback: 已複製!
+admin.documents.page_title: 內部文件
+admin.documents.heading: 內部文件
+admin.documents.error.create_dir_failed: 無法建立文件目錄：%s
+admin.documents.error.csrf: CSRF 驗證失敗，請重新整理頁面後再試。
+admin.documents.message.deleted: 文件已刪除。
+admin.documents.error.empty_fields: 標題和內容不能為空。
+admin.documents.message.saved: 文件已儲存。
+admin.documents.error.operation_failed: 操作失敗：%s
+admin.documents.error.load_failed: 載入文件失敗：%s
+admin.documents.view.author_label: 作者：
+admin.documents.view.date_label: '｜日期：'
+admin.documents.view.category_label: '｜分類：'
+admin.documents.view.back_list: "← 返回文件列表"
+admin.documents.view.confirm_delete: 確定要刪除此文件？
+admin.documents.view.delete: 刪除文件
+admin.documents.form.title_edit: 編輯文件
+admin.documents.form.title_new: 新增文件
+admin.documents.form.title: 標題 *
+admin.documents.form.category: 分類
+admin.documents.form.category_placeholder: 例如：規範、會議、手冊
+admin.documents.form.content: 內容 (Markdown) *
+admin.documents.form.cancel_edit: 取消編輯
+admin.documents.form.update: 更新文件
+admin.documents.form.save: 儲存文件
+admin.documents.list.title: 現有文件
+admin.documents.list.col_title: 標題
+admin.documents.list.col_category: 分類
+admin.documents.list.col_author: 作者
+admin.documents.list.col_date: 日期
+admin.documents.list.col_actions: 操作
+admin.documents.list.view: 檢視
+admin.documents.list.edit: 編輯
+admin.documents.list.delete: 刪除
+admin.documents.list.empty: 目前沒有文件。
+admin.header.page_title: 後台管理
+admin.sidebar.heading: 後台管理
+admin.sidebar.toggle_label: 選單
+admin.sidebar.dashboard: 儀表板
+admin.sidebar.pages: 頁面管理
+admin.sidebar.blog: 文章管理
+admin.sidebar.signature: 文章簽名
+admin.sidebar.products: 產品管理
+admin.sidebar.files: 檔案管理
+admin.sidebar.messages: 留言管理
+admin.sidebar.documents: 內部文件
+admin.sidebar.themes: 主題管理
+admin.sidebar.users: 使用者管理
+admin.sidebar.settings: 系統設定
+admin.sidebar.language: 語系管理
+admin.sidebar.logout: 登出
+admin.footer.file_browser.title: 選擇圖片
+admin.footer.file_browser.loading: 載入中...
+admin.footer.file_browser.go_to_files: 前往檔案管理
+admin.footer.editor.insert_image: 插入圖片
+admin.footer.file_browser.no_images: 尚無圖片，請先上傳。
+admin.footer.file_browser.load_error: 載入失敗。
+admin.language.page_title: 語系管理
+admin.language.heading: 語系管理
+admin.language.all_tab: 全部
+admin.language.overrides_tab: 覆蓋
+admin.language.key: 索引
+admin.language.default_value: 預設值
+admin.language.custom_value: 自訂值
+admin.language.save: 儲存變更
+admin.language.add_key: 新增索引
+admin.language.cancel: 取消
+admin.language.message.saved: 語系設定已成功儲存。
+admin.language.message.key_added: 新索引已成功新增。
+admin.language.message.key_deleted: 索引已成功刪除。
+admin.language.no_overrides: 尚無自訂語系覆蓋項目，請在上方新增。
+admin.language.key_placeholder: 例如 custom.key.name
+admin.language.value_placeholder: 輸入翻譯文字
+admin.language.reset: 恢復預設
+admin.language.confirm_delete: 確定要恢復此索引為預設值嗎？
+admin.language.editing: 編輯中
+admin.language.switch_label: 語系切換
+admin.language.switch_button: 套用
+admin.language.current_lang: '目前：'
+footer.rights: 版權所有
+footer.powered_by: 由 IgG Flat CMS - Lightweight Flat-File CMS 提供

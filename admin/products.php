@@ -1,7 +1,5 @@
 <?php
 
-defined("CMS_ENTRY") or die("Direct access not allowed.");
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統
@@ -11,6 +9,7 @@ defined("CMS_ENTRY") or die("Direct access not allowed.");
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../libs/functions.php';
 
 use CMS\Auth;
 use CMS\FileHandler;
@@ -33,7 +32,7 @@ $parser = new MarkdownParser();
 // Require authentication
 $auth->requireAuth();
 
-$pageTitle = '產品管理';
+$pageTitle = __('admin.products.page_title');
 $currentPage = 'products';
 $username = $auth->getUsername();
 
@@ -47,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Validate CSRF token
     if (!$auth->validateCsrfToken($csrfToken)) {
-        $error = 'CSRF 驗證失敗，請重新整理頁面後再試。';
+        $error = __('admin.products.error.csrf');
     } else {
         try {
             switch ($action) {
@@ -68,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 } catch (\Exception $e) {
                                     error_log('Failed to delete counter: ' . $e->getMessage());
                                 }
-                                $message = '產品已刪除。';
+                                $message = __('admin.products.message.deleted');
                                 break;
                             }
                         }
@@ -86,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $sortOrder = $_POST['sort_order'] ?? '0';
                     
                     if (!$title || !$content) {
-                        $error = '標題和內容不能為空。';
+                        $error = __('admin.products.error.empty_fields');
                     } else {
                         if (!$slug) {
                             $slug = 'product-' . time();
@@ -115,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         $fileHandler->write('content/products/' . $slug . '.md', $frontmatter);
                         $cache->clear('products', $slug);
-                        $message = '產品已儲存。';
+                        $message = __('admin.products.message.saved');
                     }
                     break;
 
@@ -140,11 +139,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             }
                         }
                     }
-                    $message = '產品排序已更新。';
+                    $message = __('admin.products.message.reordered');
                     break;
             }
         } catch (\Exception $e) {
-            $error = '操作失敗：' . $e->getMessage();
+            $error = __('admin.products.error.operation_failed', $e->getMessage());
         }
     }
 }
@@ -181,7 +180,7 @@ try {
         ];
     }
 } catch (\Exception $e) {
-    $error = '載入產品失敗：' . $e->getMessage();
+    $error = __('admin.products.error.load_failed', $e->getMessage());
 }
 
 // Sort by sort_order (asc), then by date (newest first) as tiebreaker
@@ -212,7 +211,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
 ?>
 
     <div class="admin-content">
-        <h1>產品管理</h1>
+        <h1><?php echo __('admin.products.heading'); ?></h1>
         
         <?php if ($message): ?>
             <div class="alert alert-success"><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></div>
@@ -223,7 +222,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
         <?php endif; ?>
         
         <div class="card">
-            <h3><?php echo $editProduct ? '編輯產品' : '新增產品'; ?></h3>
+            <h3><?php echo $editProduct ? __('admin.products.form.title_edit') : __('admin.products.form.title_new'); ?></h3>
             <form method="POST">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="save">
@@ -232,49 +231,49 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                 <?php endif; ?>
                 
                 <div class="form-group">
-                    <label for="title">產品名稱 *</label>
+                    <label for="title"><?php echo __('admin.products.form.name'); ?></label>
                     <input type="text" id="title" name="title" value="<?php echo $editProduct ? htmlspecialchars($editProduct['title'], ENT_QUOTES, 'UTF-8') : ''; ?>" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="price">價格</label>
-                    <input type="text" id="price" name="price" value="<?php echo $editProduct ? htmlspecialchars($editProduct['price'], ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="例如：19900 或 客製報價">
+                    <label for="price"><?php echo __('admin.products.form.price'); ?></label>
+                    <input type="text" id="price" name="price" value="<?php echo $editProduct ? htmlspecialchars($editProduct['price'], ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="<?php echo __('admin.products.form.price_placeholder'); ?>">
                 </div>
                 
                 <div class="form-group">
-                    <label for="sku">SKU</label>
+                    <label for="sku"><?php echo __('admin.products.form.sku'); ?></label>
                     <input type="text" id="sku" name="sku" value="<?php echo $editProduct ? htmlspecialchars($editProduct['sku'], ENT_QUOTES, 'UTF-8') : ''; ?>">
                 </div>
                 
                 <div class="form-group">
-                    <label for="stock">庫存數量</label>
+                    <label for="stock"><?php echo __('admin.products.form.stock'); ?></label>
                     <input type="number" id="stock" name="stock" value="<?php echo $editProduct ? htmlspecialchars($editProduct['stock'], ENT_QUOTES, 'UTF-8') : ''; ?>">
                 </div>
                 
                 <div class="form-group">
-                    <label for="image">圖片 URL</label>
-                    <input type="url" id="image" name="image" value="<?php echo $editProduct ? htmlspecialchars($editProduct['image'], ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="https://example.com/image.jpg">
+                    <label for="image"><?php echo __('admin.products.form.image'); ?></label>
+                    <input type="url" id="image" name="image" value="<?php echo $editProduct ? htmlspecialchars($editProduct['image'], ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="<?php echo __('admin.products.form.image_placeholder'); ?>">
                 </div>
                 
                 <div class="form-group">
-                    <label for="sort_order">排序順序 (數字越小越前面)</label>
+                    <label for="sort_order"><?php echo __('admin.products.form.sort_order'); ?></label>
                     <input type="number" id="sort_order" name="sort_order" value="<?php echo $editProduct ? htmlspecialchars($editProduct['sort_order'], ENT_QUOTES, 'UTF-8') : '0'; ?>">
                 </div>
                 
                 <div class="form-group">
-                    <label for="content">產品描述 (Markdown) *</label>
+                    <label for="content"><?php echo __('admin.products.form.description'); ?></label>
                     <textarea id="content" name="content" data-easymde rows="15" required><?php echo $editProduct ? htmlspecialchars($editProduct['rawContent'], ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
                 </div>
                 
                 <?php if ($editProduct): ?>
-                    <a href="/admin/products" class="btn btn-danger" style="text-decoration: none;">取消編輯</a>
+                    <a href="/admin/products" class="btn btn-danger" style="text-decoration: none;"><?php echo __('admin.products.form.cancel_edit'); ?></a>
                 <?php endif; ?>
-                <button type="submit" class="btn"><?php echo $editProduct ? '更新產品' : '儲存產品'; ?></button>
+                <button type="submit" class="btn"><?php echo $editProduct ? __('admin.products.form.update') : __('admin.products.form.save'); ?></button>
             </form>
         </div>
         
         <div class="card">
-            <h3>現有產品</h3>
+            <h3><?php echo __('admin.products.list.title'); ?></h3>
             <?php if (!empty($products)): ?>
                 <form method="POST">
                     <?php echo $csrfField; ?>
@@ -282,14 +281,14 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                     <table>
                         <thead>
                             <tr>
-                                <th>排序</th>
-                                <th>產品名稱</th>
-                                <th>價格</th>
-                                <th>SKU</th>
-                                <th>庫存</th>
-                                <th>日期</th>
-                                <th>瀏覽人次</th>
-                                <th>操作</th>
+                                <th><?php echo __('admin.products.list.col_sort'); ?></th>
+                                <th><?php echo __('admin.products.list.col_name'); ?></th>
+                                <th><?php echo __('admin.products.list.col_price'); ?></th>
+                                <th><?php echo __('admin.products.list.col_sku'); ?></th>
+                                <th><?php echo __('admin.products.list.col_stock'); ?></th>
+                                <th><?php echo __('admin.products.list.col_date'); ?></th>
+                                <th><?php echo __('admin.products.list.col_views'); ?></th>
+                                <th><?php echo __('admin.products.list.col_actions'); ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -311,23 +310,23 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                                     <td><?php echo htmlspecialchars($product['date'], ENT_QUOTES, 'UTF-8'); ?></td>
                                     <td><?php echo number_format($product['views']); ?></td>
                                     <td>
-                                        <a href="/products/<?php echo htmlspecialchars($product['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn" target="_blank">檢視</a>
-                                        <a href="/admin/products?edit=<?php echo htmlspecialchars($product['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-success">編輯</a>
+                                        <a href="/products/<?php echo htmlspecialchars($product['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn" target="_blank"><?php echo __('admin.products.list.view'); ?></a>
+                                        <a href="/admin/products?edit=<?php echo htmlspecialchars($product['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-success"><?php echo __('admin.products.list.edit'); ?></a>
                                         <form method="POST" style="display: inline;">
                                             <?php echo $csrfField; ?>
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="slug" value="<?php echo htmlspecialchars($product['slug'], ENT_QUOTES, 'UTF-8'); ?>">
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('確定要刪除此產品？');">刪除</button>
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('<?php echo __('admin.products.list.confirm_delete'); ?>');"><?php echo __('admin.products.list.delete'); ?></button>
                                         </form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                    <button type="submit" class="btn" style="margin-top: 1rem;">更新排序</button>
+                    <button type="submit" class="btn" style="margin-top: 1rem;"><?php echo __('admin.products.list.update_sort'); ?></button>
                 </form>
             <?php else: ?>
-                <p>目前沒有產品。</p>
+                <p><?php echo __('admin.products.list.empty'); ?></p>
             <?php endif; ?>
         </div>
     </div>

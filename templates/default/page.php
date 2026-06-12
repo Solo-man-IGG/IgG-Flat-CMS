@@ -8,7 +8,7 @@
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-$pageTitle = $page['title'] ?? '頁面';
+$pageTitle = $page['title'] ?? __('page.page_title_default');
 $siteTitle = $siteTitle ?? 'My Site';
 $menuItems = $menuItems ?? [];
 require __DIR__ . '/header.php';

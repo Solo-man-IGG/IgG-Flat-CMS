@@ -35,8 +35,8 @@ class MenuManager
         } catch (\Exception $e) {
             // Return default menu if config not found
             return [
-                ['type' => 'blog', 'label' => '部落格', 'menu_num' => 1, 'enabled' => true],
-                ['type' => 'products', 'label' => '產品', 'menu_num' => 2, 'enabled' => true],
+                ['type' => 'blog', 'label' => __('menumanager.defaults.blog'), 'menu_num' => 1, 'enabled' => true],
+                ['type' => 'products', 'label' => __('menumanager.defaults.products'), 'menu_num' => 2, 'enabled' => true],
             ];
         }
     }

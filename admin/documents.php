@@ -1,7 +1,5 @@
 <?php
 
-defined("CMS_ENTRY") or die("Direct access not allowed.");
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統
@@ -11,6 +9,7 @@ defined("CMS_ENTRY") or die("Direct access not allowed.");
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../libs/functions.php';
 
 use CMS\Auth;
 use CMS\FileHandler;
@@ -29,7 +28,7 @@ $parser = new MarkdownParser();
 // Require authentication
 $auth->requireAuth();
 
-$pageTitle = '內部文件';
+$pageTitle = __('admin.documents.page_title');
 $currentPage = 'documents';
 $username = $auth->getUsername();
 
@@ -40,7 +39,7 @@ $error = '';
 try {
     $fileHandler->createDirectory('content/documents');
 } catch (\Exception $e) {
-    $error = '無法建立文件目錄：' . $e->getMessage();
+    $error = __('admin.documents.error.create_dir_failed', $e->getMessage());
 }
 
 // Handle form submission
@@ -49,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
     if (!$auth->validateCsrfToken($csrfToken)) {
-        $error = 'CSRF 驗證失敗，請重新整理頁面後再試。';
+        $error = __('admin.documents.error.csrf');
     } else {
         try {
             switch ($action) {
@@ -61,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $fileSlug = pathinfo($file, PATHINFO_FILENAME);
                             if ($fileSlug === $slug) {
                                 $fileHandler->delete('content/documents/' . $file);
-                                $message = '文件已刪除。';
+                                $message = __('admin.documents.message.deleted');
                                 break;
                             }
                         }
@@ -75,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $category = $_POST['category'] ?? '';
 
                     if (!$title || !$content) {
-                        $error = '標題和內容不能為空。';
+                        $error = __('admin.documents.error.empty_fields');
                     } else {
                         if (!$slug) {
                             $slug = 'doc-' . time();
@@ -93,12 +92,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $markdown = "---\n" . \Symfony\Component\Yaml\Yaml::dump($frontmatterData, 2, 2) . "---\n\n" . $content;
 
                         $fileHandler->write('content/documents/' . $slug . '.md', $markdown);
-                        $message = '文件已儲存。';
+                        $message = __('admin.documents.message.saved');
                     }
                     break;
             }
         } catch (\Exception $e) {
-            $error = '操作失敗：' . $e->getMessage();
+            $error = __('admin.documents.error.operation_failed', $e->getMessage());
         }
     }
 }
@@ -132,7 +131,7 @@ try {
         ];
     }
 } catch (\Exception $e) {
-    $error = '載入文件失敗：' . $e->getMessage();
+    $error = __('admin.documents.error.load_failed', $e->getMessage());
 }
 
 // Sort by date (newest first)
@@ -170,7 +169,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
 ?>
 
     <div class="admin-content">
-        <h1>內部文件</h1>
+        <h1><?php echo __('admin.documents.heading'); ?></h1>
 
         <?php if ($message): ?>
             <div class="alert alert-success"><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></div>
@@ -184,27 +183,27 @@ require __DIR__ . '/../templates/admin/sidebar.php';
             <div class="card">
                 <h3><?php echo htmlspecialchars($viewDoc['title'], ENT_QUOTES, 'UTF-8'); ?></h3>
                 <div class="doc-meta">
-                    <span>作者：<?php echo htmlspecialchars($viewDoc['author'], ENT_QUOTES, 'UTF-8'); ?></span>
-                    <span>｜日期：<?php echo htmlspecialchars($viewDoc['date'], ENT_QUOTES, 'UTF-8'); ?></span>
+                    <span><?php echo __('admin.documents.view.author_label'); ?><?php echo htmlspecialchars($viewDoc['author'], ENT_QUOTES, 'UTF-8'); ?></span>
+                    <span><?php echo __('admin.documents.view.date_label'); ?><?php echo htmlspecialchars($viewDoc['date'], ENT_QUOTES, 'UTF-8'); ?></span>
                     <?php if ($viewDoc['category']): ?>
-                        <span>｜分類：<?php echo htmlspecialchars($viewDoc['category'], ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span><?php echo __('admin.documents.view.category_label'); ?><?php echo htmlspecialchars($viewDoc['category'], ENT_QUOTES, 'UTF-8'); ?></span>
                     <?php endif; ?>
                 </div>
                 <div class="doc-content">
                     <?php echo $viewDoc['content']; ?>
                 </div>
-                <a href="/admin/documents" class="btn" style="margin-top: 1rem;">← 返回文件列表</a>
+                <a href="/admin/documents" class="btn" style="margin-top: 1rem;"><?php echo __('admin.documents.view.back_list'); ?></a>
                 <form method="POST" style="display: inline;">
                     <?php echo $csrfField; ?>
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="slug" value="<?php echo htmlspecialchars($viewDoc['slug'], ENT_QUOTES, 'UTF-8'); ?>">
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('確定要刪除此文件？');">刪除文件</button>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('<?php echo __('admin.documents.view.confirm_delete'); ?>');"><?php echo __('admin.documents.view.delete'); ?></button>
                 </form>
             </div>
         <?php else: ?>
 
         <div class="card">
-            <h3><?php echo $editDoc ? '編輯文件' : '新增文件'; ?></h3>
+            <h3><?php echo $editDoc ? __('admin.documents.form.title_edit') : __('admin.documents.form.title_new'); ?></h3>
             <form method="POST">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="save">
@@ -213,38 +212,38 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                 <?php endif; ?>
 
                 <div class="form-group">
-                    <label for="title">標題 *</label>
+                    <label for="title"><?php echo __('admin.documents.form.title'); ?></label>
                     <input type="text" id="title" name="title" value="<?php echo $editDoc ? htmlspecialchars($editDoc['title'], ENT_QUOTES, 'UTF-8') : ''; ?>" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="category">分類</label>
-                    <input type="text" id="category" name="category" value="<?php echo $editDoc ? htmlspecialchars($editDoc['category'], ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="例如：規範、會議、手冊">
+                    <label for="category"><?php echo __('admin.documents.form.category'); ?></label>
+                    <input type="text" id="category" name="category" value="<?php echo $editDoc ? htmlspecialchars($editDoc['category'], ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="<?php echo __('admin.documents.form.category_placeholder'); ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="content">內容 (Markdown) *</label>
+                    <label for="content"><?php echo __('admin.documents.form.content'); ?></label>
                     <textarea id="content" name="content" data-easymde rows="15" required><?php echo $editDoc ? htmlspecialchars($editDoc['rawContent'], ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
                 </div>
 
                 <?php if ($editDoc): ?>
-                    <a href="/admin/documents" class="btn btn-danger" style="text-decoration: none;">取消編輯</a>
+                    <a href="/admin/documents" class="btn btn-danger" style="text-decoration: none;"><?php echo __('admin.documents.form.cancel_edit'); ?></a>
                 <?php endif; ?>
-                <button type="submit" class="btn"><?php echo $editDoc ? '更新文件' : '儲存文件'; ?></button>
+                <button type="submit" class="btn"><?php echo $editDoc ? __('admin.documents.form.update') : __('admin.documents.form.save'); ?></button>
             </form>
         </div>
 
         <div class="card">
-            <h3>現有文件</h3>
+            <h3><?php echo __('admin.documents.list.title'); ?></h3>
             <?php if (!empty($documents)): ?>
                 <table>
                     <thead>
                         <tr>
-                            <th>標題</th>
-                            <th>分類</th>
-                            <th>作者</th>
-                            <th>日期</th>
-                            <th>操作</th>
+                            <th><?php echo __('admin.documents.list.col_title'); ?></th>
+                            <th><?php echo __('admin.documents.list.col_category'); ?></th>
+                            <th><?php echo __('admin.documents.list.col_author'); ?></th>
+                            <th><?php echo __('admin.documents.list.col_date'); ?></th>
+                            <th><?php echo __('admin.documents.list.col_actions'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -255,13 +254,13 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                                 <td><?php echo htmlspecialchars($doc['author'], ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><?php echo htmlspecialchars($doc['date'], ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td>
-                                    <a href="/admin/documents?view=<?php echo htmlspecialchars($doc['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn">檢視</a>
-                                    <a href="/admin/documents?edit=<?php echo htmlspecialchars($doc['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-success">編輯</a>
+                                    <a href="/admin/documents?view=<?php echo htmlspecialchars($doc['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn"><?php echo __('admin.documents.list.view'); ?></a>
+                                    <a href="/admin/documents?edit=<?php echo htmlspecialchars($doc['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-success"><?php echo __('admin.documents.list.edit'); ?></a>
                                     <form method="POST" style="display: inline;">
                                         <?php echo $csrfField; ?>
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="slug" value="<?php echo htmlspecialchars($doc['slug'], ENT_QUOTES, 'UTF-8'); ?>">
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('確定要刪除此文件？');">刪除</button>
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('<?php echo __('admin.documents.list.confirm_delete'); ?>');"><?php echo __('admin.documents.list.delete'); ?></button>
                                     </form>
                                 </td>
                             </tr>
@@ -269,7 +268,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                     </tbody>
                 </table>
             <?php else: ?>
-                <p>目前沒有文件。</p>
+                <p><?php echo __('admin.documents.list.empty'); ?></p>
             <?php endif; ?>
         </div>
         <?php endif; ?>

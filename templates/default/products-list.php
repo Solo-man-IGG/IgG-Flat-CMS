@@ -8,7 +8,7 @@
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-$pageTitle = '產品';
+$pageTitle = __('products.list.page_title');
 $siteTitle = $siteTitle ?? 'My Site';
 $menuItems = $menuItems ?? [];
 require __DIR__ . '/header.php';
@@ -31,12 +31,12 @@ require __DIR__ . '/header.php';
                     <?php echo htmlspecialchars($product['excerpt'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                 </div>
                 <a href="/products/<?php echo htmlspecialchars($product['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="read-more">
-                    查看詳情 →
+                    <?php echo __('products.list.view_details'); ?>
                 </a>
             </div>
         <?php endforeach; ?>
     <?php else: ?>
-        <p class="text-center">目前沒有產品。</p>
+        <p class="text-center"><?php echo __('products.list.empty'); ?></p>
     <?php endif; ?>
 </div>
 

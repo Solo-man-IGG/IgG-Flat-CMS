@@ -50,8 +50,8 @@ class Router
             return $config['items'] ?? [];
         } catch (\Exception $e) {
             return [
-                ['type' => 'blog', 'label' => '部落格', 'menu_num' => 1, 'enabled' => true],
-                ['type' => 'products', 'label' => '產品', 'menu_num' => 2, 'enabled' => true],
+                ['type' => 'blog', 'label' => __('router.menu_defaults.blog'), 'menu_num' => 1, 'enabled' => true],
+                ['type' => 'products', 'label' => __('router.menu_defaults.products'), 'menu_num' => 2, 'enabled' => true],
             ];
         }
     }
@@ -109,6 +109,7 @@ class Router
         $routes['/^\/admin\/users$/'] = 'admin_users';
         $routes['/^\/admin\/files$/'] = 'admin_files';
         $routes['/^\/admin\/documents$/'] = 'admin_documents';
+        $routes['/^\/admin\/language$/'] = 'admin_language';
 
         return $routes;
     }
@@ -155,6 +156,7 @@ class Router
             'admin_signature' => $this->adminController->handleAdminSignature(),
             'admin_documents' => $this->adminController->handleAdminDocuments(),
             'admin_files' => $this->adminController->handleAdminFiles(),
+            'admin_language' => $this->adminController->handleAdminLanguage(),
             default => $this->pageController->notFound(),
         };
     }

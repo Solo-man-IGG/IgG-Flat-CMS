@@ -1,7 +1,5 @@
 <?php
 
-defined("CMS_ENTRY") or die("Direct access not allowed.");
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統
@@ -11,6 +9,7 @@ defined("CMS_ENTRY") or die("Direct access not allowed.");
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../libs/functions.php';
 
 use CMS\Auth;
 use CMS\FileHandler;
@@ -33,7 +32,7 @@ $parser = new MarkdownParser();
 // Require authentication
 $auth->requireAuth();
 
-$pageTitle = '文章管理';
+$pageTitle = __('admin.blog.page_title');
 $currentPage = 'blog';
 $username = $auth->getUsername();
 
@@ -47,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Validate CSRF token
     if (!$auth->validateCsrfToken($csrfToken)) {
-        $error = 'CSRF 驗證失敗，請重新整理頁面後再試。';
+        $error = __('admin.blog.error.csrf');
     } else {
         try {
             switch ($action) {
@@ -59,8 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $fileSlug = pathinfo($file, PATHINFO_FILENAME);
                             if ($fileSlug === $slug) {
                                 $fileHandler->delete('content/blog/' . $file);
-                                $cache->clear('blog', $slug);
-                                $cache->clear('blog', 'blog_list');
+                                    $cache->clear('blog', 'blog_post_' . $slug);
+                                    $cache->clear('blog', 'blog_list');
                                 try {
                                     $counterFile = 'content/counters/blog-' . $slug . '.json';
                                     if ($fileHandler->exists($counterFile)) {
@@ -69,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 } catch (\Exception $e) {
                                     error_log('Failed to delete counter: ' . $e->getMessage());
                                 }
-                                $message = '文章已刪除。';
+                                $message = __('admin.blog.message.deleted');
                                 break;
                             }
                         }
@@ -86,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $published = isset($_POST['published']) ? 'true' : 'false';
                     
                     if (!$title || !$content) {
-                        $error = '標題和內容不能為空。';
+                        $error = __('admin.blog.error.empty_fields');
                     } else {
                         // Generate slug if not provided
                         if (!$slug) {
@@ -129,14 +128,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $frontmatter = "---\n" . \Symfony\Component\Yaml\Yaml::dump($frontmatterData, 2, 2) . "---\n\n" . $content;
                         
                         $fileHandler->write('content/blog/' . $slug . '.md', $frontmatter);
-                        $cache->clear('blog', $slug);
+                        $cache->clear('blog', 'blog_post_' . $slug);
                         $cache->clear('blog', 'blog_list');
-                        $message = '文章已儲存。';
+                        $message = __('admin.blog.message.saved');
                     }
                     break;
             }
         } catch (\Exception $e) {
-            $error = '操作失敗：' . $e->getMessage();
+            $error = __('admin.blog.error.operation_failed', $e->getMessage());
         }
     }
 }
@@ -177,7 +176,7 @@ try {
         ];
     }
 } catch (\Exception $e) {
-    $error = '載入文章失敗：' . $e->getMessage();
+    $error = __('admin.blog.error.load_failed', $e->getMessage());
 }
 
 // Sort posts by date (newest first)
@@ -203,7 +202,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
 ?>
 
     <div class="admin-content">
-        <h1>文章管理</h1>
+        <h1><?php echo __('admin.blog.heading'); ?></h1>
         
         <?php if ($message): ?>
             <div class="alert alert-success"><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></div>
@@ -214,7 +213,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
         <?php endif; ?>
         
         <div class="card">
-            <h3><?php echo $editPost ? '編輯文章' : '新增文章'; ?></h3>
+            <h3><?php echo $editPost ? __('admin.blog.form.title_edit') : __('admin.blog.form.title_new'); ?></h3>
             <form method="POST">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="save">
@@ -223,56 +222,56 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                 <?php endif; ?>
                 
                 <div class="form-group">
-                    <label for="title">標題 *</label>
+                    <label for="title"><?php echo __('admin.blog.form.title'); ?></label>
                     <input type="text" id="title" name="title" value="<?php echo $editPost ? htmlspecialchars($editPost['title'], ENT_QUOTES, 'UTF-8') : ''; ?>" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="author">作者</label>
+                    <label for="author"><?php echo __('admin.blog.form.author'); ?></label>
                     <input type="text" id="author" name="author" value="<?php echo htmlspecialchars($editPost['author'] ?? $username, ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
                 
                 <div class="form-group">
-                    <label for="tags">標籤 (用逗號分隔)</label>
-                    <input type="text" id="tags" name="tags" value="<?php echo $editPost ? htmlspecialchars($editPost['tags'], ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="例如：技術, 教程">
+                    <label for="tags"><?php echo __('admin.blog.form.tags'); ?></label>
+                    <input type="text" id="tags" name="tags" value="<?php echo $editPost ? htmlspecialchars($editPost['tags'], ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="<?php echo __('admin.blog.form.tags_placeholder'); ?>">
                 </div>
                 
-                <div class="form-group">
-                    <label for="banner">Banner 圖片 URL</label>
-                    <input type="url" id="banner" name="banner" value="<?php echo $editPost ? htmlspecialchars($editPost['banner'], ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="https://example.com/banner.jpg">
-                </div>
+                    <div class="form-group">
+                        <label for="banner"><?php echo __('admin.blog.form.banner'); ?></label>
+                        <input type="text" id="banner" name="banner" value="<?php echo $editPost ? htmlspecialchars($editPost['banner'], ENT_QUOTES, 'UTF-8') : ''; ?>" placeholder="<?php echo __('admin.blog.form.banner_placeholder'); ?>">
+                    </div>
                 
                 <div class="form-group">
                     <label>
                         <input type="checkbox" name="published" value="true" <?php echo (!$editPost || $editPost['published']) ? 'checked' : ''; ?>>
-                        發布文章
+                        <?php echo __('admin.blog.form.published'); ?>
                     </label>
                 </div>
                 
                 <div class="form-group">
-                    <label for="content">內容 (Markdown) *</label>
+                    <label for="content"><?php echo __('admin.blog.form.content'); ?></label>
                     <textarea id="content" name="content" data-easymde rows="20" required><?php echo $editPost ? htmlspecialchars($editPost['rawContent'], ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
                 </div>
                 
                 <?php if ($editPost): ?>
-                    <a href="/admin/blog" class="btn btn-danger" style="text-decoration: none;">取消編輯</a>
+                    <a href="/admin/blog" class="btn btn-danger" style="text-decoration: none;"><?php echo __('admin.blog.form.cancel_edit'); ?></a>
                 <?php endif; ?>
-                <button type="submit" class="btn"><?php echo $editPost ? '更新文章' : '儲存文章'; ?></button>
+                <button type="submit" class="btn"><?php echo $editPost ? __('admin.blog.form.update') : __('admin.blog.form.save'); ?></button>
             </form>
         </div>
         
         <div class="card">
-            <h3>現有文章</h3>
+            <h3><?php echo __('admin.blog.list.title'); ?></h3>
             <?php if (!empty($posts)): ?>
                 <table>
                     <thead>
                         <tr>
-                            <th>標題</th>
-                            <th>作者</th>
-                            <th>日期</th>
-                            <th>狀態</th>
-                            <th>瀏覽人次</th>
-                            <th>操作</th>
+                            <th><?php echo __('admin.blog.list.col_title'); ?></th>
+                            <th><?php echo __('admin.blog.list.col_author'); ?></th>
+                            <th><?php echo __('admin.blog.list.col_date'); ?></th>
+                            <th><?php echo __('admin.blog.list.col_status'); ?></th>
+                            <th><?php echo __('admin.blog.list.col_views'); ?></th>
+                            <th><?php echo __('admin.blog.list.col_actions'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -283,20 +282,20 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                                 <td><?php echo htmlspecialchars($post['date'], ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td>
                                     <?php if ($post['published']): ?>
-                                        <span style="color: #10b981;">已發布</span>
+                                        <span style="color: #10b981;"><?php echo __('admin.blog.list.status_published'); ?></span>
                                     <?php else: ?>
-                                        <span style="color: #6b7280;">草稿</span>
+                                        <span style="color: #6b7280;"><?php echo __('admin.blog.list.status_draft'); ?></span>
                                     <?php endif; ?>
                                 </td>
                                 <td><?php echo number_format($post['views']); ?></td>
                                 <td>
-                                    <a href="/blog/<?php echo htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn" target="_blank">檢視</a>
-                                    <a href="/admin/blog?edit=<?php echo htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-success">編輯</a>
+                                    <a href="/blog/<?php echo htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn" target="_blank"><?php echo __('admin.blog.list.view'); ?></a>
+                                    <a href="/admin/blog?edit=<?php echo htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-success"><?php echo __('admin.blog.list.edit'); ?></a>
                                     <form method="POST" style="display: inline;">
                                         <?php echo $csrfField; ?>
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="slug" value="<?php echo htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8'); ?>">
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('確定要刪除此文章？');">刪除</button>
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('<?php echo __('admin.blog.list.confirm_delete'); ?>');"><?php echo __('admin.blog.list.delete'); ?></button>
                                     </form>
                                 </td>
                             </tr>
@@ -304,7 +303,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                     </tbody>
                 </table>
             <?php else: ?>
-                <p>目前沒有文章。</p>
+                <p><?php echo __('admin.blog.list.empty'); ?></p>
             <?php endif; ?>
         </div>
     </div>

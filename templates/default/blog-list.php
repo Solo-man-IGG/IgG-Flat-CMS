@@ -8,7 +8,7 @@
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-$pageTitle = '部落格';
+$pageTitle = __('blog.list.page_title');
 $siteTitle = $siteTitle ?? 'My Site';
 $menuItems = $menuItems ?? [];
 require __DIR__ . '/header.php';
@@ -16,16 +16,16 @@ require __DIR__ . '/header.php';
 
 <div class="blog-filter">
     <form method="GET" action="/blog">
-        <label for="tag-filter">篩選分類：</label>
+        <label for="tag-filter"><?php echo __('blog.list.filter_label'); ?></label>
         <select name="tag" id="tag-filter" onchange="this.form.submit()">
-            <option value="">全部文章</option>
+            <option value=""><?php echo __('blog.list.filter_all'); ?></option>
             <?php foreach ($allTags as $tag): ?>
                 <option value="<?php echo htmlspecialchars($tag, ENT_QUOTES, 'UTF-8'); ?>"<?php echo ($selectedTag ?? '') === $tag ? ' selected' : ''; ?>>
                     <?php echo htmlspecialchars($tag, ENT_QUOTES, 'UTF-8'); ?>
                 </option>
             <?php endforeach; ?>
         </select>
-        <noscript><button type="submit">送出</button></noscript>
+        <noscript><button type="submit"><?php echo __('blog.list.filter_submit'); ?></button></noscript>
     </form>
 </div>
 
@@ -39,9 +39,9 @@ require __DIR__ . '/header.php';
                     </a>
                 </h2>
                 <div class="meta">
-                    <span>日期：<?php echo htmlspecialchars($post['date'], ENT_QUOTES, 'UTF-8'); ?></span>
+                    <span><?php echo __('blog.list.date_label'); ?><?php echo htmlspecialchars($post['date'], ENT_QUOTES, 'UTF-8'); ?></span>
                     <?php if (!empty($post['author'])): ?>
-                        <span> | 作者：<?php echo htmlspecialchars($post['author'], ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span><?php echo __('blog.list.author_label'); ?><?php echo htmlspecialchars($post['author'], ENT_QUOTES, 'UTF-8'); ?></span>
                     <?php endif; ?>
                 </div>
                 <div class="excerpt">
@@ -53,19 +53,19 @@ require __DIR__ . '/header.php';
                     <?php endforeach; ?>
                 </div>
                 <a href="/blog/<?php echo htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="read-more">
-                    閱讀更多 →
+                    <?php echo __('blog.list.read_more'); ?>
                 </a>
             </article>
         <?php endforeach; ?>
     <?php else: ?>
-        <p>目前沒有文章。</p>
+        <p><?php echo __('blog.list.empty'); ?></p>
     <?php endif; ?>
 </div>
 
 <?php if ($totalPages > 1): ?>
 <div class="pagination">
     <?php if ($currentPage > 1): ?>
-        <a href="?<?php echo $selectedTag !== '' ? 'tag=' . urlencode($selectedTag) . '&' : ''; ?>page=<?php echo $currentPage - 1; ?>" class="page-link">&laquo; 上一頁</a>
+        <a href="?<?php echo $selectedTag !== '' ? 'tag=' . urlencode($selectedTag) . '&' : ''; ?>page=<?php echo $currentPage - 1; ?>" class="page-link"><?php echo __('blog.list.prev_page'); ?></a>
     <?php endif; ?>
     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
         <?php if ($i === $currentPage): ?>
@@ -75,7 +75,7 @@ require __DIR__ . '/header.php';
         <?php endif; ?>
     <?php endfor; ?>
     <?php if ($currentPage < $totalPages): ?>
-        <a href="?<?php echo $selectedTag !== '' ? 'tag=' . urlencode($selectedTag) . '&' : ''; ?>page=<?php echo $currentPage + 1; ?>" class="page-link">下一頁 &raquo;</a>
+        <a href="?<?php echo $selectedTag !== '' ? 'tag=' . urlencode($selectedTag) . '&' : ''; ?>page=<?php echo $currentPage + 1; ?>" class="page-link"><?php echo __('blog.list.next_page'); ?></a>
     <?php endif; ?>
 </div>
 <?php endif; ?>

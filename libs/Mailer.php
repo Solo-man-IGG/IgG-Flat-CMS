@@ -151,7 +151,7 @@ class Mailer
     {
         $to = $this->settings['from'] ?? 'admin@example.com';
         $toName = $this->settings['from_name'] ?? 'Admin';
-        $subject = '新的聯絡表單留言 [' . $this->settings['site_title'] . ']：' . $data['subject'];
+        $subject = __('mailer.contact_notification.subject', $this->settings['site_title'], $data['subject']);
         
         $body = $this->generateContactEmailBody($data);
         
@@ -168,7 +168,7 @@ class Mailer
      */
     public function sendReply(string $to, string $toName, string $replyBody): bool
     {
-        $subject = '回覆您的留言 - ' . $this->settings['site_title'];
+        $subject = __('mailer.reply.subject', $this->settings['site_title']);
         
         $body = $this->generateReplyEmailBody($toName, $replyBody);
         
@@ -181,41 +181,41 @@ class Mailer
     private function generateContactEmailBody(array $data): string
     {
         $body = '<!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="' . __('lang.attr') . '">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新的聯絡表單留言</title>
+    <title>' . __('mailer.contact_notification.email_title') . '</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
     <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #2563eb;">新的聯絡表單留言</h2>
+        <h2 style="color: #2563eb;">' . __('mailer.contact_notification.heading') . '</h2>
         
         <table style="width: 100%; border-collapse: collapse;">
             <tr>
-                <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>姓名：</strong></td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">' . __('mailer.contact_notification.name_label') . '</td>
                 <td style="padding: 10px; border-bottom: 1px solid #eee;">' . htmlspecialchars($data['name'], ENT_QUOTES, 'UTF-8') . '</td>
             </tr>
             <tr>
-                <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>電子郵件：</strong></td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">' . __('mailer.contact_notification.email_label') . '</td>
                 <td style="padding: 10px; border-bottom: 1px solid #eee;"><a href="mailto:' . htmlspecialchars($data['email'], ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($data['email'], ENT_QUOTES, 'UTF-8') . '</a></td>
             </tr>
             <tr>
-                <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>主題：</strong></td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">' . __('mailer.contact_notification.subject_label') . '</td>
                 <td style="padding: 10px; border-bottom: 1px solid #eee;">' . htmlspecialchars($data['subject'], ENT_QUOTES, 'UTF-8') . '</td>
             </tr>
             <tr>
-                <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>時間：</strong></td>
+                <td style="padding: 10px; border-bottom: 1px solid #eee;">' . __('mailer.contact_notification.time_label') . '</td>
                 <td style="padding: 10px; border-bottom: 1px solid #eee;">' . htmlspecialchars($data['created_at'] ?? date('Y-m-d H:i:s'), ENT_QUOTES, 'UTF-8') . '</td>
             </tr>
         </table>
         
         <div style="margin-top: 20px; padding: 15px; background-color: #f9fafb; border-left: 4px solid #2563eb;">
-            <strong>訊息內容：</strong>
+            ' . __('mailer.contact_notification.message_label') . '
             <p style="margin: 10px 0; white-space: pre-wrap;">' . htmlspecialchars($data['message'], ENT_QUOTES, 'UTF-8') . '</p>
         </div>
         
-        <p style="margin-top: 20px; color: #666; font-size: 12px;">此郵件由 IgG Flat CMS - Lightweight Flat-File CMS 自動發送。</p>
+        ' . __('mailer.contact_notification.footer') . '
     </div>
 </body>
 </html>';
@@ -229,25 +229,25 @@ class Mailer
     private function generateReplyEmailBody(string $toName, string $replyBody): string
     {
         $body = '<!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="' . __('lang.attr') . '">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>回覆您的留言</title>
+    <title>' . __('mailer.reply.email_title') . '</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
     <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #2563eb;">回覆您的留言</h2>
+        <h2 style="color: #2563eb;">' . __('mailer.reply.heading') . '</h2>
         
-        <p>親愛的 ' . htmlspecialchars($toName, ENT_QUOTES, 'UTF-8') . '，</p>
+        ' . __('mailer.reply.greeting', htmlspecialchars($toName, ENT_QUOTES, 'UTF-8')) . '
         
         <div style="margin: 20px 0; padding: 15px; background-color: #f9fafb; border-left: 4px solid #2563eb;">
             <p style="margin: 0; white-space: pre-wrap;">' . htmlspecialchars($replyBody, ENT_QUOTES, 'UTF-8') . '</p>
         </div>
         
-        <p>如果您有任何其他問題，請隨時與我們聯繫。</p>
+        ' . __('mailer.reply.footer_contact') . '
         
-        <p style="margin-top: 20px; color: #666; font-size: 12px;">此郵件由 IgG Flat CMS - Lightweight Flat-File CMS 發送。</p>
+        ' . __('mailer.reply.footer') . '
     </div>
 </body>
 </html>';

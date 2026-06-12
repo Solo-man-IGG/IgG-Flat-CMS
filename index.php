@@ -1,7 +1,5 @@
 <?php
 
-define('CMS_ENTRY', true);
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統
@@ -45,7 +43,9 @@ if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
     }
 }
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/libs/functions.php';
 
+use CMS\Lang;
 use CMS\Router;
 use CMS\FileHandler;
 use CMS\Logger;
@@ -72,6 +72,9 @@ ini_set('log_errors', 1);
 
 // Set timezone
 date_default_timezone_set('Asia/Taipei');
+
+// Initialize language system
+Lang::init(__DIR__ . '/data');
 
 // Initialize FileHandler
 $fileHandler = new FileHandler(__DIR__);
@@ -105,18 +108,18 @@ try {
     // Display error page
     http_response_code(500);
     echo '<!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="' . __('lang.attr') . '">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>系統錯誤</title>
+    <title>' . __('error.title') . '</title>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 <body>
     <main>
-        <h1>系統錯誤</h1>
-        <p>抱歉，系統發生錯誤。請稍後再試。</p>
-        <p><a href="/">返回首頁</a></p>
+        <h1>' . __('error.title') . '</h1>
+        <p>' . __('error.message') . '</p>
+        <p><a href="/">' . __('home') . '</a></p>
     </main>
 </body>
 </html>';

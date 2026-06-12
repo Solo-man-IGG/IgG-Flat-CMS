@@ -1,7 +1,5 @@
 <?php
 
-defined("CMS_ENTRY") or die("Direct access not allowed.");
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統
@@ -11,6 +9,7 @@ defined("CMS_ENTRY") or die("Direct access not allowed.");
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../libs/functions.php';
 
 use CMS\Auth;
 use CMS\FileHandler;
@@ -33,7 +32,7 @@ $parser = new MarkdownParser();
 // Require authentication
 $auth->requireAuth();
 
-$pageTitle = '頁面管理';
+$pageTitle = __('admin.pages.page_title');
 $currentPage = 'pages';
 $username = $auth->getUsername();
 
@@ -47,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Validate CSRF token
     if (!$auth->validateCsrfToken($csrfToken)) {
-        $error = 'CSRF 驗證失敗，請重新整理頁面後再試。';
+        $error = __('admin.pages.error.csrf');
     } else {
         try {
             switch ($action) {
@@ -68,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 } catch (\Exception $e) {
                                     error_log('Failed to delete counter: ' . $e->getMessage());
                                 }
-                                $message = '頁面已刪除。';
+                                $message = __('admin.pages.message.deleted');
                                 break;
                             }
                         }
@@ -81,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $content = $_POST['content'] ?? '';
                     
                     if (!$title || !$content) {
-                        $error = '標題和內容不能為空。';
+                        $error = __('admin.pages.error.empty_fields');
                     } else {
                         // Generate slug if not provided
                         if (!$slug) {
@@ -106,12 +105,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         $fileHandler->write('content/pages/' . $slug . '.md', $markdown);
                         $cache->clear('pages', $slug);
-                        $message = '頁面已儲存。';
+                        $message = __('admin.pages.message.saved');
                     }
                     break;
             }
         } catch (\Exception $e) {
-            $error = '操作失敗：' . $e->getMessage();
+            $error = __('admin.pages.error.operation_failed', $e->getMessage());
         }
     }
 }
@@ -143,7 +142,7 @@ try {
         ];
     }
 } catch (\Exception $e) {
-    $error = '載入頁面失敗：' . $e->getMessage();
+    $error = __('admin.pages.error.load_failed', $e->getMessage());
 }
 
 // Sort pages by date (newest first)
@@ -169,7 +168,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
 ?>
 
     <div class="admin-content">
-        <h1>頁面管理</h1>
+        <h1><?php echo __('admin.pages.heading'); ?></h1>
         
         <?php if ($message): ?>
             <div class="alert alert-success"><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></div>
@@ -180,7 +179,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
         <?php endif; ?>
         
         <div class="card">
-            <h3><?php echo $editPage ? '編輯頁面' : '新增頁面'; ?></h3>
+            <h3><?php echo $editPage ? __('admin.pages.form.title_edit') : __('admin.pages.form.title_new'); ?></h3>
             <form method="POST">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="save">
@@ -189,33 +188,33 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                 <?php endif; ?>
                 
                 <div class="form-group">
-                    <label for="title">標題 *</label>
+                    <label for="title"><?php echo __('admin.pages.form.title'); ?></label>
                     <input type="text" id="title" name="title" value="<?php echo $editPage ? htmlspecialchars($editPage['title'], ENT_QUOTES, 'UTF-8') : ''; ?>" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="content">內容 (Markdown) *</label>
+                    <label for="content"><?php echo __('admin.pages.form.content'); ?></label>
                     <textarea id="content" name="content" data-easymde rows="15" required><?php echo $editPage ? htmlspecialchars($editPage['rawContent'], ENT_QUOTES, 'UTF-8') : ''; ?></textarea>
                 </div>
                 
                 <?php if ($editPage): ?>
-                    <a href="/admin/pages" class="btn btn-danger" style="text-decoration: none;">取消編輯</a>
+                    <a href="/admin/pages" class="btn btn-danger" style="text-decoration: none;"><?php echo __('admin.pages.form.cancel_edit'); ?></a>
                 <?php endif; ?>
-                <button type="submit" class="btn"><?php echo $editPage ? '更新頁面' : '儲存頁面'; ?></button>
+                <button type="submit" class="btn"><?php echo $editPage ? __('admin.pages.form.update') : __('admin.pages.form.save'); ?></button>
             </form>
         </div>
         
         <div class="card">
-            <h3>現有頁面</h3>
+            <h3><?php echo __('admin.pages.list.title'); ?></h3>
             <?php if (!empty($pages)): ?>
                 <table>
                     <thead>
                         <tr>
-                            <th>標題</th>
-                            <th>Slug</th>
-                            <th>日期</th>
-                            <th>瀏覽人次</th>
-                            <th>操作</th>
+                            <th><?php echo __('admin.pages.list.col_title'); ?></th>
+                            <th><?php echo __('admin.pages.list.col_slug'); ?></th>
+                            <th><?php echo __('admin.pages.list.col_date'); ?></th>
+                            <th><?php echo __('admin.pages.list.col_views'); ?></th>
+                            <th><?php echo __('admin.pages.list.col_actions'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -226,13 +225,13 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                                 <td><?php echo htmlspecialchars($page['date'], ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><?php echo number_format($page['views']); ?></td>
                                 <td>
-                                    <a href="/pages/<?php echo htmlspecialchars($page['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn" target="_blank">檢視</a>
-                                    <a href="/admin/pages?edit=<?php echo htmlspecialchars($page['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-success">編輯</a>
+                                    <a href="/pages/<?php echo htmlspecialchars($page['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn" target="_blank"><?php echo __('admin.pages.list.view'); ?></a>
+                                    <a href="/admin/pages?edit=<?php echo htmlspecialchars($page['slug'], ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-success"><?php echo __('admin.pages.list.edit'); ?></a>
                                     <form method="POST" style="display: inline;">
                                         <?php echo $csrfField; ?>
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="slug" value="<?php echo htmlspecialchars($page['slug'], ENT_QUOTES, 'UTF-8'); ?>">
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('確定要刪除此頁面？');">刪除</button>
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('<?php echo __('admin.pages.list.confirm_delete'); ?>');"><?php echo __('admin.pages.list.delete'); ?></button>
                                     </form>
                                 </td>
                             </tr>
@@ -240,7 +239,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                     </tbody>
                 </table>
             <?php else: ?>
-                <p>目前沒有頁面。</p>
+                <p><?php echo __('admin.pages.list.empty'); ?></p>
             <?php endif; ?>
         </div>
     </div>

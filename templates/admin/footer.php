@@ -3,14 +3,14 @@
     <div id="fileBrowserModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
         <div style="background: white; border-radius: 0.5rem; max-width: 800px; margin: 60px auto; max-height: 85vh; display: flex; flex-direction: column;">
             <div style="padding: 1rem 1.5rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="margin: 0;">選擇圖片</h3>
+                <h3 style="margin: 0;"><?php echo __('admin.footer.file_browser.title'); ?></h3>
                 <button type="button" onclick="closeFileBrowser()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6b7280; padding: 0.25rem;">&times;</button>
             </div>
             <div id="fileBrowserContent" style="flex: 1; overflow-y: auto; padding: 1rem;">
-                <p style="text-align: center; color: #94a3b8;">載入中...</p>
+<p style="text-align: center; color: #94a3b8;"><?php echo __('admin.footer.file_browser.loading'); ?></p>
             </div>
             <div style="padding: 0.75rem 1.5rem; border-top: 1px solid #e2e8f0; text-align: right;">
-                <a href="/admin/files" target="_blank" class="btn" style="font-size: 0.8rem; text-decoration: none;">前往檔案管理</a>
+                <a href="/admin/files" target="_blank" class="btn" style="font-size: 0.8rem; text-decoration: none;"><?php echo __('admin.footer.file_browser.go_to_files'); ?></a>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
                     loadFileBrowser();
                 },
                 className: 'fa fa-image',
-                title: '插入圖片',
+                title: '<?php echo __('admin.footer.editor.insert_image'); ?>',
             },
             '|',
             'table', '|',
@@ -57,13 +57,13 @@
 
         function loadFileBrowser() {
             var container = document.getElementById('fileBrowserContent');
-            container.innerHTML = '<p style="text-align: center; color: #94a3b8;">載入中...</p>';
+            container.innerHTML = '<p style="text-align: center; color: #94a3b8;"><?php echo __('admin.footer.file_browser.loading'); ?></p>';
 
             fetch('/admin/files?action=list')
                 .then(function(r) { return r.json(); })
                 .then(function(files) {
                     if (!files || files.length === 0) {
-                        container.innerHTML = '<p style="text-align: center; color: #94a3b8;">尚無圖片，請先上傳。</p>';
+                        container.innerHTML = '<p style="text-align: center; color: #94a3b8;"><?php echo __('admin.footer.file_browser.no_images'); ?></p>';
                         return;
                     }
 
@@ -85,7 +85,7 @@
                     container.innerHTML = html;
                 })
                 .catch(function() {
-                    container.innerHTML = '<p style="text-align: center; color: #ef4444;">載入失敗。</p>';
+                    container.innerHTML = '<p style="text-align: center; color: #ef4444;"><?php echo __('admin.footer.file_browser.load_error'); ?></p>';
                 });
         }
 
@@ -105,6 +105,37 @@
         document.getElementById('fileBrowserModal').addEventListener('click', function(e) {
             if (e.target === this) closeFileBrowser();
         });
+
+        // Sidebar toggle for mobile
+        var sidebarToggle = document.getElementById('sidebarToggle');
+        var sidebar = document.getElementById('adminSidebar');
+        if (sidebarToggle && sidebar) {
+            var sidebarMenu = sidebar.querySelector('ul');
+            // On mobile, start collapsed
+            if (window.innerWidth <= 768 && sidebarMenu) {
+                sidebarMenu.style.display = 'none';
+            }
+            sidebarToggle.addEventListener('click', function() {
+                if (window.innerWidth > 768) return;
+                if (sidebarMenu) {
+                    var isOpen = sidebarMenu.style.display !== 'none';
+                    sidebarMenu.style.display = isOpen ? 'none' : 'block';
+                    sidebarToggle.textContent = isOpen ? '☰' : '×';
+                }
+            });
+        }
+
+        // Wrap tables in scrollable container on small screens
+        if (window.innerWidth <= 768) {
+            document.querySelectorAll('table').forEach(function(t) {
+                if (!t.parentNode.classList.contains('table-wrap')) {
+                    var wrap = document.createElement('div');
+                    wrap.className = 'table-wrap';
+                    t.parentNode.insertBefore(wrap, t);
+                    wrap.appendChild(t);
+                }
+            });
+        }
     </script>
 </body>
 </html>

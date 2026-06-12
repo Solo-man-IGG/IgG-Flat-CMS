@@ -8,14 +8,14 @@
  * @license https://opensource.org/licenses/MIT MIT License
  */
 
-$pageTitle = '聯絡我們';
+$pageTitle = __('contact.page_title');
 $siteTitle = $siteTitle ?? 'My Site';
 $menuItems = $menuItems ?? [];
 require __DIR__ . '/header.php';
 ?>
 
 <div class="contact-page">
-    <h1>聯絡我們</h1>
+    <h1><?php echo __('contact.heading'); ?></h1>
     
     <?php if (!empty($success)): ?>
         <div class="alert alert-success">
@@ -33,26 +33,26 @@ require __DIR__ . '/header.php';
         <?php echo $csrfField ?? ''; ?>
         
         <div class="form-group">
-            <label for="name">姓名 *</label>
+            <label for="name"><?php echo __('contact.form.name'); ?></label>
             <input type="text" id="name" name="name" required value="<?php echo htmlspecialchars($_POST['name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
         </div>
         
         <div class="form-group">
-            <label for="email">電子郵件 *</label>
+            <label for="email"><?php echo __('contact.form.email'); ?></label>
             <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
         </div>
         
         <div class="form-group full-width">
-            <label for="subject">主題 *</label>
+            <label for="subject"><?php echo __('contact.form.subject'); ?></label>
             <input type="text" id="subject" name="subject" required value="<?php echo htmlspecialchars($_POST['subject'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
         </div>
         
         <div class="form-group full-width">
-            <label for="message">訊息 *</label>
+            <label for="message"><?php echo __('contact.form.message'); ?></label>
             <textarea id="message" name="message" required><?php echo htmlspecialchars($_POST['message'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
         </div>
         
-        <button type="submit">送出訊息</button>
+        <button type="submit"><?php echo __('contact.form.submit'); ?></button>
     </form>
 </div>
 

@@ -10,19 +10,27 @@
 
 namespace CMS\Controllers;
 
+use CMS\Cache;
+use CMS\MarkdownParser;
+use CMS\MenuManager;
+
 class ProductController extends BaseController
 {
     public function handleProductsList(): void
     {
-        $menuItems = $this->menuManager->getTemplateData();
+        $menuManager = new MenuManager($this->fileHandler);
+        $menuItems = $menuManager->getTemplateData();
 
         $settings = $this->loadSettings();
         $siteTitle = $settings['site_title'] ?? 'My Site';
 
+        $parser = new MarkdownParser();
+        $cache = new Cache($this->fileHandler);
+
         $products = [];
         $cacheKey = 'products_list';
 
-        $cached = $this->cache->get('products', $cacheKey);
+        $cached = $cache->get('products', $cacheKey);
         if ($cached !== null) {
             $products = json_decode($cached, true);
         } else {
@@ -30,20 +38,20 @@ class ProductController extends BaseController
                 $files = $this->fileHandler->listFiles('content/products', 'md');
                 foreach ($files as $file) {
                     $path = 'content/products/' . $file;
-                    $parsed = $this->parser->parseFile($this->fileHandler, $path);
+                    $parsed = $parser->parseFile($this->fileHandler, $path);
                     $frontmatter = $parsed['frontmatter'];
-                    $slug = $this->parser->getSlug($frontmatter, $file);
+                    $slug = $parser->getSlug($frontmatter, $file);
 
                     $products[] = [
                         'slug' => $slug,
-                        'title' => $this->parser->getTitle($frontmatter, $parsed['content']),
-                        'date' => $this->parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
+                        'title' => $parser->getTitle($frontmatter, $parsed['content']),
+                        'date' => $parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
                         'price' => $frontmatter['price'] ?? '',
                         'sku' => $frontmatter['sku'] ?? '',
                         'stock' => $frontmatter['stock'] ?? '',
                         'image' => $frontmatter['image'] ?? '',
                         'sort_order' => $frontmatter['sort_order'] ?? 0,
-                        'excerpt' => $this->parser->getExcerpt($parsed['content']),
+                        'excerpt' => $parser->getExcerpt($parsed['content']),
                     ];
                 }
 
@@ -56,7 +64,7 @@ class ProductController extends BaseController
                     return strtotime($b['date']) - strtotime($a['date']);
                 });
 
-                $this->cache->set('products', $cacheKey, json_encode($products));
+                $cache->set('products', $cacheKey, json_encode($products));
             } catch (\Exception $e) {
                 error_log('Products list error: ' . $e->getMessage());
             }
@@ -67,14 +75,18 @@ class ProductController extends BaseController
 
     public function handleProduct(string $slug): void
     {
-        $menuItems = $this->menuManager->getTemplateData();
+        $menuManager = new MenuManager($this->fileHandler);
+        $menuItems = $menuManager->getTemplateData();
 
         $settings = $this->loadSettings();
         $siteTitle = $settings['site_title'] ?? 'My Site';
 
+        $parser = new MarkdownParser();
+        $cache = new Cache($this->fileHandler);
+
         $cacheKey = 'product_' . $slug;
 
-        $cached = $this->cache->get('products', $cacheKey);
+        $cached = $cache->get('products', $cacheKey);
         if ($cached !== null) {
             $product = json_decode($cached, true);
         } else {
@@ -82,16 +94,16 @@ class ProductController extends BaseController
             try {
                 $files = $this->fileHandler->listFiles('content/products', 'md');
                 foreach ($files as $file) {
-                    $path = 'content/products/' . $file;
-                    $parsed = $this->parser->parseFile($this->fileHandler, $path);
-                    $frontmatter = $parsed['frontmatter'];
-                    $fileSlug = $this->parser->getSlug($frontmatter, $file);
+                    $fileSlug = pathinfo($file, PATHINFO_FILENAME);
                     if ($fileSlug === $slug) {
+                        $path = 'content/products/' . $file;
+                        $parsed = $parser->parseFile($this->fileHandler, $path);
+                        $frontmatter = $parsed['frontmatter'];
 
                         $product = [
                             'slug' => $slug,
-                            'title' => $this->parser->getTitle($frontmatter, $parsed['content']),
-                            'date' => $this->parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
+                            'title' => $parser->getTitle($frontmatter, $parsed['content']),
+                            'date' => $parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
                             'price' => $frontmatter['price'] ?? '',
                             'sku' => $frontmatter['sku'] ?? '',
                             'stock' => $frontmatter['stock'] ?? '',
@@ -100,7 +112,7 @@ class ProductController extends BaseController
                             'content' => $parsed['content'],
                         ];
 
-                        $this->cache->set('products', $cacheKey, json_encode($product));
+                        $cache->set('products', $cacheKey, json_encode($product));
                         break;
                     }
                 }

@@ -1,7 +1,5 @@
 <?php
 
-defined("CMS_ENTRY") or die("Direct access not allowed.");
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統
@@ -11,6 +9,7 @@ defined("CMS_ENTRY") or die("Direct access not allowed.");
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../libs/functions.php';
 
 use CMS\Auth;
 use CMS\FileHandler;
@@ -24,7 +23,7 @@ $auth = new Auth($fileHandler);
 
 $auth->requireAuth();
 
-$pageTitle = '檔案管理';
+$pageTitle = __('admin.files.page_title');
 $currentPage = 'files';
 $username = $auth->getUsername();
 
@@ -42,11 +41,11 @@ if ($uploadsDir === false || !is_dir($uploadsDir)) {
         $fileHandler->createDirectory('uploads');
         $uploadsDir = realpath(__DIR__ . '/../uploads');
     } catch (\Exception $e) {
-        $error = '無法建立上傳目錄：' . $e->getMessage();
+        $error = __('admin.files.error.create_upload_dir_failed', $e->getMessage());
     }
 }
 if ($uploadsDir === false) {
-    $error = '上傳目錄無法存取。';
+    $error = __('admin.files.error.upload_dir_inaccessible');
 }
 
 // Helper: list image files from a directory
@@ -93,7 +92,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'list') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrfToken = $_POST['csrf_token'] ?? '';
     if (!$auth->validateCsrfToken($csrfToken)) {
-        $error = 'CSRF 驗證失敗，請重新整理頁面後再試。';
+        $error = __('admin.files.error.csrf');
     } else {
         $action = $_POST['action'] ?? '';
 
@@ -103,9 +102,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($filename) {
                 try {
                     $fileHandler->delete('uploads/' . $filename);
-                    $message = '檔案已刪除。';
+                    $message = __('admin.files.message.deleted');
                 } catch (\Exception $e) {
-                    $error = '刪除失敗：' . $e->getMessage();
+                    $error = __('admin.files.error.delete_failed', $e->getMessage());
                 }
             }
         }
@@ -113,9 +112,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // --- Upload ---
         if ($action === 'upload') {
             if (empty($_FILES['files']['name'][0])) {
-                $error = '請選擇要上傳的檔案。';
+                $error = __('admin.files.error.no_file_selected');
             } elseif ($uploadsDir === false) {
-                $error = '上傳目錄無法存取。';
+                $error = __('admin.files.error.upload_dir_inaccessible');
             } else {
                 $uploaded = 0;
                 $failed = 0;
@@ -153,10 +152,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 if ($uploaded > 0) {
-                    $message = "成功上傳 {$uploaded} 個檔案。";
+                    $message = __('admin.files.message.upload_success', $uploaded);
                 }
                 if ($failed > 0) {
-                    $error = "{$failed} 個檔案上傳失敗（不支援的格式或超過大小限制）。";
+                    $error = __('admin.files.error.upload_failed', $failed);
                 }
             }
         }
@@ -191,7 +190,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
 ?>
 
     <div class="admin-content">
-        <h1>檔案管理</h1>
+        <h1><?php echo __('admin.files.heading'); ?></h1>
 
         <?php if ($message): ?>
             <div class="alert alert-success"><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></div>
@@ -202,27 +201,27 @@ require __DIR__ . '/../templates/admin/sidebar.php';
         <?php endif; ?>
 
         <div class="card">
-            <h3>上傳檔案</h3>
+            <h3><?php echo __('admin.files.upload_section.title'); ?></h3>
             <form method="POST" enctype="multipart/form-data">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="upload">
 
                 <div class="form-group">
-                    <label for="files">選擇圖片（可多選）</label>
+                    <label for="files"><?php echo __('admin.files.upload_section.select_files'); ?></label>
                     <input type="file" id="files" name="files[]" multiple accept="image/jpeg,image/png,image/gif,image/webp">
-                    <p class="help-text">支援 JPG、PNG、GIF、WebP，單檔最大 20MB</p>
+                    <p class="help-text"><?php echo __('admin.files.upload_section.help'); ?></p>
                 </div>
 
                 <div class="upload-drop-zone" id="dropZone">
-                    <span>或將圖片拖曳到此區域上傳</span>
+                    <span><?php echo __('admin.files.upload_section.drag_drop'); ?></span>
                 </div>
 
-                <button type="submit" class="btn">上傳檔案</button>
+                <button type="submit" class="btn"><?php echo __('admin.files.upload_section.upload'); ?></button>
             </form>
         </div>
 
         <div class="card">
-            <h3>已上傳檔案（<?php echo count($files); ?>）</h3>
+            <h3><?php echo sprintf(__('admin.files.list.title'), count($files)); ?></h3>
             <?php if (!empty($files)): ?>
                 <div class="file-grid">
                     <?php foreach ($files as $file): ?>
@@ -236,20 +235,20 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                                 </div>
                                 <div class="file-url">
                                     <input type="text" value="<?php echo htmlspecialchars($file['url'], ENT_QUOTES, 'UTF-8'); ?>" readonly onclick="this.select()">
-                                    <button class="btn btn-sm" onclick="copyUrl(this, '<?php echo htmlspecialchars($file['url'], ENT_QUOTES, 'UTF-8'); ?>')">複製</button>
+                                    <button class="btn btn-sm" onclick="copyUrl(this, '<?php echo htmlspecialchars($file['url'], ENT_QUOTES, 'UTF-8'); ?>')"><?php echo __('admin.files.list.copy_url'); ?></button>
                                 </div>
                             </div>
                             <form method="POST" class="file-actions">
                                 <?php echo $csrfField; ?>
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="filename" value="<?php echo htmlspecialchars($file['name'], ENT_QUOTES, 'UTF-8'); ?>">
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('確定要刪除「<?php echo htmlspecialchars($file['name'], ENT_QUOTES, 'UTF-8'); ?>」？')">刪除</button>
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('<?php echo __('admin.files.list.confirm_delete', htmlspecialchars($file['name'], ENT_QUOTES, 'UTF-8')); ?>')"><?php echo __('admin.files.list.delete'); ?></button>
                             </form>
                         </div>
                     <?php endforeach; ?>
                 </div>
             <?php else: ?>
-                <p>尚未上傳任何檔案。</p>
+                <p><?php echo __('admin.files.list.empty'); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -416,7 +415,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
 
         function showCopied(btn) {
             var orig = btn.textContent;
-            btn.textContent = '已複製!';
+            btn.textContent = '<?php echo __('admin.files.copy_feedback'); ?>';
             btn.style.background = '#10b981';
             setTimeout(function() {
                 btn.textContent = orig;

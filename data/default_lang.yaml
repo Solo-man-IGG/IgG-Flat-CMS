@@ -1,0 +1,471 @@
+lang.display_name: English
+lang.attr: en
+home: Back to Home
+error.title: System Error
+error.message: Sorry, an error occurred. Please try again later.
+header.nav.aria_label: Menu
+header.nav.contact: Contact Us
+base.error_404.title: Page Not Found
+base.error_404.heading: Page Not Found
+base.error_404.message: Sorry, the page you are looking for does not exist.
+base.error_404.back_home: Back to Home
+page.home.welcome: '<h1>Welcome to IgG CMS</h1>'
+page.home.description: '<p>A lightweight PHP 8.1+ Flat-File CMS.</p>'
+page.home.browse_blog: Browse Blog
+page.home.view_products: View Products
+page.home.contact_us: Contact Us
+page.page_title_default: Page
+contact.page_title: Contact Us
+contact.heading: Contact Us
+contact.form.name: Name *
+contact.form.email: Email *
+contact.form.subject: Subject *
+contact.form.message: Message *
+contact.form.submit: Send Message
+contact.error.csrf: CSRF verification failed. Please refresh the page and try again.
+contact.error.rate_limit: Please do not submit messages too frequently. Try again later.
+contact.error.send_failed: Failed to send message. Please try again later.
+auth.csrf_error.title: CSRF Verification Failed
+auth.csrf_error.heading: CSRF Verification Failed
+auth.csrf_error.message: Request verification failed. Please refresh the page and try again.
+auth.csrf_error.back_admin: Back to Admin
+blog.list.page_title: Blog
+blog.list.filter_label: 'Filter: '
+blog.list.filter_all: All Posts
+blog.list.filter_submit: Submit
+blog.list.date_label: 'Date: '
+blog.list.author_label: ' | Author: '
+blog.list.read_more: Read More →
+blog.list.empty: No posts yet.
+blog.list.prev_page: '« Previous'
+blog.list.next_page: Next »
+blog.post.page_title_default: Post
+blog.post.date_label: 'Date: '
+blog.post.author_label: ' | Author: '
+blog.post.tags_label: ' | Tags: '
+blog.post.related_title: Related Posts
+products.list.page_title: Products
+products.list.view_details: View Details →
+products.list.empty: No products yet.
+product.page_title_default: Product
+product.sku_label: '<strong>SKU：</strong>'
+product.stock_label: '<strong>Stock：</strong>'
+router.menu_defaults.blog: Blog
+router.menu_defaults.products: Products
+menumanager.defaults.blog: Blog
+menumanager.defaults.products: Products
+mailer.contact_notification.subject: '[%s] New Contact Message: %s'
+mailer.contact_notification.email_title: New Contact Message
+mailer.contact_notification.heading: New Contact Message
+mailer.contact_notification.name_label: '<strong>Name：</strong>'
+mailer.contact_notification.email_label: '<strong>Email：</strong>'
+mailer.contact_notification.subject_label: '<strong>Subject：</strong>'
+mailer.contact_notification.time_label: '<strong>Time：</strong>'
+mailer.contact_notification.message_label: '<strong>Message：</strong>'
+mailer.contact_notification.footer: '<p>This email was sent automatically by IgG Flat CMS.</p>'
+mailer.reply.subject: 'Re: %s'
+mailer.reply.email_title: Reply to Your Message
+mailer.reply.heading: Reply to Your Message
+mailer.reply.greeting: '<p>Dear %s，</p>'
+mailer.reply.footer_contact: '<p>If you have any further questions, please feel free to contact us.</p>'
+mailer.reply.footer: '<p>This email was sent by IgG Flat CMS.</p>'
+admin.login.page_title: Login - Admin Panel
+admin.login.heading: Admin Login
+admin.login.form.username: Username
+admin.login.form.password: Password
+admin.login.form.submit: Login
+admin.login.back_home: Back to Home
+admin.login.error.csrf: CSRF verification failed. Please refresh and try again.
+admin.login.error.invalid_credentials: Invalid username or password.
+admin.login.error.rate_limited: Too many login attempts. Please try again in %d minutes.
+admin.dashboard.page_title: Dashboard
+admin.dashboard.welcome: Welcome back, %s
+admin.dashboard.stat_blog_posts: Blog Posts
+admin.dashboard.stat_products: Products
+admin.dashboard.stat_pages: Pages
+admin.dashboard.stat_messages: Messages
+admin.dashboard.system_info.title: System Info
+admin.dashboard.system_info.col_item: Item
+admin.dashboard.system_info.col_value: Value
+admin.dashboard.system_info.php_version: PHP Version
+admin.dashboard.system_info.server_time: Server Time
+admin.dashboard.system_info.cache_count: Cache Files
+admin.dashboard.system_info.cache_size: Cache Size
+admin.dashboard.quick_actions.title: Quick Actions
+admin.dashboard.quick_actions.new_blog: New Post
+admin.dashboard.quick_actions.new_product: New Product
+admin.dashboard.quick_actions.new_page: New Page
+admin.dashboard.quick_actions.settings: Settings
+admin.blog.page_title: Blog Management
+admin.blog.heading: Blog Management
+admin.blog.error.csrf: CSRF verification failed. Please refresh and try again.
+admin.blog.error.empty_fields: Title and content cannot be empty.
+admin.blog.message.deleted: Post deleted.
+admin.blog.message.saved: Post saved.
+admin.blog.error.operation_failed: 'Operation failed: %s'
+admin.blog.error.load_failed: 'Failed to load post: %s'
+admin.blog.form.title_edit: Edit Post
+admin.blog.form.title_new: New Post
+admin.blog.form.title: Title *
+admin.blog.form.author: Author
+admin.blog.form.tags: Tags (comma-separated)
+admin.blog.form.tags_placeholder: e.g. tech, tutorial
+admin.blog.form.banner: Banner Image URL
+admin.blog.form.banner_placeholder: /uploads/your-image.jpg
+admin.blog.form.published: Publish
+admin.blog.form.content: Content (Markdown) *
+admin.blog.form.cancel_edit: Cancel
+admin.blog.form.update: Update Post
+admin.blog.form.save: Save Post
+admin.blog.list.title: All Posts
+admin.blog.list.col_title: Title
+admin.blog.list.col_author: Author
+admin.blog.list.col_date: Date
+admin.blog.list.col_status: Status
+admin.blog.list.col_views: Views
+admin.blog.list.col_actions: Actions
+admin.blog.list.status_published: Published
+admin.blog.list.status_draft: Draft
+admin.blog.list.view: View
+admin.blog.list.edit: Edit
+admin.blog.list.confirm_delete: Are you sure you want to delete this post?
+admin.blog.list.delete: Delete
+admin.blog.list.empty: No posts yet.
+admin.pages.page_title: Page Management
+admin.pages.heading: Page Management
+admin.pages.error.csrf: CSRF verification failed. Please refresh and try again.
+admin.pages.error.empty_fields: Title and content cannot be empty.
+admin.pages.message.deleted: Page deleted.
+admin.pages.message.saved: Page saved.
+admin.pages.error.operation_failed: 'Operation failed: %s'
+admin.pages.error.load_failed: 'Failed to load page: %s'
+admin.pages.form.title_edit: Edit Page
+admin.pages.form.title_new: New Page
+admin.pages.form.title: Title *
+admin.pages.form.content: Content (Markdown) *
+admin.pages.form.cancel_edit: Cancel
+admin.pages.form.update: Update Page
+admin.pages.form.save: Save Page
+admin.pages.list.title: All Pages
+admin.pages.list.col_title: Title
+admin.pages.list.col_slug: Slug
+admin.pages.list.col_date: Date
+admin.pages.list.col_views: Views
+admin.pages.list.col_actions: Actions
+admin.pages.list.view: View
+admin.pages.list.edit: Edit
+admin.pages.list.confirm_delete: Are you sure you want to delete this page?
+admin.pages.list.delete: Delete
+admin.pages.list.empty: No pages yet.
+admin.products.page_title: Product Management
+admin.products.heading: Product Management
+admin.products.error.csrf: CSRF verification failed. Please refresh and try again.
+admin.products.error.empty_fields: Title and content cannot be empty.
+admin.products.message.deleted: Product deleted.
+admin.products.message.saved: Product saved.
+admin.products.message.reordered: Sort order updated.
+admin.products.error.operation_failed: 'Operation failed: %s'
+admin.products.error.load_failed: 'Failed to load product: %s'
+admin.products.form.title_edit: Edit Product
+admin.products.form.title_new: New Product
+admin.products.form.name: Product Name *
+admin.products.form.price: Price
+admin.products.form.price_placeholder: e.g. 19900 or Custom Quote
+admin.products.form.sku: SKU
+admin.products.form.stock: Stock
+admin.products.form.image: Image URL
+admin.products.form.image_placeholder: https://example.com/image.jpg
+admin.products.form.sort_order: Sort Order (lower = first)
+admin.products.form.description: Description (Markdown) *
+admin.products.form.cancel_edit: Cancel
+admin.products.form.update: Update Product
+admin.products.form.save: Save Product
+admin.products.list.title: All Products
+admin.products.list.col_sort: Order
+admin.products.list.col_name: Name
+admin.products.list.col_price: Price
+admin.products.list.col_sku: SKU
+admin.products.list.col_stock: Stock
+admin.products.list.col_date: Date
+admin.products.list.col_views: Views
+admin.products.list.col_actions: Actions
+admin.products.list.view: View
+admin.products.list.edit: Edit
+admin.products.list.confirm_delete: Are you sure you want to delete this product?
+admin.products.list.delete: Delete
+admin.products.list.update_sort: Update Order
+admin.products.list.empty: No products yet.
+admin.messages.page_title: Message Management
+admin.messages.heading: Message Management
+admin.messages.error.csrf: CSRF verification failed. Please refresh and try again.
+admin.messages.message.marked_replied: Message marked as replied.
+admin.messages.error.operation_failed_short: Operation failed.
+admin.messages.message.deleted: Message deleted.
+admin.messages.message.reply_sent: Reply sent.
+admin.messages.error.reply_failed: Failed to send reply. Please check mail settings.
+admin.messages.error.not_found: Message not found.
+admin.messages.error.reply_empty: Please enter reply content.
+admin.messages.error.operation_failed: 'Operation failed: %s'
+admin.messages.warning.mail_not_configured: Mail is not configured. Please go to Settings to configure SMTP.
+admin.messages.list.title: Messages
+admin.messages.list.col_name: Name
+admin.messages.list.col_email: Email
+admin.messages.list.col_subject: Subject
+admin.messages.list.col_date: Date
+admin.messages.list.col_status: Status
+admin.messages.list.col_actions: Actions
+admin.messages.list.status_replied: Replied
+admin.messages.list.status_unreplied: Unreplied
+admin.messages.list.reply: Reply
+admin.messages.list.mark_replied: Mark as Replied
+admin.messages.list.confirm_delete: Are you sure you want to delete this message?
+admin.messages.list.delete: Delete
+admin.messages.list.empty: No messages yet.
+admin.messages.modal.title: Reply to Message
+admin.messages.modal.from_label: 'From: %s'
+admin.messages.modal.subject_label: 'Subject: %s'
+admin.messages.modal.original_message_label: 'Original Message:'
+admin.messages.modal.reply_body: Reply Content *
+admin.messages.modal.send: Send Reply
+admin.messages.modal.cancel: Cancel
+admin.settings.page_title: Settings
+admin.settings.heading: Settings
+admin.settings.error.csrf: CSRF verification failed. Please refresh and try again.
+admin.settings.message.saved: Settings saved.
+admin.settings.message.menu_saved: Menu saved.
+admin.settings.message.cache_cleared: Cache cleared.
+admin.settings.error.invalid_test_email: Please enter a valid test email address.
+admin.settings.email_test.subject_suffix: ' Mail Test'
+admin.settings.email_test.body_html: '<h3>This is a test email</h3><p>If you receive this, SMTP settings are correct.</p><p>Time: %s</p>'
+admin.settings.email_test.body_plain: 'This is a test email. If you receive this, SMTP settings are correct. Time: %s'
+admin.settings.email_test.recipient_name: Test Recipient
+admin.settings.message.test_email_sent: Test email sent to %s
+admin.settings.error.test_email_failed: 'Send failed: %s'
+admin.settings.error.unknown: Unknown error. Check error_log.
+admin.settings.error.operation_failed: 'Operation failed: %s'
+admin.settings.site_section.title: Site Settings
+admin.settings.site_section.site_title: Site Title
+admin.settings.site_section.save: Save Settings
+admin.settings.mail_section.title: Mail Settings
+admin.settings.mail_section.host: SMTP Host
+admin.settings.mail_section.host_placeholder: smtp.example.com
+admin.settings.mail_section.port: SMTP Port
+admin.settings.mail_section.username: SMTP Username
+admin.settings.mail_section.password: SMTP Password
+admin.settings.mail_section.password_placeholder: (already set, leave blank to keep)
+admin.settings.mail_section.password_help: Can also be set via MAIL_PASSWORD environment variable (takes precedence)
+admin.settings.mail_section.from_email: Sender Email
+admin.settings.mail_section.from_name: Sender Name
+admin.settings.mail_section.save: Save Mail Settings
+admin.settings.menu_section.title: Menu Settings
+admin.settings.menu_section.col_type: Type
+admin.settings.menu_section.col_label: Label
+admin.settings.menu_section.col_order: Order
+admin.settings.menu_section.col_enabled: Enabled
+admin.settings.menu_section.col_actions: Actions
+admin.settings.menu_section.type_blog: Blog
+admin.settings.menu_section.type_products: Products
+admin.settings.menu_section.optgroup_static_pages: Static Pages
+admin.settings.menu_section.delete_item: Delete
+admin.settings.menu_section.add_item: Add Menu Item
+admin.settings.menu_section.save: Save Menu
+admin.settings.home_section.title: Homepage Settings
+admin.settings.home_section.home_page: Homepage Content
+admin.settings.home_section.default_option: Default (System Homepage)
+admin.settings.home_section.help: Select a page to use as homepage. Select "Default" for the system homepage.
+admin.settings.home_section.save: Save Homepage Settings
+admin.settings.cache_section.title: Cache Management
+admin.settings.cache_section.clear: Clear All Cache
+admin.settings.email_test.title: Mail Test
+admin.settings.email_test.to_label: Test Recipient *
+admin.settings.email_test.to_placeholder: test@example.com
+admin.settings.email_test.help: Enter an email to send a test message and verify SMTP settings.
+admin.settings.email_test.send: Send Test Email
+admin.users.page_title: User Management
+admin.users.heading: User Management
+admin.users.error.csrf: CSRF verification failed. Please refresh and try again.
+admin.users.message.deleted: User deleted.
+admin.users.error.cannot_delete_last_admin: Cannot delete user (may be the last admin).
+admin.users.error.empty_fields: Username, password and email cannot be empty.
+admin.users.error.password_too_short: Password must be at least 6 characters.
+admin.users.message.created: User created.
+admin.users.error.username_exists: Username already exists.
+admin.users.error.id_email_empty: User ID and email cannot be empty.
+admin.users.message.updated: User updated.
+admin.users.error.update_failed: Failed to update user.
+admin.users.error.operation_failed: 'Operation failed: %s'
+admin.users.add_section.title: Add User
+admin.users.add_section.username: Username *
+admin.users.add_section.password: Password * (min. 6 characters)
+admin.users.add_section.email: Email *
+admin.users.add_section.role: Role
+admin.users.role.admin: Admin
+admin.users.role.editor: Editor
+admin.users.add_section.create: Create User
+admin.users.list.title: All Users
+admin.users.list.col_username: Username
+admin.users.list.col_email: Email
+admin.users.list.col_role: Role
+admin.users.list.col_created: Created
+admin.users.list.col_actions: Actions
+admin.users.list.edit: Edit
+admin.users.list.confirm_delete: Are you sure you want to delete this user?
+admin.users.list.delete: Delete
+admin.users.list.current_user_label: (currently logged in)
+admin.users.list.empty: No users yet.
+admin.users.edit_section.title: Edit User
+admin.users.edit_section.username: Username
+admin.users.edit_section.email: Email *
+admin.users.edit_section.role: Role
+admin.users.edit_section.password: New Password (leave blank to keep)
+admin.users.edit_section.password_help: To change password, enter at least 6 characters.
+admin.users.edit_section.update: Update User
+admin.users.edit_section.cancel: Cancel
+admin.themes.page_title: Theme Management
+admin.themes.heading: Theme Management
+admin.themes.presets.default: Default
+admin.themes.presets.dark: Dark
+admin.themes.presets.nature: Nature
+admin.themes.presets.ocean: Ocean
+admin.themes.presets.sunset: Sunset
+admin.themes.color_label.primary: Primary Color
+admin.themes.color_label.secondary: Secondary Color
+admin.themes.color_label.accent: Accent Color
+admin.themes.color_label.text: Text Color
+admin.themes.color_label.background: Background Color
+admin.themes.color_label.border: Border Color
+admin.themes.color_label.header_bg: Header Background
+admin.themes.color_label.header_text: Header Text
+admin.themes.color_label.footer_bg: Footer Background
+admin.themes.color_label.footer_text: Footer Text
+admin.themes.error.csrf: CSRF verification failed. Please refresh and try again.
+admin.themes.message.saved: Theme settings saved.
+admin.themes.message.reset: Theme has been reset to default.
+admin.themes.error.operation_failed: 'Operation failed: %s'
+admin.themes.scheme_section.title: Color Scheme
+admin.themes.scheme_section.description: Select a preset scheme or customize colors below.
+admin.themes.custom_colors.title: Custom Colors
+admin.themes.nav_style.title: Navigation Style
+admin.themes.nav_style.description: Choose how the menu is displayed.
+admin.themes.nav_style.list: Horizontal List
+admin.themes.nav_style.hamburger: Hamburger Menu
+admin.themes.nav_style.preview.item1: Item 1
+admin.themes.nav_style.preview.item2: Item 2
+admin.themes.nav_style.preview.item3: Item 3
+admin.themes.custom_css.title: Custom CSS
+admin.themes.custom_css.description: 'Advanced: write CSS overrides directly. For users familiar with CSS.'
+admin.themes.save: Save Theme Settings
+admin.themes.confirm_reset: Are you sure you want to reset all theme settings?
+admin.themes.reset_default: Reset to Default
+admin.signature.page_title: Signature Management
+admin.signature.heading: Signature Management
+admin.signature.error.load_failed: 'Failed to load signature: %s'
+admin.signature.error.csrf: CSRF verification failed. Please refresh and try again.
+admin.signature.message.saved: Signature saved.
+admin.signature.error.save_failed: 'Save failed: %s'
+admin.signature.form.title: Configure Signature
+admin.signature.form.signature: Post Signature
+admin.signature.form.placeholder: e.g. Thank you for reading. Comments welcome!
+admin.signature.form.help: This signature will be automatically appended to all posts.
+admin.signature.form.save: Save Signature
+admin.files.page_title: File Management
+admin.files.heading: File Management
+admin.files.error.create_upload_dir_failed: 'Failed to create upload directory: %s'
+admin.files.error.upload_dir_inaccessible: Upload directory is not accessible.
+admin.files.error.csrf: CSRF verification failed. Please refresh and try again.
+admin.files.message.deleted: File deleted.
+admin.files.error.delete_failed: 'Delete failed: %s'
+admin.files.error.no_file_selected: Please select a file to upload.
+admin.files.message.upload_success: Successfully uploaded %d file(s).
+admin.files.error.upload_failed: '%d file(s) failed to upload (unsupported format or exceeds size limit).'
+admin.files.upload_section.title: Upload Files
+admin.files.upload_section.select_files: Select Images (multiple)
+admin.files.upload_section.help: Supports JPG, PNG, GIF, WebP. Max 20MB per file.
+admin.files.upload_section.drag_drop: Or drag and drop images here
+admin.files.upload_section.upload: Upload
+admin.files.list.title: Uploaded Files (%d)
+admin.files.list.copy_url: Copy URL
+admin.files.list.confirm_delete: Are you sure you want to delete "%s"?
+admin.files.list.delete: Delete
+admin.files.list.empty: No files uploaded yet.
+admin.files.copy_feedback: Copied!
+admin.documents.page_title: Internal Documents
+admin.documents.heading: Internal Documents
+admin.documents.error.create_dir_failed: 'Failed to create documents directory: %s'
+admin.documents.error.csrf: CSRF verification failed. Please refresh and try again.
+admin.documents.message.deleted: Document deleted.
+admin.documents.error.empty_fields: Title and content cannot be empty.
+admin.documents.message.saved: Document saved.
+admin.documents.error.operation_failed: 'Operation failed: %s'
+admin.documents.error.load_failed: 'Failed to load document: %s'
+admin.documents.view.author_label: 'Author: '
+admin.documents.view.date_label: ' | Date: '
+admin.documents.view.category_label: ' | Category: '
+admin.documents.view.back_list: '← Back to Documents'
+admin.documents.view.confirm_delete: Are you sure you want to delete this document?
+admin.documents.view.delete: Delete Document
+admin.documents.form.title_edit: Edit Document
+admin.documents.form.title_new: New Document
+admin.documents.form.title: Title *
+admin.documents.form.category: Category
+admin.documents.form.category_placeholder: e.g. Policy, Meeting, Manual
+admin.documents.form.content: Content (Markdown) *
+admin.documents.form.cancel_edit: Cancel
+admin.documents.form.update: Update Document
+admin.documents.form.save: Save Document
+admin.documents.list.title: All Documents
+admin.documents.list.col_title: Title
+admin.documents.list.col_category: Category
+admin.documents.list.col_author: Author
+admin.documents.list.col_date: Date
+admin.documents.list.col_actions: Actions
+admin.documents.list.view: View
+admin.documents.list.edit: Edit
+admin.documents.list.delete: Delete
+admin.documents.list.empty: No documents yet.
+admin.header.page_title: Admin Panel
+admin.sidebar.heading: Admin Panel
+admin.sidebar.toggle_label: Menu
+admin.sidebar.dashboard: Dashboard
+admin.sidebar.pages: Pages
+admin.sidebar.blog: Blog
+admin.sidebar.signature: Signature
+admin.sidebar.products: Products
+admin.sidebar.files: Files
+admin.sidebar.messages: Messages
+admin.sidebar.documents: Documents
+admin.sidebar.themes: Themes
+admin.sidebar.users: Users
+admin.sidebar.settings: Settings
+admin.sidebar.language: Language
+admin.sidebar.logout: Logout
+admin.footer.file_browser.title: Select Image
+admin.footer.file_browser.loading: Loading...
+admin.footer.file_browser.go_to_files: Go to File Manager
+admin.footer.editor.insert_image: Insert Image
+admin.footer.file_browser.no_images: No images yet. Please upload first.
+admin.footer.file_browser.load_error: Failed to load.
+admin.language.page_title: Language Management
+admin.language.heading: Language Management
+admin.language.all_tab: All
+admin.language.overrides_tab: Overrides
+admin.language.key: Key
+admin.language.default_value: Default
+admin.language.custom_value: Custom
+admin.language.save: Save Changes
+admin.language.add_key: Add Key
+admin.language.cancel: Cancel
+admin.language.message.saved: Language settings saved successfully.
+admin.language.message.key_added: New key added successfully.
+admin.language.message.key_deleted: Key deleted successfully.
+admin.language.no_overrides: No custom language overrides yet. Add one above.
+admin.language.key_placeholder: e.g. custom.key.name
+admin.language.value_placeholder: Enter translation text
+admin.language.reset: Reset to Default
+admin.language.confirm_delete: Are you sure you want to reset this key to default?
+admin.language.editing: Editing
+admin.language.switch_label: Language
+admin.language.switch_button: Apply
+admin.language.current_lang: 'Current:'
+footer.rights: All rights reserved.
+footer.powered_by: Powered by IgG Flat CMS - Lightweight Flat-File CMS

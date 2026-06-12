@@ -1,7 +1,5 @@
 <?php
 
-defined("CMS_ENTRY") or die("Direct access not allowed.");
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統
@@ -11,6 +9,7 @@ defined("CMS_ENTRY") or die("Direct access not allowed.");
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../libs/functions.php';
 
 use CMS\Auth;
 use CMS\FileHandler;
@@ -29,7 +28,7 @@ $cache = new Cache($fileHandler);
 // Require authentication
 $auth->requireAuth();
 
-$pageTitle = '文章簽名管理';
+$pageTitle = __('admin.signature.page_title');
 $currentPage = 'signature';
 $username = $auth->getUsername();
 
@@ -44,7 +43,7 @@ try {
         $currentSignature = $fileHandler->read($signaturePath);
     }
 } catch (\Exception $e) {
-    $error = '讀取簽名失败：' . $e->getMessage();
+    $error = __('admin.signature.error.load_failed', $e->getMessage());
 }
 
 // Handle form submission
@@ -54,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Validate CSRF token
     if (!$auth->validateCsrfToken($csrfToken)) {
-        $error = 'CSRF 驗證失敗，請重新整理頁面後再試。';
+        $error = __('admin.signature.error.csrf');
     } else {
         try {
             // Save signature
@@ -64,9 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $cache->clear('blog', '');
             $cache->clear('pages', '');
             
-            $message = '簽名已儲存。';
+            $message = __('admin.signature.message.saved');
         } catch (\Exception $e) {
-            $error = '儲存失敗：' . $e->getMessage();
+            $error = __('admin.signature.error.save_failed', $e->getMessage());
         }
     }
 }
@@ -78,7 +77,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
 ?>
 
 <div class="admin-content">
-    <h1>文章簽名管理</h1>
+    <h1><?php echo __('admin.signature.heading'); ?></h1>
     
     <?php if ($message): ?>
         <div class="alert alert-success"><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></div>
@@ -89,17 +88,17 @@ require __DIR__ . '/../templates/admin/sidebar.php';
     <?php endif; ?>
     
     <div class="card">
-        <h3>設定文章簽名</h3>
+        <h3><?php echo __('admin.signature.form.title'); ?></h3>
         <form method="POST">
             <?php echo $csrfField; ?>
             
             <div class="form-group">
-                <label for="signature">文章簽名</label>
-                <textarea id="signature" name="signature" data-easymde rows="5" placeholder="例如：感謝閱讀，歡迎留言。"><?php echo htmlspecialchars($currentSignature, ENT_QUOTES, 'UTF-8'); ?></textarea>
-                <p class="help-text">此簽名將自動附加到所有文章末尾。</p>
+                <label for="signature"><?php echo __('admin.signature.form.signature'); ?></label>
+                <textarea id="signature" name="signature" data-easymde rows="5" placeholder="<?php echo __('admin.signature.form.placeholder'); ?>"><?php echo htmlspecialchars($currentSignature, ENT_QUOTES, 'UTF-8'); ?></textarea>
+                <p class="help-text"><?php echo __('admin.signature.form.help'); ?></p>
             </div>
             
-            <button type="submit" class="btn">儲存簽名</button>
+            <button type="submit" class="btn"><?php echo __('admin.signature.form.save'); ?></button>
         </form>
     </div>
 </div>

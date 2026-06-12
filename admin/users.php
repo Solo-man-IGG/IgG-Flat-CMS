@@ -1,7 +1,5 @@
 <?php
 
-defined("CMS_ENTRY") or die("Direct access not allowed.");
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統
@@ -11,6 +9,7 @@ defined("CMS_ENTRY") or die("Direct access not allowed.");
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../libs/functions.php';
 
 use CMS\Auth;
 use CMS\FileHandler;
@@ -27,7 +26,7 @@ $auth = new Auth($fileHandler);
 // Require authentication
 $auth->requireAuth();
 
-$pageTitle = '使用者管理';
+$pageTitle = __('admin.users.page_title');
 $currentPage = 'users';
 $username = $auth->getUsername();
 
@@ -41,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Validate CSRF token
     if (!$auth->validateCsrfToken($csrfToken)) {
-        $error = 'CSRF 驗證失敗，請重新整理頁面後再試。';
+        $error = __('admin.users.error.csrf');
     } else {
         try {
             switch ($action) {
@@ -49,9 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $userId = $_POST['user_id'] ?? '';
                     if ($userId) {
                         if ($auth->deleteUser($userId)) {
-                            $message = '使用者已刪除。';
+                            $message = __('admin.users.message.deleted');
                         } else {
-                            $error = '無法刪除使用者（可能是最後一個管理員）。';
+                            $error = __('admin.users.error.cannot_delete_last_admin');
                         }
                     }
                     break;
@@ -62,15 +61,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $newEmail = $_POST['email'] ?? '';
                     $newRole = $_POST['role'] ?? 'admin';
                     
-                    if (!$newUsername || !$newPassword || !$newEmail) {
-                        $error = '使用者名稱、密碼和信箱不能為空。';
+                        if (!$newUsername || !$newPassword || !$newEmail) {
+                            $error = __('admin.users.error.empty_fields');
                     } elseif (strlen($newPassword) < 6) {
-                        $error = '密碼至少需要 6 個字元。';
+                        $error = __('admin.users.error.password_too_short');
                     } else {
                         if ($auth->createUser($newUsername, $newPassword, $newEmail, $newRole)) {
-                            $message = '使用者已建立。';
+                            $message = __('admin.users.message.created');
                         } else {
-                            $error = '使用者名稱已存在。';
+                            $error = __('admin.users.error.username_exists');
                         }
                     }
                     break;
@@ -82,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $updatePassword = $_POST['password'] ?? '';
                     
                     if (!$userId || !$updateEmail) {
-                        $error = '使用者 ID 和信箱不能為空。';
+                        $error = __('admin.users.error.id_email_empty');
                     } else {
                         $data = [
                             'email' => $updateEmail,
@@ -91,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         if (!empty($updatePassword)) {
                             if (strlen($updatePassword) < 6) {
-                                $error = '密碼至少需要 6 個字元。';
+                                $error = __('admin.users.error.password_too_short');
                             } else {
                                 $data['password'] = $updatePassword;
                             }
@@ -99,16 +98,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         if (!$error) {
                             if ($auth->updateUser($userId, $data)) {
-                                $message = '使用者已更新。';
+                                $message = __('admin.users.message.updated');
                             } else {
-                                $error = '更新使用者失敗。';
+                                $error = __('admin.users.error.update_failed');
                             }
                         }
                     }
                     break;
             }
         } catch (\Exception $e) {
-            $error = '操作失敗：' . $e->getMessage();
+            $error = __('admin.users.error.operation_failed', $e->getMessage());
         }
     }
 }
@@ -123,7 +122,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
 ?>
 
     <div class="admin-content">
-        <h1>使用者管理</h1>
+        <h1><?php echo __('admin.users.heading'); ?></h1>
         
         <?php if ($message): ?>
             <div class="alert alert-success"><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></div>
@@ -134,49 +133,49 @@ require __DIR__ . '/../templates/admin/sidebar.php';
         <?php endif; ?>
         
         <div class="card">
-            <h3>新增使用者</h3>
+            <h3><?php echo __('admin.users.add_section.title'); ?></h3>
             <form method="POST">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="create">
                 
                 <div class="form-group">
-                    <label for="username">使用者名稱 *</label>
+                    <label for="username"><?php echo __('admin.users.add_section.username'); ?></label>
                     <input type="text" id="username" name="username" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="password">密碼 * (至少 6 個字元)</label>
+                    <label for="password"><?php echo __('admin.users.add_section.password'); ?></label>
                     <input type="password" id="password" name="password" required minlength="6">
                 </div>
                 
                 <div class="form-group">
-                    <label for="email">信箱 *</label>
+                    <label for="email"><?php echo __('admin.users.add_section.email'); ?></label>
                     <input type="email" id="email" name="email" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="role">角色</label>
+                    <label for="role"><?php echo __('admin.users.add_section.role'); ?></label>
                     <select id="role" name="role">
-                        <option value="admin">管理員</option>
-                        <option value="editor">編輯者</option>
+                        <option value="admin"><?php echo __('admin.users.role.admin'); ?></option>
+                        <option value="editor"><?php echo __('admin.users.role.editor'); ?></option>
                     </select>
                 </div>
                 
-                <button type="submit" class="btn">建立使用者</button>
+                <button type="submit" class="btn"><?php echo __('admin.users.add_section.create'); ?></button>
             </form>
         </div>
         
         <div class="card">
-            <h3>現有使用者</h3>
+            <h3><?php echo __('admin.users.list.title'); ?></h3>
             <?php if (!empty($users)): ?>
                 <table>
                     <thead>
                         <tr>
-                            <th>使用者名稱</th>
-                            <th>信箱</th>
-                            <th>角色</th>
-                            <th>建立日期</th>
-                            <th>操作</th>
+                            <th><?php echo __('admin.users.list.col_username'); ?></th>
+                            <th><?php echo __('admin.users.list.col_email'); ?></th>
+                            <th><?php echo __('admin.users.list.col_role'); ?></th>
+                            <th><?php echo __('admin.users.list.col_created'); ?></th>
+                            <th><?php echo __('admin.users.list.col_actions'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -186,23 +185,23 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                                 <td><?php echo htmlspecialchars($user['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td>
                                     <?php if (($user['role'] ?? '') === 'admin'): ?>
-                                        <span style="color: #ef4444; font-weight: bold;">管理員</span>
+                                        <span style="color: #ef4444; font-weight: bold;"><?php echo __('admin.users.role.admin'); ?></span>
                                     <?php else: ?>
-                                        <span style="color: #2563eb;">編輯者</span>
+                                        <span style="color: #2563eb;"><?php echo __('admin.users.role.editor'); ?></span>
                                     <?php endif; ?>
                                 </td>
                                 <td><?php echo htmlspecialchars(date('Y-m-d', strtotime($user['created_at'] ?? 'now')), ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td>
-                                    <button type="button" class="btn" onclick="showEditForm('<?php echo htmlspecialchars($user['id'] ?? '', ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($user['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($user['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($user['role'] ?? '', ENT_QUOTES, 'UTF-8'); ?>')">編輯</button>
+                                    <button type="button" class="btn" onclick="showEditForm('<?php echo htmlspecialchars($user['id'] ?? '', ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($user['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($user['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>', '<?php echo htmlspecialchars($user['role'] ?? '', ENT_QUOTES, 'UTF-8'); ?>')"><?php echo __('admin.users.list.edit'); ?></button>
                                     <?php if (($user['username'] ?? '') !== $username): ?>
                                         <form method="POST" style="display: inline;">
                                             <?php echo $csrfField; ?>
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($user['id'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('確定要刪除此使用者？');">刪除</button>
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('<?php echo __('admin.users.list.confirm_delete'); ?>');"><?php echo __('admin.users.list.delete'); ?></button>
                                         </form>
                                     <?php else: ?>
-                                        <span style="color: #6b7280; font-size: 0.875rem;">（目前登入）</span>
+                                        <span style="color: #6b7280; font-size: 0.875rem;"><?php echo __('admin.users.list.current_user_label'); ?></span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -210,43 +209,43 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                     </tbody>
                 </table>
             <?php else: ?>
-                <p>目前沒有使用者。</p>
+                <p><?php echo __('admin.users.list.empty'); ?></p>
             <?php endif; ?>
         </div>
         
         <div class="card" id="edit-card" style="display: none;">
-            <h3>編輯使用者</h3>
+            <h3><?php echo __('admin.users.edit_section.title'); ?></h3>
             <form method="POST" id="edit-form">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="update">
                 <input type="hidden" name="user_id" id="edit-user-id">
                 
                 <div class="form-group">
-                    <label>使用者名稱</label>
+                    <label><?php echo __('admin.users.edit_section.username'); ?></label>
                     <input type="text" id="edit-username" disabled style="background-color: #f3f4f6;">
                 </div>
                 
                 <div class="form-group">
-                    <label for="edit-email">信箱 *</label>
+                    <label for="edit-email"><?php echo __('admin.users.edit_section.email'); ?></label>
                     <input type="email" id="edit-email" name="email" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="edit-role">角色</label>
+                    <label for="edit-role"><?php echo __('admin.users.edit_section.role'); ?></label>
                     <select id="edit-role" name="role">
-                        <option value="admin">管理員</option>
-                        <option value="editor">編輯者</option>
+                        <option value="admin"><?php echo __('admin.users.role.admin'); ?></option>
+                        <option value="editor"><?php echo __('admin.users.role.editor'); ?></option>
                     </select>
                 </div>
                 
                 <div class="form-group">
-                    <label for="edit-password">新密碼 (留空則不變更)</label>
+                    <label for="edit-password"><?php echo __('admin.users.edit_section.password'); ?></label>
                     <input type="password" id="edit-password" name="password" minlength="6">
-                    <small style="color: #6b7280;">若要變更密碼，請輸入至少 6 個字元的新密碼</small>
+                    <small style="color: #6b7280;"><?php echo __('admin.users.edit_section.password_help'); ?></small>
                 </div>
                 
-                <button type="submit" class="btn">更新使用者</button>
-                <button type="button" class="btn" onclick="hideEditForm()" style="background-color: #6b7280;">取消</button>
+                <button type="submit" class="btn"><?php echo __('admin.users.edit_section.update'); ?></button>
+                <button type="button" class="btn" onclick="hideEditForm()" style="background-color: #6b7280;"><?php echo __('admin.users.edit_section.cancel'); ?></button>
             </form>
         </div>
     </div>

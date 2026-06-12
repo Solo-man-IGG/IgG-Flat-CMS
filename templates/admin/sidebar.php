@@ -1,17 +1,19 @@
-    <aside class="admin-sidebar">
-        <h2>後台管理</h2>
+    <aside class="admin-sidebar" id="adminSidebar">
+        <h2><?php echo __('admin.sidebar.heading'); ?></h2>
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="<?php echo __('admin.sidebar.toggle_label'); ?>">☰</button>
         <ul>
-            <li><a href="/admin/dashboard" class="<?php echo $currentPage === 'dashboard' ? 'active' : ''; ?>">儀表板</a></li>
-            <li><a href="/admin/pages" class="<?php echo $currentPage === 'pages' ? 'active' : ''; ?>">頁面管理</a></li>
-            <li><a href="/admin/blog" class="<?php echo $currentPage === 'blog' ? 'active' : ''; ?>">文章管理</a></li>
-            <li><a href="/admin/signature" class="<?php echo $currentPage === 'signature' ? 'active' : ''; ?>">文章簽名</a></li>
-            <li><a href="/admin/products" class="<?php echo $currentPage === 'products' ? 'active' : ''; ?>">產品管理</a></li>
-            <li><a href="/admin/files" class="<?php echo $currentPage === 'files' ? 'active' : ''; ?>">檔案管理</a></li>
-            <li><a href="/admin/messages" class="<?php echo $currentPage === 'messages' ? 'active' : ''; ?>">留言管理</a></li>
-            <li><a href="/admin/documents" class="<?php echo $currentPage === 'documents' ? 'active' : ''; ?>">內部文件</a></li>
-            <li><a href="/admin/themes" class="<?php echo $currentPage === 'themes' ? 'active' : ''; ?>">主題管理</a></li>
-            <li><a href="/admin/users" class="<?php echo $currentPage === 'users' ? 'active' : ''; ?>">使用者管理</a></li>
-            <li><a href="/admin/settings" class="<?php echo $currentPage === 'settings' ? 'active' : ''; ?>">系統設定</a></li>
-            <li><a href="/admin/logout" style="color: #f87171;">登出</a></li>
+            <li><a href="/admin/dashboard" class="<?php echo $currentPage === 'dashboard' ? 'active' : ''; ?>"><?php echo __('admin.sidebar.dashboard'); ?></a></li>
+            <li><a href="/admin/pages" class="<?php echo $currentPage === 'pages' ? 'active' : ''; ?>"><?php echo __('admin.sidebar.pages'); ?></a></li>
+            <li><a href="/admin/blog" class="<?php echo $currentPage === 'blog' ? 'active' : ''; ?>"><?php echo __('admin.sidebar.blog'); ?></a></li>
+            <li><a href="/admin/signature" class="<?php echo $currentPage === 'signature' ? 'active' : ''; ?>"><?php echo __('admin.sidebar.signature'); ?></a></li>
+            <li><a href="/admin/products" class="<?php echo $currentPage === 'products' ? 'active' : ''; ?>"><?php echo __('admin.sidebar.products'); ?></a></li>
+            <li><a href="/admin/files" class="<?php echo $currentPage === 'files' ? 'active' : ''; ?>"><?php echo __('admin.sidebar.files'); ?></a></li>
+            <li><a href="/admin/messages" class="<?php echo $currentPage === 'messages' ? 'active' : ''; ?>"><?php echo __('admin.sidebar.messages'); ?></a></li>
+            <li><a href="/admin/documents" class="<?php echo $currentPage === 'documents' ? 'active' : ''; ?>"><?php echo __('admin.sidebar.documents'); ?></a></li>
+            <li><a href="/admin/themes" class="<?php echo $currentPage === 'themes' ? 'active' : ''; ?>"><?php echo __('admin.sidebar.themes'); ?></a></li>
+            <li><a href="/admin/users" class="<?php echo $currentPage === 'users' ? 'active' : ''; ?>"><?php echo __('admin.sidebar.users'); ?></a></li>
+            <li><a href="/admin/settings" class="<?php echo $currentPage === 'settings' ? 'active' : ''; ?>"><?php echo __('admin.sidebar.settings'); ?></a></li>
+            <li><a href="/admin/language" class="<?php echo $currentPage === 'language' ? 'active' : ''; ?>"><?php echo __('admin.sidebar.language'); ?></a></li>
+            <li><a href="/admin/logout" style="color: #f87171;"><?php echo __('admin.sidebar.logout'); ?></a></li>
         </ul>
     </aside>

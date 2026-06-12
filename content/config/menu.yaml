@@ -1,12 +1,11 @@
 items:
   -
     type: products
-    label: 產品
-    menu_num: 6
+    label: Products
+    menu_num: 5
     enabled: true
   -
     type: blog
-    label: 部落格
-    menu_num: 7
+    label: Blog
+    menu_num: 6
     enabled: true
- 

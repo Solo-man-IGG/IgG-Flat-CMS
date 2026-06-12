@@ -1,7 +1,5 @@
 <?php
 
-defined("CMS_ENTRY") or die("Direct access not allowed.");
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統
@@ -11,6 +9,7 @@ defined("CMS_ENTRY") or die("Direct access not allowed.");
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../libs/functions.php';
 
 use CMS\Auth;
 use CMS\FileHandler;
@@ -34,7 +33,7 @@ $parser = new MarkdownParser();
 // Require authentication
 $auth->requireAuth();
 
-$pageTitle = '系統設定';
+$pageTitle = __('admin.settings.page_title');
 $currentPage = 'settings';
 $username = $auth->getUsername();
 
@@ -84,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Validate CSRF token
     if (!$auth->validateCsrfToken($csrfToken)) {
-        $error = 'CSRF 驗證失敗，請重新整理頁面後再試。';
+        $error = __('admin.settings.error.csrf');
     } else {
         try {
             switch ($action) {
@@ -113,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     $fileHandler->write('content/config/settings.json', json_encode($newSettings, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
                     $settings = $newSettings;
-                    $message = '設定已儲存。';
+                    $message = __('admin.settings.message.saved');
                     break;
                     
                 case 'save_menu':
@@ -135,36 +134,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $menuManager->saveMenu($menuData);
                     $cache->clearAll();
                     $menuItems = $menuManager->getMenuItems();
-                    $message = '選單已儲存。';
+                    $message = __('admin.settings.message.menu_saved');
                     break;
                     
                 case 'clear_cache':
                     $cache->clearAll();
-                    $message = '快取已清除。';
+                    $message = __('admin.settings.message.cache_cleared');
                     break;
                     
                 case 'test_email':
                     $testTo = $_POST['test_email_to'] ?? '';
                     if (!$testTo || !filter_var($testTo, FILTER_VALIDATE_EMAIL)) {
-                        $error = '請輸入有效的測試收件信箱。';
+                        $error = __('admin.settings.error.invalid_test_email');
                     } else {
                         $mailer = new Mailer($fileHandler);
                         $mailer->reloadSettings();
                         $siteTitle = $settings['site_title'] ?? 'IgG Flat CMS - Lightweight Flat-File CMS';
-                        $subject = $siteTitle . ' 郵件測試';
-                        $body = '<h3>這是一封測試郵件</h3><p>若您收到此信，表示 SMTP 設定正常。</p><p>時間：' . date('Y-m-d H:i:s') . '</p>';
-                        $altBody = '這是一封測試郵件。若您收到此信，表示 SMTP 設定正常。時間：' . date('Y-m-d H:i:s');
+                        $subject = $siteTitle . __('admin.settings.email_test.subject_suffix');
+                        $body = __('admin.settings.email_test.body_html', date('Y-m-d H:i:s'));
+                        $altBody = __('admin.settings.email_test.body_plain', date('Y-m-d H:i:s'));
                         
-                        if ($mailer->send($testTo, '測試收件者', $subject, $body, $altBody)) {
-                            $message = '測試郵件已發送至 ' . htmlspecialchars($testTo, ENT_QUOTES, 'UTF-8');
+                        if ($mailer->send($testTo, __('admin.settings.email_test.recipient_name'), $subject, $body, $altBody)) {
+                            $message = __('admin.settings.message.test_email_sent', htmlspecialchars($testTo, ENT_QUOTES, 'UTF-8'));
                         } else {
-                            $error = '發送失敗：' . ($mailer->getLastError() ?: '未知錯誤，請檢查 error_log');
+                            $error = $mailer->getLastError() ? __('admin.settings.error.test_email_failed', $mailer->getLastError()) : __('admin.settings.error.unknown');
                         }
                     }
                     break;
             }
         } catch (\Exception $e) {
-            $error = '操作失敗：' . $e->getMessage();
+            $error = __('admin.settings.error.operation_failed', $e->getMessage());
         }
     }
 }
@@ -176,7 +175,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
 ?>
 
     <div class="admin-content">
-        <h1>系統設定</h1>
+        <h1><?php echo __('admin.settings.heading'); ?></h1>
         
         <?php if ($message): ?>
             <div class="alert alert-success"><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></div>
@@ -187,63 +186,63 @@ require __DIR__ . '/../templates/admin/sidebar.php';
         <?php endif; ?>
         
         <div class="card">
-            <h3>網站設定</h3>
+            <h3><?php echo __('admin.settings.site_section.title'); ?></h3>
             <form method="POST">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="save_settings">
                 
                 <div class="form-group">
-                    <label for="site_title">網站標題</label>
+                    <label for="site_title"><?php echo __('admin.settings.site_section.site_title'); ?></label>
                     <input type="text" id="site_title" name="site_title" value="<?php echo htmlspecialchars($settings['site_title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
                 
-                <button type="submit" class="btn">儲存設定</button>
+                <button type="submit" class="btn"><?php echo __('admin.settings.site_section.save'); ?></button>
             </form>
         </div>
         
         <div class="card">
-            <h3>郵件設定</h3>
+            <h3><?php echo __('admin.settings.mail_section.title'); ?></h3>
             <form method="POST">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="save_settings">
                 
                 <div class="form-group">
-                    <label for="mail_host">SMTP 主機</label>
-                    <input type="text" id="mail_host" name="mail_host" value="<?php echo htmlspecialchars($settings['mail_host'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="smtp.example.com">
+                    <label for="mail_host"><?php echo __('admin.settings.mail_section.host'); ?></label>
+                    <input type="text" id="mail_host" name="mail_host" value="<?php echo htmlspecialchars($settings['mail_host'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="<?php echo __('admin.settings.mail_section.host_placeholder'); ?>">
                 </div>
                 
                 <div class="form-group">
-                    <label for="mail_port">SMTP 埠號</label>
+                    <label for="mail_port"><?php echo __('admin.settings.mail_section.port'); ?></label>
                     <input type="number" id="mail_port" name="mail_port" value="<?php echo htmlspecialchars($settings['mail_port'] ?? '587', ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
                 
                 <div class="form-group">
-                    <label for="mail_username">SMTP 使用者名稱</label>
+                    <label for="mail_username"><?php echo __('admin.settings.mail_section.username'); ?></label>
                     <input type="text" id="mail_username" name="mail_username" value="<?php echo htmlspecialchars($settings['mail_username'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
                 
                 <div class="form-group">
-                    <label for="mail_password">SMTP 密碼</label>
-                    <input type="password" id="mail_password" name="mail_password" placeholder="<?php echo $settings['mail_password'] ? '（已設定，留空不修改）' : ''; ?>">
-                    <p class="form-help">亦可透過環境變數 MAIL_PASSWORD 設定（優先於此欄位）</p>
+                    <label for="mail_password"><?php echo __('admin.settings.mail_section.password'); ?></label>
+                    <input type="password" id="mail_password" name="mail_password" placeholder="<?php echo $settings['mail_password'] ? __('admin.settings.mail_section.password_placeholder') : ''; ?>">
+                    <p class="form-help"><?php echo __('admin.settings.mail_section.password_help'); ?></p>
                 </div>
                 
                 <div class="form-group">
-                    <label for="mail_from">寄件者信箱</label>
+                    <label for="mail_from"><?php echo __('admin.settings.mail_section.from_email'); ?></label>
                     <input type="email" id="mail_from" name="mail_from" value="<?php echo htmlspecialchars($settings['mail_from'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
                 
                 <div class="form-group">
-                    <label for="mail_from_name">寄件者名稱</label>
+                    <label for="mail_from_name"><?php echo __('admin.settings.mail_section.from_name'); ?></label>
                     <input type="text" id="mail_from_name" name="mail_from_name" value="<?php echo htmlspecialchars($settings['mail_from_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
                 
-                <button type="submit" class="btn">儲存郵件設定</button>
+                <button type="submit" class="btn"><?php echo __('admin.settings.mail_section.save'); ?></button>
             </form>
         </div>
         
         <div class="card">
-            <h3>選單設定</h3>
+            <h3><?php echo __('admin.settings.menu_section.title'); ?></h3>
             <form method="POST">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="save_menu">
@@ -251,11 +250,11 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                 <table>
                     <thead>
                         <tr>
-                            <th>類型</th>
-                            <th>標籤</th>
-                            <th>順序</th>
-                            <th>啟用</th>
-                            <th>操作</th>
+                            <th><?php echo __('admin.settings.menu_section.col_type'); ?></th>
+                            <th><?php echo __('admin.settings.menu_section.col_label'); ?></th>
+                            <th><?php echo __('admin.settings.menu_section.col_order'); ?></th>
+                            <th><?php echo __('admin.settings.menu_section.col_enabled'); ?></th>
+                            <th><?php echo __('admin.settings.menu_section.col_actions'); ?></th>
                         </tr>
                     </thead>
                     <tbody id="menu-items">
@@ -263,10 +262,10 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                             <tr>
                                 <td>
                                     <select name="type[]" required class="menu-type-select">
-                                        <option value="blog" <?php echo $item['type'] === 'blog' ? 'selected' : ''; ?>>部落格</option>
-                                        <option value="products" <?php echo $item['type'] === 'products' ? 'selected' : ''; ?>>產品</option>
+                                        <option value="blog" <?php echo $item['type'] === 'blog' ? 'selected' : ''; ?>><?php echo __('admin.settings.menu_section.type_blog'); ?></option>
+                                        <option value="products" <?php echo $item['type'] === 'products' ? 'selected' : ''; ?>><?php echo __('admin.settings.menu_section.type_products'); ?></option>
                                         <?php if (!empty($existingPages)): ?>
-                                            <optgroup label="靜態頁面">
+                                            <optgroup label="<?php echo __('admin.settings.menu_section.optgroup_static_pages'); ?>">
                                                 <?php foreach ($existingPages as $slug => $title): ?>
                                                     <option value="page:<?php echo htmlspecialchars($slug, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $item['type'] === 'page:' . $slug ? 'selected' : ''; ?>>
                                                         <?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?>
@@ -286,63 +285,63 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                                     <input type="checkbox" name="enabled[]" value="<?php echo $index; ?>" <?php echo $item['enabled'] ? 'checked' : ''; ?>>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-danger" onclick="removeMenuItem(this)">刪除</button>
+                                    <button type="button" class="btn btn-danger" onclick="removeMenuItem(this)"><?php echo __('admin.settings.menu_section.delete_item'); ?></button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
                 
-                <button type="button" class="btn" onclick="addMenuItem()">新增選單項目</button>
-                <button type="submit" class="btn">儲存選單</button>
+                <button type="button" class="btn" onclick="addMenuItem()"><?php echo __('admin.settings.menu_section.add_item'); ?></button>
+                <button type="submit" class="btn"><?php echo __('admin.settings.menu_section.save'); ?></button>
             </form>
         </div>
         
         <div class="card">
-            <h3>首頁設定</h3>
+            <h3><?php echo __('admin.settings.home_section.title'); ?></h3>
             <form method="POST">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="save_settings">
 
                 <div class="form-group">
-                    <label for="home_page">首頁內容</label>
+                    <label for="home_page"><?php echo __('admin.settings.home_section.home_page'); ?></label>
                     <select id="home_page" name="home_page">
-                        <option value="">預設首頁（系統內建）</option>
+                        <option value=""><?php echo __('admin.settings.home_section.default_option'); ?></option>
                         <?php foreach ($existingPages as $slug => $title): ?>
                             <option value="<?php echo htmlspecialchars($slug, ENT_QUOTES, 'UTF-8'); ?>" <?php echo ($settings['home_page'] ?? '') === $slug ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
-                    <p class="form-help">選擇要作為首頁的頁面，選「預設首頁」則使用系統內建首頁。</p>
+                    <p class="form-help"><?php echo __('admin.settings.home_section.help'); ?></p>
                 </div>
 
-                <button type="submit" class="btn">儲存首頁設定</button>
+                <button type="submit" class="btn"><?php echo __('admin.settings.home_section.save'); ?></button>
             </form>
         </div>
 
         <div class="card">
-            <h3>快取管理</h3>
+            <h3><?php echo __('admin.settings.cache_section.title'); ?></h3>
             <form method="POST">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="clear_cache">
-                <button type="submit" class="btn btn-danger">清除所有快取</button>
+                <button type="submit" class="btn btn-danger"><?php echo __('admin.settings.cache_section.clear'); ?></button>
             </form>
         </div>
         
         <div class="card">
-            <h3>郵件測試</h3>
+            <h3><?php echo __('admin.settings.email_test.title'); ?></h3>
             <form method="POST">
                 <?php echo $csrfField; ?>
                 <input type="hidden" name="action" value="test_email">
                 
                 <div class="form-group">
-                    <label for="test_email_to">測試收件信箱 *</label>
-                    <input type="email" id="test_email_to" name="test_email_to" required placeholder="test@example.com">
-                    <p class="form-help">輸入一個信箱進行測試發送，確認 SMTP 設定是否正常</p>
+                    <label for="test_email_to"><?php echo __('admin.settings.email_test.to_label'); ?></label>
+                    <input type="email" id="test_email_to" name="test_email_to" required placeholder="<?php echo __('admin.settings.email_test.to_placeholder'); ?>">
+                    <p class="form-help"><?php echo __('admin.settings.email_test.help'); ?></p>
                 </div>
                 
-                <button type="submit" class="btn">發送測試郵件</button>
+                <button type="submit" class="btn"><?php echo __('admin.settings.email_test.send'); ?></button>
             </form>
         </div>
     </div>
@@ -354,10 +353,10 @@ require __DIR__ . '/../templates/admin/sidebar.php';
             newRow.innerHTML = `
                 <td>
                     <select name="type[]" required class="menu-type-select">
-                        <option value="blog">部落格</option>
-                        <option value="products">產品</option>
+                        <option value="blog"><?php echo __('admin.settings.menu_section.type_blog'); ?></option>
+                        <option value="products"><?php echo __('admin.settings.menu_section.type_products'); ?></option>
                         <?php if (!empty($existingPages)): ?>
-                            <optgroup label="靜態頁面">
+                            <optgroup label="<?php echo __('admin.settings.menu_section.optgroup_static_pages'); ?>">
                                 <?php foreach ($existingPages as $slug => $title): ?>
                                     <option value="page:<?php echo htmlspecialchars($slug, ENT_QUOTES, 'UTF-8'); ?>">
                                         <?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?>
@@ -377,7 +376,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                     <input type="checkbox" name="enabled[]" value="">
                 </td>
                 <td>
-                    <button type="button" class="btn btn-danger" onclick="removeMenuItem(this)">刪除</button>
+                    <button type="button" class="btn btn-danger" onclick="removeMenuItem(this)"><?php echo __('admin.settings.menu_section.delete_item'); ?></button>
                 </td>
             `;
             tbody.appendChild(newRow);

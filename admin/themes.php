@@ -1,7 +1,5 @@
 <?php
 
-defined("CMS_ENTRY") or die("Direct access not allowed.");
-
 /**
  * IgG Flat CMS - Lightweight Flat-File CMS
  * 璦閣內容管理系統
@@ -11,6 +9,7 @@ defined("CMS_ENTRY") or die("Direct access not allowed.");
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../libs/functions.php';
 
 use CMS\Auth;
 use CMS\FileHandler;
@@ -27,7 +26,7 @@ $auth = new Auth($fileHandler);
 // Require authentication
 $auth->requireAuth();
 
-$pageTitle = '主題管理';
+$pageTitle = __('admin.themes.page_title');
 $currentPage = 'themes';
 $username = $auth->getUsername();
 
@@ -36,7 +35,7 @@ $error = '';
 
 $presets = [
     'default' => [
-        'label' => '預設',
+        'label' => __('admin.themes.presets.default'),
         'colors' => [
             'primary-color' => '#3b82f6',
             'secondary-color' => '#1d4ed8',
@@ -51,7 +50,7 @@ $presets = [
         ],
     ],
     'dark' => [
-        'label' => '暗色',
+        'label' => __('admin.themes.presets.dark'),
         'colors' => [
             'primary-color' => '#6366f1',
             'secondary-color' => '#818cf8',
@@ -66,7 +65,7 @@ $presets = [
         ],
     ],
     'nature' => [
-        'label' => '自然',
+        'label' => __('admin.themes.presets.nature'),
         'colors' => [
             'primary-color' => '#059669',
             'secondary-color' => '#047857',
@@ -81,7 +80,7 @@ $presets = [
         ],
     ],
     'ocean' => [
-        'label' => '海洋',
+        'label' => __('admin.themes.presets.ocean'),
         'colors' => [
             'primary-color' => '#0891b2',
             'secondary-color' => '#0e7490',
@@ -96,7 +95,7 @@ $presets = [
         ],
     ],
     'sunset' => [
-        'label' => '夕陽',
+        'label' => __('admin.themes.presets.sunset'),
         'colors' => [
             'primary-color' => '#ea580c',
             'secondary-color' => '#c2410c',
@@ -113,16 +112,16 @@ $presets = [
 ];
 
 $colorLabels = [
-    'primary-color' => '主要顏色',
-    'secondary-color' => '次要顏色',
-    'accent-color' => '強調色',
-    'text-color' => '文字顏色',
-    'bg-color' => '背景顏色',
-    'border-color' => '邊框顏色',
-    'header-bg' => '頁首背景',
-    'header-text' => '頁首文字',
-    'footer-bg' => '頁尾背景',
-    'footer-text' => '頁尾文字',
+    'primary-color' => __('admin.themes.color_label.primary'),
+    'secondary-color' => __('admin.themes.color_label.secondary'),
+    'accent-color' => __('admin.themes.color_label.accent'),
+    'text-color' => __('admin.themes.color_label.text'),
+    'bg-color' => __('admin.themes.color_label.background'),
+    'border-color' => __('admin.themes.color_label.border'),
+    'header-bg' => __('admin.themes.color_label.header_bg'),
+    'header-text' => __('admin.themes.color_label.header_text'),
+    'footer-bg' => __('admin.themes.color_label.footer_bg'),
+    'footer-text' => __('admin.themes.color_label.footer_text'),
 ];
 
 // Load existing theme config
@@ -145,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
     if (!$auth->validateCsrfToken($csrfToken)) {
-        $error = 'CSRF 驗證失敗，請重新整理頁面後再試。';
+        $error = __('admin.themes.error.csrf');
     } else {
         try {
             switch ($action) {
@@ -171,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $currentScheme = $themeConfig['scheme'];
                     $currentNavStyle = $themeConfig['nav_style'];
                     $customCss = $themeConfig['custom_css'];
-                    $message = '主題設定已儲存。';
+                    $message = __('admin.themes.message.saved');
                     break;
 
                 case 'reset_theme':
@@ -188,11 +187,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $currentColors = $presets['default']['colors'];
                     $currentScheme = 'default';
                     $customCss = '';
-                    $message = '主題已重置為預設。';
+                    $message = __('admin.themes.message.reset');
                     break;
             }
         } catch (\Exception $e) {
-            $error = '操作失敗：' . $e->getMessage();
+            $error = __('admin.themes.error.operation_failed', $e->getMessage());
         }
     }
 }
@@ -204,7 +203,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
 ?>
 
     <div class="admin-content">
-        <h1>主題管理</h1>
+        <h1><?php echo __('admin.themes.heading'); ?></h1>
 
         <?php if ($message): ?>
             <div class="alert alert-success"><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></div>
@@ -220,8 +219,8 @@ require __DIR__ . '/../templates/admin/sidebar.php';
             <input type="hidden" name="scheme" id="scheme-input" value="<?php echo htmlspecialchars($currentScheme, ENT_QUOTES, 'UTF-8'); ?>">
 
             <div class="card">
-                <h3>配色方案</h3>
-                <p>選擇一個預設方案，或自行調整下方的顏色。</p>
+                <h3><?php echo __('admin.themes.scheme_section.title'); ?></h3>
+                <p><?php echo __('admin.themes.scheme_section.description'); ?></p>
                 <div class="preset-grid">
                     <?php foreach ($presets as $key => $preset): ?>
                         <button type="button" class="preset-btn <?php echo $currentScheme === $key ? 'active' : ''; ?>" data-scheme="<?php echo $key; ?>" onclick="applyPreset('<?php echo $key; ?>')">
@@ -237,7 +236,7 @@ require __DIR__ . '/../templates/admin/sidebar.php';
             </div>
 
             <div class="card">
-                <h3>自訂顏色</h3>
+                <h3><?php echo __('admin.themes.custom_colors.title'); ?></h3>
                 <div class="color-grid">
                     <?php foreach ($colorLabels as $key => $label): ?>
                         <div class="color-item">
@@ -252,18 +251,18 @@ require __DIR__ . '/../templates/admin/sidebar.php';
             </div>
 
             <div class="card">
-                <h3>導覽樣式</h3>
-                <p>選擇選單的顯示方式。</p>
+                <h3><?php echo __('admin.themes.nav_style.title'); ?></h3>
+                <p><?php echo __('admin.themes.nav_style.description'); ?></p>
                 <div class="nav-style-grid">
                     <label class="nav-style-option <?php echo $currentNavStyle === 'list' ? 'active' : ''; ?>">
                         <input type="radio" name="nav_style" value="list" <?php echo $currentNavStyle === 'list' ? 'checked' : ''; ?> onchange="document.querySelectorAll('.nav-style-option').forEach(function(e){e.classList.remove('active')});this.closest('.nav-style-option').classList.add('active')">
                         <div class="nav-style-preview">
                             <div class="mock-nav">
                                 <span class="mock-brand">Logo</span>
-                                <span class="mock-links"><span>選項1</span><span>選項2</span><span>選項3</span></span>
+                                <span class="mock-links"><span><?php echo __('admin.themes.nav_style.preview.item1'); ?></span><span><?php echo __('admin.themes.nav_style.preview.item2'); ?></span><span><?php echo __('admin.themes.nav_style.preview.item3'); ?></span></span>
                             </div>
                         </div>
-                        <span>水平列表</span>
+                        <span><?php echo __('admin.themes.nav_style.list'); ?></span>
                     </label>
                     <label class="nav-style-option <?php echo $currentNavStyle === 'hamburger' ? 'active' : ''; ?>">
                         <input type="radio" name="nav_style" value="hamburger" <?php echo $currentNavStyle === 'hamburger' ? 'checked' : ''; ?> onchange="document.querySelectorAll('.nav-style-option').forEach(function(e){e.classList.remove('active')});this.closest('.nav-style-option').classList.add('active')">
@@ -273,22 +272,22 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                                 <span class="mock-hamburger"><span></span><span></span><span></span></span>
                             </div>
                         </div>
-                        <span>漢堡選單</span>
+                        <span><?php echo __('admin.themes.nav_style.hamburger'); ?></span>
                     </label>
                 </div>
             </div>
 
             <div class="card">
-                <h3>自訂 CSS</h3>
-                <p>進階：直接撰寫 CSS 覆蓋樣式，適合熟悉 CSS 的使用者。</p>
+                <h3><?php echo __('admin.themes.custom_css.title'); ?></h3>
+                <p><?php echo __('admin.themes.custom_css.description'); ?></p>
                 <div class="form-group">
                     <textarea id="custom_css" name="custom_css" rows="20" style="font-family: monospace; font-size: 14px; width: 100%;"><?php echo htmlspecialchars($customCss, ENT_QUOTES, 'UTF-8'); ?></textarea>
                 </div>
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn">儲存主題設定</button>
-                <button type="button" class="btn btn-danger" onclick="if(confirm('確定要重置所有主題設定？')){document.getElementById('scheme-input').name='';var f=document.getElementById('theme-form');var i=document.createElement('input');i.type='hidden';i.name='action';i.value='reset_theme';f.appendChild(i);f.submit()}">重置為預設</button>
+                <button type="submit" class="btn"><?php echo __('admin.themes.save'); ?></button>
+                <button type="button" class="btn btn-danger" onclick="if(confirm('<?php echo __('admin.themes.confirm_reset'); ?>')){document.getElementById('scheme-input').name='';var f=document.getElementById('theme-form');var i=document.createElement('input');i.type='hidden';i.name='action';i.value='reset_theme';f.appendChild(i);f.submit()}"><?php echo __('admin.themes.reset_default'); ?></button>
             </div>
         </form>
     </div>
