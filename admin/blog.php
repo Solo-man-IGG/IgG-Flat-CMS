@@ -16,6 +16,7 @@ use CMS\FileHandler;
 use CMS\MarkdownParser;
 use CMS\Cache;
 use CMS\Counter;
+use CMS\Search;
 
 // Start session
 if (session_status() === PHP_SESSION_NONE) {
@@ -69,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     error_log('Failed to delete counter: ' . $e->getMessage());
                                 }
                                 $message = __('admin.blog.message.deleted');
+                                (new Search($fileHandler))->rebuildIndex();
                                 break;
                             }
                         }
@@ -78,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 case 'save':
                     $slug = $_POST['slug'] ?? '';
                     $title = $_POST['title'] ?? '';
+                    $subtitle = $_POST['subtitle'] ?? '';
                     $content = $_POST['content'] ?? '';
                     $author = $_POST['author'] ?? '';
                     $tags = $_POST['tags'] ?? '';
@@ -119,6 +122,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             'author' => $author,
                             'published' => $published === 'true',
                         ];
+                        if ($subtitle) {
+                            $frontmatterData['subtitle'] = $subtitle;
+                        }
                         if ($banner) {
                             $frontmatterData['banner'] = $banner;
                         }
@@ -130,6 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $fileHandler->write('content/blog/' . $slug . '.md', $frontmatter);
                         $cache->clear('blog', 'blog_post_' . $slug);
                         $cache->clear('blog', 'blog_list');
+                        (new Search($fileHandler))->rebuildIndex();
                         $message = __('admin.blog.message.saved');
                     }
                     break;
@@ -165,6 +172,7 @@ try {
         $posts[] = [
             'slug' => $slug,
             'title' => $parser->getTitle($frontmatter, $parsed['content']),
+            'subtitle' => $frontmatter['subtitle'] ?? '',
             'date' => $parser->getDate($frontmatter, $fileHandler->getModificationTime($path)),
             'author' => $frontmatter['author'] ?? '',
             'published' => $frontmatter['published'] ?? true,
@@ -224,6 +232,11 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                 <div class="form-group">
                     <label for="title"><?php echo __('admin.blog.form.title'); ?></label>
                     <input type="text" id="title" name="title" value="<?php echo $editPost ? htmlspecialchars($editPost['title'], ENT_QUOTES, 'UTF-8') : ''; ?>" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subtitle"><?php echo __('admin.blog.form.subtitle'); ?></label>
+                    <input type="text" id="subtitle" name="subtitle" value="<?php echo $editPost ? htmlspecialchars($editPost['subtitle'] ?? '', ENT_QUOTES, 'UTF-8') : ''; ?>">
                 </div>
                 
                 <div class="form-group">

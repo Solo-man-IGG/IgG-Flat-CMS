@@ -10,6 +10,8 @@
 
 $pageTitle = $product['title'] ?? __('product.page_title_default');
 $siteTitle = $siteTitle ?? 'My Site';
+$siteSlogan = $siteSlogan ?? '';
+$subtitle = $product['subtitle'] ?? '';
 $menuItems = $menuItems ?? [];
 require __DIR__ . '/header.php';
 ?>

@@ -10,6 +10,8 @@
 
 $pageTitle = __('contact.page_title');
 $siteTitle = $siteTitle ?? 'My Site';
+$siteSlogan = $siteSlogan ?? '';
+$subtitle = $subtitle ?? '';
 $menuItems = $menuItems ?? [];
 require __DIR__ . '/header.php';
 ?>

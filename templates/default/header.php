@@ -82,6 +82,10 @@
         <nav>
             <div class="nav-brand">
                 <a href="/"><?php echo htmlspecialchars($siteTitle ?? 'My Site', ENT_QUOTES, 'UTF-8'); ?></a>
+                <?php $slogan = !empty($subtitle) ? $subtitle : ($siteSlogan ?? ''); ?>
+                <?php if ($slogan): ?>
+                    <div class="site-slogan"><?php echo htmlspecialchars($slogan, ENT_QUOTES, 'UTF-8'); ?></div>
+                <?php endif; ?>
             </div>
             <?php if ($navStyle === 'hamburger'): ?>
             <button class="hamburger-btn" onclick="var btn=this;var menu=document.querySelector('.nav-menu');menu.classList.toggle('open');btn.classList.toggle('active');btn.textContent=btn.classList.contains('active')?'×':'☰';btn.setAttribute('aria-expanded',menu.classList.contains('open'))" aria-label="<?php echo __('header.nav.aria_label'); ?>" aria-expanded="false">☰</button>
@@ -108,6 +112,7 @@
                     <?php endforeach; ?>
                 <?php endif; ?>
                 <li><a href="/contact"><?php echo __('header.nav.contact'); ?></a></li>
+                <li><a href="/search" class="search-link" title="<?php echo __('search.heading'); ?>">🔍</a></li>
             </ul>
         </nav>
     </header>

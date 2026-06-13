@@ -15,6 +15,7 @@ use CMS\Controllers\BlogController;
 use CMS\Controllers\ContactController;
 use CMS\Controllers\PageController;
 use CMS\Controllers\ProductController;
+use CMS\Controllers\SearchController;
 use Symfony\Component\Yaml\Yaml;
 
 class Router
@@ -27,6 +28,7 @@ class Router
     private BlogController $blogController;
     private ProductController $productController;
     private ContactController $contactController;
+    private SearchController $searchController;
     private AdminController $adminController;
 
     public function __construct(FileHandler $fileHandler)
@@ -39,6 +41,7 @@ class Router
         $this->blogController = new BlogController($fileHandler);
         $this->productController = new ProductController($fileHandler);
         $this->contactController = new ContactController($fileHandler);
+        $this->searchController = new SearchController($fileHandler);
         $this->adminController = new AdminController($fileHandler);
     }
 
@@ -62,6 +65,7 @@ class Router
 
         $routes['/^\/$/'] = 'home';
         $routes['/^\/contact$/'] = 'contact';
+        $routes['/^\/search$/'] = 'search';
         $routes['/^\/pages\/([a-z0-9-]+)$/'] = 'page';
 
         foreach ($this->menuConfig as $item) {
@@ -137,6 +141,7 @@ class Router
         match ($handler) {
             'home' => $this->pageController->handleHome(),
             'contact' => $this->contactController->handleContact(),
+            'search' => $this->searchController->handleSearch(),
             'blog_list' => $this->blogController->handleBlogList(),
             'blog_post' => $this->blogController->handleBlogPost($params[0] ?? ''),
             'products_list' => $this->productController->handleProductsList(),

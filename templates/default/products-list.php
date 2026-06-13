@@ -10,6 +10,8 @@
 
 $pageTitle = __('products.list.page_title');
 $siteTitle = $siteTitle ?? 'My Site';
+$siteSlogan = $siteSlogan ?? '';
+$subtitle = $subtitle ?? '';
 $menuItems = $menuItems ?? [];
 require __DIR__ . '/header.php';
 ?>
@@ -21,10 +23,10 @@ require __DIR__ . '/header.php';
                 <?php if (!empty($product['image'])): ?>
                     <img src="<?php echo htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($product['title'], ENT_QUOTES, 'UTF-8'); ?>" style="max-width: 100%; border-radius: 0.5rem;">
                 <?php endif; ?>
-                <h3><?php echo htmlspecialchars($product['title'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                <h5><?php echo htmlspecialchars($product['title'], ENT_QUOTES, 'UTF-8'); ?></h5>
                 <div class="price">
                     <?php if (!empty($product['price'])): ?>
-                        <?php echo htmlspecialchars($product['price'], ENT_QUOTES, 'UTF-8'); ?>
+                        <?php echo "$".htmlspecialchars($product['price'], ENT_QUOTES, 'UTF-8'); ?>
                     <?php endif; ?>
                 </div>
                 <div class="description">

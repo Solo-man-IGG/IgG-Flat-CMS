@@ -30,7 +30,7 @@ abstract class BaseController
             $settingsJson = $this->fileHandler->read('content/config/settings.json');
             return json_decode($settingsJson, true) ?? [];
         } catch (\Exception $e) {
-            return ['site_title' => 'My Site'];
+            return ['site_title' => 'My Site', 'site_slogan' => ''];
         }
     }
 

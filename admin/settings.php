@@ -48,6 +48,7 @@ try {
 } catch (\Exception $e) {
     $settings = [
         'site_title' => 'My Site',
+        'site_slogan' => '',
         'mail_host' => '',
         'mail_port' => '587',
         'mail_username' => '',
@@ -94,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     $newSettings = $currentSettings;
                     $fields = [
-                        'site_title', 'mail_host', 'mail_port',
+                        'site_title', 'site_slogan', 'mail_host', 'mail_port',
                         'mail_username', 'mail_from', 'mail_from_name',
                         'home_page'
                     ];
@@ -194,6 +195,11 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                 <div class="form-group">
                     <label for="site_title"><?php echo __('admin.settings.site_section.site_title'); ?></label>
                     <input type="text" id="site_title" name="site_title" value="<?php echo htmlspecialchars($settings['site_title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                </div>
+                
+                <div class="form-group">
+                    <label for="site_slogan"><?php echo __('admin.settings.site_section.site_slogan'); ?></label>
+                    <input type="text" id="site_slogan" name="site_slogan" value="<?php echo htmlspecialchars($settings['site_slogan'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
                 
                 <button type="submit" class="btn"><?php echo __('admin.settings.site_section.save'); ?></button>

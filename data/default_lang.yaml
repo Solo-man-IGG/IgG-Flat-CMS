@@ -29,6 +29,15 @@ auth.csrf_error.title: CSRF Verification Failed
 auth.csrf_error.heading: CSRF Verification Failed
 auth.csrf_error.message: Request verification failed. Please refresh the page and try again.
 auth.csrf_error.back_admin: Back to Admin
+search.page_title: Search
+search.heading: Search
+search.placeholder: Enter keywords...
+search.submit: Search
+search.no_results: 'No results found for "%s".'
+search.results_count: 'Found %d result(s) for "%s".'
+search.type_blog: Blog Post
+search.type_product: Product
+search.type_page: Page
 blog.list.page_title: Blog
 blog.list.filter_label: 'Filter: '
 blog.list.filter_all: All Posts
@@ -107,6 +116,7 @@ admin.blog.error.load_failed: 'Failed to load post: %s'
 admin.blog.form.title_edit: Edit Post
 admin.blog.form.title_new: New Post
 admin.blog.form.title: Title *
+admin.blog.form.subtitle: Subtitle
 admin.blog.form.author: Author
 admin.blog.form.tags: Tags (comma-separated)
 admin.blog.form.tags_placeholder: e.g. tech, tutorial
@@ -142,6 +152,7 @@ admin.pages.error.load_failed: 'Failed to load page: %s'
 admin.pages.form.title_edit: Edit Page
 admin.pages.form.title_new: New Page
 admin.pages.form.title: Title *
+admin.pages.form.subtitle: Subtitle
 admin.pages.form.content: Content (Markdown) *
 admin.pages.form.cancel_edit: Cancel
 admin.pages.form.update: Update Page
@@ -169,6 +180,7 @@ admin.products.error.load_failed: 'Failed to load product: %s'
 admin.products.form.title_edit: Edit Product
 admin.products.form.title_new: New Product
 admin.products.form.name: Product Name *
+admin.products.form.subtitle: Subtitle
 admin.products.form.price: Price
 admin.products.form.price_placeholder: e.g. 19900 or Custom Quote
 admin.products.form.sku: SKU
@@ -245,6 +257,7 @@ admin.settings.error.unknown: Unknown error. Check error_log.
 admin.settings.error.operation_failed: 'Operation failed: %s'
 admin.settings.site_section.title: Site Settings
 admin.settings.site_section.site_title: Site Title
+admin.settings.site_section.site_slogan: Site Slogan
 admin.settings.site_section.save: Save Settings
 admin.settings.mail_section.title: Mail Settings
 admin.settings.mail_section.host: SMTP Host

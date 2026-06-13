@@ -16,6 +16,7 @@ use CMS\FileHandler;
 use CMS\MarkdownParser;
 use CMS\Cache;
 use CMS\Counter;
+use CMS\Search;
 
 // Start session
 if (session_status() === PHP_SESSION_NONE) {
@@ -68,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     error_log('Failed to delete counter: ' . $e->getMessage());
                                 }
                                 $message = __('admin.pages.message.deleted');
+                                (new Search($fileHandler))->rebuildIndex();
                                 break;
                             }
                         }
@@ -77,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 case 'save':
                     $slug = $_POST['slug'] ?? '';
                     $title = $_POST['title'] ?? '';
+                    $subtitle = $_POST['subtitle'] ?? '';
                     $content = $_POST['content'] ?? '';
                     
                     if (!$title || !$content) {
@@ -101,10 +104,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             'slug' => $slug,
                             'date' => date('Y-m-d'),
                         ];
+                        if ($subtitle) {
+                            $frontmatterData['subtitle'] = $subtitle;
+                        }
                         $markdown = "---\n" . \Symfony\Component\Yaml\Yaml::dump($frontmatterData, 2, 2) . "---\n\n" . $content;
                         
                         $fileHandler->write('content/pages/' . $slug . '.md', $markdown);
                         $cache->clear('pages', $slug);
+                        (new Search($fileHandler))->rebuildIndex();
                         $message = __('admin.pages.message.saved');
                     }
                     break;
@@ -135,6 +142,7 @@ try {
         $pages[] = [
             'slug' => $slug,
             'title' => $parser->getTitle($frontmatter, $parsed['content']),
+            'subtitle' => $frontmatter['subtitle'] ?? '',
             'date' => $parser->getDate($frontmatter, $fileHandler->getModificationTime($path)),
             'rawContent' => $rawMarkdown,
             'views' => $counter->get('page', $slug),
@@ -190,6 +198,11 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                 <div class="form-group">
                     <label for="title"><?php echo __('admin.pages.form.title'); ?></label>
                     <input type="text" id="title" name="title" value="<?php echo $editPage ? htmlspecialchars($editPage['title'], ENT_QUOTES, 'UTF-8') : ''; ?>" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subtitle"><?php echo __('admin.pages.form.subtitle'); ?></label>
+                    <input type="text" id="subtitle" name="subtitle" value="<?php echo $editPage ? htmlspecialchars($editPage['subtitle'] ?? '', ENT_QUOTES, 'UTF-8') : ''; ?>">
                 </div>
                 
                 <div class="form-group">

@@ -24,6 +24,7 @@ class ContactController extends BaseController
 
         $settings = $this->loadSettings();
         $siteTitle = $settings['site_title'] ?? 'My Site';
+        $siteSlogan = $settings['site_slogan'] ?? '';
 
         $auth = new Auth($this->fileHandler);
         $mailer = new Mailer($this->fileHandler);

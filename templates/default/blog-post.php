@@ -10,6 +10,8 @@
 
 $pageTitle = $post['title'] ?? __('blog.post.page_title_default');
 $siteTitle = $siteTitle ?? 'My Site';
+$siteSlogan = $siteSlogan ?? '';
+$subtitle = $post['subtitle'] ?? '';
 $menuItems = $menuItems ?? [];
 require __DIR__ . '/header.php';
 ?>

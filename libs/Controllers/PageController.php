@@ -21,6 +21,8 @@ class PageController extends BaseController
         $settings = $this->loadSettings();
         $homePageSlug = $settings['home_page'] ?? '';
 
+        $siteSlogan = $settings['site_slogan'] ?? '';
+
         if ($homePageSlug) {
             $menuManager = new MenuManager($this->fileHandler);
             $menuItems = $menuManager->getTemplateData();
@@ -48,6 +50,7 @@ class PageController extends BaseController
                             $page = [
                                 'slug' => $homePageSlug,
                                 'title' => $parser->getTitle($frontmatter, $parsed['content']),
+                                'subtitle' => $frontmatter['subtitle'] ?? '',
                                 'date' => $parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
                                 'content' => $parsed['content'],
                             ];
@@ -91,6 +94,7 @@ class PageController extends BaseController
 
         $settings = $this->loadSettings();
         $siteTitle = $settings['site_title'] ?? 'My Site';
+        $siteSlogan = $settings['site_slogan'] ?? '';
 
         $parser = new MarkdownParser();
         $cache = new Cache($this->fileHandler);
@@ -114,6 +118,7 @@ class PageController extends BaseController
                         $page = [
                             'slug' => $slug,
                             'title' => $parser->getTitle($frontmatter, $parsed['content']),
+                            'subtitle' => $frontmatter['subtitle'] ?? '',
                             'date' => $parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
                             'content' => $parsed['content'],
                         ];

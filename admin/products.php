@@ -16,6 +16,7 @@ use CMS\FileHandler;
 use CMS\MarkdownParser;
 use CMS\Cache;
 use CMS\Counter;
+use CMS\Search;
 
 // Start session
 if (session_status() === PHP_SESSION_NONE) {
@@ -68,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     error_log('Failed to delete counter: ' . $e->getMessage());
                                 }
                                 $message = __('admin.products.message.deleted');
+                                (new Search($fileHandler))->rebuildIndex();
                                 break;
                             }
                         }
@@ -77,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 case 'save':
                     $slug = $_POST['slug'] ?? '';
                     $title = $_POST['title'] ?? '';
+                    $subtitle = $_POST['subtitle'] ?? '';
                     $content = $_POST['content'] ?? '';
                     $price = $_POST['price'] ?? '';
                     $sku = $_POST['sku'] ?? '';
@@ -98,6 +101,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             'date' => date('Y-m-d'),
                             'sort_order' => (int)$sortOrder,
                         ];
+                        if ($subtitle) {
+                            $frontmatterData['subtitle'] = $subtitle;
+                        }
                         if ($price) {
                             $frontmatterData['price'] = $price;
                         }
@@ -114,6 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         $fileHandler->write('content/products/' . $slug . '.md', $frontmatter);
                         $cache->clear('products', $slug);
+                        (new Search($fileHandler))->rebuildIndex();
                         $message = __('admin.products.message.saved');
                     }
                     break;
@@ -139,6 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             }
                         }
                     }
+                    (new Search($fileHandler))->rebuildIndex();
                     $message = __('admin.products.message.reordered');
                     break;
             }
@@ -168,6 +176,7 @@ try {
         $products[] = [
             'slug' => $slug,
             'title' => $parser->getTitle($frontmatter, $parsed['content']),
+            'subtitle' => $frontmatter['subtitle'] ?? '',
             'date' => $parser->getDate($frontmatter, $fileHandler->getModificationTime($path)),
             'price' => $frontmatter['price'] ?? '',
             'sku' => $frontmatter['sku'] ?? '',
@@ -233,6 +242,11 @@ require __DIR__ . '/../templates/admin/sidebar.php';
                 <div class="form-group">
                     <label for="title"><?php echo __('admin.products.form.name'); ?></label>
                     <input type="text" id="title" name="title" value="<?php echo $editProduct ? htmlspecialchars($editProduct['title'], ENT_QUOTES, 'UTF-8') : ''; ?>" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subtitle"><?php echo __('admin.products.form.subtitle'); ?></label>
+                    <input type="text" id="subtitle" name="subtitle" value="<?php echo $editProduct ? htmlspecialchars($editProduct['subtitle'] ?? '', ENT_QUOTES, 'UTF-8') : ''; ?>">
                 </div>
                 
                 <div class="form-group">

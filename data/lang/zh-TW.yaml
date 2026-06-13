@@ -29,6 +29,15 @@ auth.csrf_error.title: CSRF 驗證失敗
 auth.csrf_error.heading: CSRF 驗證失敗
 auth.csrf_error.message: 請求驗證失敗，請重新整理頁面後再試。
 auth.csrf_error.back_admin: 返回後台
+search.page_title: 搜尋
+search.heading: 搜尋
+search.placeholder: 請輸入關鍵字...
+search.submit: 搜尋
+search.no_results: '找不到與「%s」相關的結果。'
+search.results_count: '找到 %d 筆與「%s」相關的結果。'
+search.type_blog: 文章
+search.type_product: 產品
+search.type_page: 頁面
 blog.list.page_title: 部落格
 blog.list.filter_label: 篩選分類：
 blog.list.filter_all: 全部文章
@@ -107,6 +116,7 @@ admin.blog.error.load_failed: 載入文章失敗：%s
 admin.blog.form.title_edit: 編輯文章
 admin.blog.form.title_new: 新增文章
 admin.blog.form.title: 標題 *
+admin.blog.form.subtitle: 副標題
 admin.blog.form.author: 作者
 admin.blog.form.tags: 標籤 (用逗號分隔)
 admin.blog.form.tags_placeholder: 例如：技術, 教程
@@ -142,6 +152,7 @@ admin.pages.error.load_failed: 載入頁面失敗：%s
 admin.pages.form.title_edit: 編輯頁面
 admin.pages.form.title_new: 新增頁面
 admin.pages.form.title: 標題 *
+admin.pages.form.subtitle: 副標題
 admin.pages.form.content: 內容 (Markdown) *
 admin.pages.form.cancel_edit: 取消編輯
 admin.pages.form.update: 更新頁面
@@ -169,6 +180,7 @@ admin.products.error.load_failed: 載入產品失敗：%s
 admin.products.form.title_edit: 編輯產品
 admin.products.form.title_new: 新增產品
 admin.products.form.name: 產品名稱 *
+admin.products.form.subtitle: 副標題
 admin.products.form.price: 價格
 admin.products.form.price_placeholder: 例如：19900 或 客製報價
 admin.products.form.sku: SKU
@@ -245,6 +257,7 @@ admin.settings.error.unknown: 未知錯誤，請檢查 error_log
 admin.settings.error.operation_failed: 操作失敗：%s
 admin.settings.site_section.title: 網站設定
 admin.settings.site_section.site_title: 網站標題
+admin.settings.site_section.site_slogan: 網站標語
 admin.settings.site_section.save: 儲存設定
 admin.settings.mail_section.title: 郵件設定
 admin.settings.mail_section.host: SMTP 主機

@@ -23,6 +23,7 @@ class BlogController extends BaseController
 
         $settings = $this->loadSettings();
         $siteTitle = $settings['site_title'] ?? 'My Site';
+        $siteSlogan = $settings['site_slogan'] ?? '';
 
         $parser = new MarkdownParser();
         $cache = new Cache($this->fileHandler);
@@ -108,6 +109,7 @@ class BlogController extends BaseController
 
         $settings = $this->loadSettings();
         $siteTitle = $settings['site_title'] ?? 'My Site';
+        $siteSlogan = $settings['site_slogan'] ?? '';
 
         $parser = new MarkdownParser();
         $cache = new Cache($this->fileHandler);
@@ -136,6 +138,7 @@ class BlogController extends BaseController
                         $post = [
                             'slug' => $slug,
                             'title' => $parser->getTitle($frontmatter, $parsed['content']),
+                            'subtitle' => $frontmatter['subtitle'] ?? '',
                             'date' => $parser->getDate($frontmatter, $this->fileHandler->getModificationTime($path)),
                             'author' => $frontmatter['author'] ?? '',
                             'tags' => $frontmatter['tags'] ?? [],

@@ -138,6 +138,13 @@ nav {
     text-decoration: none;
 }
 
+.site-slogan {
+    color: var(--header-text, #ffffff);
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin-top: 0.15rem;
+}
+
 .nav-menu {
     list-style: none;
     display: flex;
