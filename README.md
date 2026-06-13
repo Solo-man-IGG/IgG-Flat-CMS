@@ -44,6 +44,8 @@ No complicated business model, no hidden affiliate marketing — just something 
 - **Blog system** — posts, tags, drafts, tag filtering, pagination (12 per page)
 - **Product management** — catalog, pricing (supports text like "Custom Quote"), stock, drag-and-drop sorting
 - **Static pages** — custom pages with Markdown content
+- **Full-text search** — on-site search with auto-generated JSON index, rebuilds on content changes
+- **Site slogan** — configurable global slogan in settings, per-article subtitle override
 - **Contact form** — built-in form with message management and reply functionality
 - **File management** — image upload, drag & drop, file browser (EasyMDE integration)
 - **Internal documents** — company knowledge base / document management
@@ -221,7 +223,8 @@ Open your browser and visit your site. Admin panel: `/admin`
 │       ├── users.json        # Admin accounts
 │       └── signature.txt     # Signature text
 ├── cache/                    # Cache directory
-│   └── pages/                # HTML cache
+│   ├── pages/                # HTML page cache
+│   └── search_index.json     # Search index (auto-generated)
 ├── data/                     # Language data
 │   ├── default_lang.yaml     # Default language (English base)
 │   ├── custom_lang.yaml      # User custom overrides
@@ -234,6 +237,7 @@ Open your browser and visit your site. Admin panel: `/admin`
 │   ├── Router.php
 │   ├── FileHandler.php
 │   ├── MarkdownParser.php
+│   ├── Search.php
 │   ├── Cache.php
 │   ├── Auth.php
 │   ├── MenuManager.php
@@ -245,6 +249,7 @@ Open your browser and visit your site. Admin panel: `/admin`
 │       ├── PageController.php
 │       ├── BlogController.php
 │       ├── ProductController.php
+│       ├── SearchController.php
 │       ├── ContactController.php
 │       └── AdminController.php
 ├── templates/                # Template directory
@@ -256,6 +261,7 @@ Open your browser and visit your site. Admin panel: `/admin`
 │   │   ├── blog-post.php
 │   │   ├── products-list.php
 │   │   ├── product.php
+│   │   ├── search.php
 │   │   ├── contact.php
 │   │   ├── style.css
 │   │   └── custom.css
@@ -278,6 +284,7 @@ slug: article-slug
 date: 2026-06-01
 author: Author Name
 published: true
+subtitle: Optional subtitle / slogan override
 tags:
   - tag1
   - tag2
@@ -297,6 +304,7 @@ title: Product Name
 slug: product-slug
 date: 2026-06-01
 price: "NT$ 1,500起"
+subtitle: Optional subtitle / slogan override
 description: Short product description
 tags:
   - tag1
@@ -326,7 +334,7 @@ Available admin features:
 | Messages | View contact form messages and reply |
 | Documents | Internal knowledge base / document management |
 | Users | Create, edit, delete admin accounts |
-| Settings | Configure site title, menu, mail, homepage |
+| Settings | Configure site title, site slogan, menu, mail, homepage |
 | Themes | Customize colors and navigation style |
 | Language | One-click language switching, add language packs, override individual strings |
 | Signature | Set post signature text |
@@ -394,6 +402,7 @@ The system automatically caches parsed Markdown content for performance.
 - **Blog cache** — automatically cleared when posts are created, edited, or deleted
 - **Product cache** — automatically cleared when products are created, edited, or deleted
 - **Page cache** — automatically cleared when static pages are updated
+- **Search index** (`cache/search_index.json`) — automatically rebuilt when any content is created, edited, or deleted; no manual maintenance needed
 
 You can also manually clear all cache from the "Settings" page in the admin panel.
 
